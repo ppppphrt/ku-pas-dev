@@ -15,6 +15,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from accounts import Accounts
 from catalog import Catalog
+from chat import ChatRequest, GEData, respond
 from schemas import (
     Credentials,
     Filters,
@@ -62,6 +63,14 @@ def create_app(catalog_path=None, database_path=None, semantic=None):
                     "Semantic model could not be loaded; keyword search is available."
                 )
                 log.exception("Semantic loading failed")
+        app.state.ge = None
+        if app.state.catalog:
+            try:
+                app.state.ge = GEData(
+                    app.state.catalog, os.getenv("GE_DATA_PATH", str(ROOT / "data/gened.json"))
+                )
+            except (OSError, ValueError):
+                log.exception("GE data unavailable; existing discovery remains available")
         yield
 
     app = FastAPI(title="KU-PAS Course and Timetable API", version="2.0.0", lifespan=lifespan)
@@ -271,6 +280,20 @@ def create_app(catalog_path=None, database_path=None, semantic=None):
         if found is None:
             raise HTTPException(404, "Course not found.")
         return found
+
+    @app.post("/chat", tags=["Chat"])
+    def chat(body: ChatRequest):
+        c = catalog()
+        if body.dataset_version != c.metadata["dataset_version"]:
+            raise HTTPException(409, "ข้อมูลเปลี่ยนแล้ว กรุณาโหลดหน้าใหม่และตรวจตารางอีกครั้ง")
+        if app.state.ge is None:
+            raise HTTPException(503, "ยังไม่มีข้อมูล GE ที่ตรงกับ snapshot นี้ โปรดตรวจ GE_DATA_PATH")
+        if not body.message.strip():
+            raise HTTPException(422, "กรุณาพิมพ์คำถาม")
+        try:
+            return respond(body, c, app.state.ge)
+        except ValueError as exc:
+            raise HTTPException(422, "ตรวจเงื่อนไขวัน เวลา หน่วยกิต และรายการในตารางอีกครั้ง") from exc
 
     def validate_timetable(body):
         c = catalog()

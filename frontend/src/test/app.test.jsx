@@ -228,3 +228,101 @@ it("allows explicit recovery from damaged saved data", async () => {
   await waitFor(() => expect(screen.queryAllByRole("alert")).toHaveLength(0));
   expect(JSON.parse(localStorage.getItem("ku-timetable-v2")).items).toEqual([]);
 });
+
+it("chats with context, labels mocks and shares the existing timetable", async () => {
+  const requests = [];
+  server.use(
+    http.post(`${root}/chat`, async ({ request }) => {
+      const body = await request.json();
+      requests.push(body);
+      return HttpResponse.json({
+        state: {
+          ...body.state,
+          interest: "ภาษา",
+          days: body.message.includes("ศุกร์") ? ["Fri"] : [],
+        },
+        engine: "local-rules",
+        total_results: 1,
+        message: "พบวิชาทดลอง",
+        notice: "ข้อมูลจำลอง ยังยืนยันสิทธิ์ไม่ได้",
+        sources: {
+          catalog: {
+            source_url: "https://kudrive.ku.ac.th",
+            updated_at: "2026-10-24",
+          },
+          ge: { source_url: "demo://test", updated_at: "2026-10-24" },
+        },
+        results: [
+          {
+            course: courses[0],
+            classification: {
+              groups: ["ภาษากับการสื่อสาร"],
+              competencies: [1],
+              status: "mock",
+            },
+            sections: [
+              {
+                section: courses[0].sections[0],
+                offering: {
+                  offered: true,
+                  remaining: 2,
+                  programs: ["regular"],
+                  status: "mock",
+                  eligibility_note: "ข้อมูลจำลอง",
+                },
+                eligibility: "unknown",
+                can_plan: true,
+              },
+            ],
+          },
+        ],
+      });
+    }),
+  );
+  window.history.replaceState({}, "", "/chat");
+  const user = userEvent.setup();
+  render(<App />);
+  const input = await screen.findByLabelText("ถามเรื่องรายวิชา GE");
+  await waitFor(() =>
+    expect(screen.getByRole("button", { name: "สนใจภาษา" })).toBeEnabled(),
+  );
+  await user.type(input, "สนใจภาษา");
+  await user.click(screen.getByRole("button", { name: "ส่งข้อความ" }));
+  await screen.findByText("ผลล่าสุด · 1 วิชา");
+  expect(screen.getByText("GE จำลอง")).toBeInTheDocument();
+  expect(screen.getByText(/โหมดทดลองฟรี/)).toBeInTheDocument();
+  await user.type(input, "เฉพาะวันศุกร์");
+  await user.click(screen.getByRole("button", { name: "ส่งข้อความ" }));
+  await waitFor(() => expect(requests).toHaveLength(2));
+  expect(requests[1].state.interest).toBe("ภาษา");
+  await user.click(screen.getByText(/ดูหมู่และเวลาเรียน/));
+  await user.click(screen.getByRole("button", { name: "เพิ่มหมู่นี้ลงตาราง" }));
+  await screen.findByText(/เพิ่ม 001 หมู่ 1 ลงตารางแล้ว/);
+  expect(
+    JSON.parse(localStorage.getItem("ku-timetable-v2")).items,
+  ).toHaveLength(1);
+  await user.click(screen.getByRole("link", { name: /ดูตารางของฉัน/ }));
+  await screen.findByText("1 courses");
+});
+
+it("keeps the chat draft after an API error so the user can retry", async () => {
+  server.use(
+    http.post(`${root}/chat`, () =>
+      HttpResponse.json(
+        { error: { message: "Chat unavailable" } },
+        { status: 503 },
+      ),
+    ),
+  );
+  window.history.replaceState({}, "", "/chat");
+  const user = userEvent.setup();
+  render(<App />);
+  const input = await screen.findByLabelText("ถามเรื่องรายวิชา GE");
+  await user.type(input, "สนใจภาษา");
+  const send = screen.getByRole("button", { name: "ส่งข้อความ" });
+  await waitFor(() => expect(send).toBeEnabled());
+  await user.click(send);
+  await screen.findByText(/Chat unavailable/);
+  expect(input).toHaveValue("สนใจภาษา");
+  expect(send).toBeEnabled();
+});

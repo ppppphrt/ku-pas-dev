@@ -1,0 +1,4446 @@
+{
+  "dataset_version": "ku-workbooks-v1:0808b8a9ef7fe0d8a5bbdaf84c7decdfcab43cc81b19fe775c021fd32034efb1",
+  "source_url": "demo://gened-regis",
+  "updated_at": "2026-10-24",
+  "academic_year": null,
+  "semester": null,
+  "courses": [
+    {
+      "subject_code": "01001317-55",
+      "groups": [
+        "พลเมืองไทยและพลเมืองโลก"
+      ],
+      "competencies": [
+        1,
+        2,
+        4,
+        5,
+        7,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01001317-59",
+      "groups": [
+        "พลเมืองไทยและพลเมืองโลก"
+      ],
+      "competencies": [
+        1,
+        2,
+        4,
+        5,
+        7,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01001317-64",
+      "groups": [
+        "พลเมืองไทยและพลเมืองโลก"
+      ],
+      "competencies": [
+        1,
+        2,
+        4,
+        5,
+        7,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01001317-67",
+      "groups": [
+        "พลเมืองไทยและพลเมืองโลก"
+      ],
+      "competencies": [
+        1,
+        2,
+        4,
+        5,
+        7,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01004101-67",
+      "groups": [
+        "ศาสตร์แห่งผู้ประกอบการ"
+      ],
+      "competencies": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01005101-04",
+      "groups": [
+        "ศาสตร์แห่งผู้ประกอบการ"
+      ],
+      "competencies": [
+        1,
+        3,
+        4,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01005101-55",
+      "groups": [
+        "ศาสตร์แห่งผู้ประกอบการ"
+      ],
+      "competencies": [
+        1,
+        3,
+        4,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01005101-59",
+      "groups": [
+        "ศาสตร์แห่งผู้ประกอบการ"
+      ],
+      "competencies": [
+        1,
+        3,
+        4,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01005101-64",
+      "groups": [
+        "ศาสตร์แห่งผู้ประกอบการ"
+      ],
+      "competencies": [
+        1,
+        3,
+        4,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01005101-67",
+      "groups": [
+        "ศาสตร์แห่งผู้ประกอบการ"
+      ],
+      "competencies": [
+        1,
+        3,
+        4,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01007101-55",
+      "groups": [
+        "สุนทรียศาสตร์"
+      ],
+      "competencies": [
+        1,
+        2,
+        4,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01007101-59",
+      "groups": [
+        "สุนทรียศาสตร์"
+      ],
+      "competencies": [
+        1,
+        2,
+        4,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01007101-64",
+      "groups": [
+        "สุนทรียศาสตร์"
+      ],
+      "competencies": [
+        1,
+        2,
+        4,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01007101-67",
+      "groups": [
+        "สุนทรียศาสตร์"
+      ],
+      "competencies": [
+        1,
+        2,
+        4,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01009102-55",
+      "groups": [
+        "พลเมืองไทยและพลเมืองโลก"
+      ],
+      "competencies": [
+        1,
+        2,
+        4,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01009102-59",
+      "groups": [
+        "พลเมืองไทยและพลเมืองโลก"
+      ],
+      "competencies": [
+        1,
+        2,
+        4,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01009102-64",
+      "groups": [
+        "พลเมืองไทยและพลเมืองโลก"
+      ],
+      "competencies": [
+        1,
+        2,
+        4,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01009102-67",
+      "groups": [
+        "พลเมืองไทยและพลเมืองโลก"
+      ],
+      "competencies": [
+        1,
+        2,
+        4,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01015202-55",
+      "groups": [
+        "พลเมืองไทยและพลเมืองโลก"
+      ],
+      "competencies": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01015202-59",
+      "groups": [
+        "พลเมืองไทยและพลเมืองโลก"
+      ],
+      "competencies": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01015202-64",
+      "groups": [
+        "พลเมืองไทยและพลเมืองโลก"
+      ],
+      "competencies": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01015202-67",
+      "groups": [
+        "พลเมืองไทยและพลเมืองโลก"
+      ],
+      "competencies": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01051121-67",
+      "groups": [
+        "อยู่ดีมีสุข"
+      ],
+      "competencies": [
+        1,
+        2,
+        4
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01101101-55",
+      "groups": [
+        "ศาสตร์แห่งผู้ประกอบการ"
+      ],
+      "competencies": [
+        4
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01101101-59",
+      "groups": [
+        "ศาสตร์แห่งผู้ประกอบการ"
+      ],
+      "competencies": [
+        4
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01101101-60",
+      "groups": [
+        "ศาสตร์แห่งผู้ประกอบการ"
+      ],
+      "competencies": [
+        4
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01101101-64",
+      "groups": [
+        "ศาสตร์แห่งผู้ประกอบการ"
+      ],
+      "competencies": [
+        4
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01101101-67",
+      "groups": [
+        "ศาสตร์แห่งผู้ประกอบการ"
+      ],
+      "competencies": [
+        4
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01131111-59",
+      "groups": [
+        "ศาสตร์แห่งผู้ประกอบการ"
+      ],
+      "competencies": [
+        3,
+        4,
+        6
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01131111-64",
+      "groups": [
+        "ศาสตร์แห่งผู้ประกอบการ"
+      ],
+      "competencies": [
+        3,
+        4,
+        6
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01131111-67",
+      "groups": [
+        "ศาสตร์แห่งผู้ประกอบการ"
+      ],
+      "competencies": [
+        3,
+        4,
+        6
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01173151-55",
+      "groups": [
+        "อยู่ดีมีสุข"
+      ],
+      "competencies": [
+        1,
+        2,
+        4,
+        6,
+        7,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01173151-59",
+      "groups": [
+        "อยู่ดีมีสุข"
+      ],
+      "competencies": [
+        1,
+        2,
+        4,
+        6,
+        7,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01173151-64",
+      "groups": [
+        "อยู่ดีมีสุข"
+      ],
+      "competencies": [
+        1,
+        2,
+        4,
+        6,
+        7,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01173151-67",
+      "groups": [
+        "อยู่ดีมีสุข"
+      ],
+      "competencies": [
+        1,
+        2,
+        4,
+        6,
+        7,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01174123-64",
+      "groups": [
+        "อยู่ดีมีสุข"
+      ],
+      "competencies": [
+        1,
+        2,
+        4,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01174123-67",
+      "groups": [
+        "อยู่ดีมีสุข"
+      ],
+      "competencies": [
+        1,
+        2,
+        4,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01174231-55",
+      "groups": [
+        "อยู่ดีมีสุข"
+      ],
+      "competencies": [
+        2,
+        4,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01174231-59",
+      "groups": [
+        "อยู่ดีมีสุข"
+      ],
+      "competencies": [
+        2,
+        4,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01174231-64",
+      "groups": [
+        "อยู่ดีมีสุข"
+      ],
+      "competencies": [
+        2,
+        4,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01174231-67",
+      "groups": [
+        "อยู่ดีมีสุข"
+      ],
+      "competencies": [
+        2,
+        4,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175111-55",
+      "groups": [
+        "อยู่ดีมีสุข"
+      ],
+      "competencies": [
+        4,
+        6,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175111-59",
+      "groups": [
+        "อยู่ดีมีสุข"
+      ],
+      "competencies": [
+        4,
+        6,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175111-64",
+      "groups": [
+        "อยู่ดีมีสุข"
+      ],
+      "competencies": [
+        4,
+        6,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175111-67",
+      "groups": [
+        "อยู่ดีมีสุข"
+      ],
+      "competencies": [
+        4,
+        6,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175112-55",
+      "groups": [
+        "อยู่ดีมีสุข"
+      ],
+      "competencies": [
+        2,
+        4,
+        6,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175112-59",
+      "groups": [
+        "อยู่ดีมีสุข"
+      ],
+      "competencies": [
+        2,
+        4,
+        6,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175112-64",
+      "groups": [
+        "อยู่ดีมีสุข"
+      ],
+      "competencies": [
+        2,
+        4,
+        6,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175112-67",
+      "groups": [
+        "อยู่ดีมีสุข"
+      ],
+      "competencies": [
+        2,
+        4,
+        6,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175114-55",
+      "groups": [
+        "อยู่ดีมีสุข"
+      ],
+      "competencies": [
+        2,
+        4,
+        6,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175114-59",
+      "groups": [
+        "อยู่ดีมีสุข"
+      ],
+      "competencies": [
+        2,
+        4,
+        6,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175114-64",
+      "groups": [
+        "อยู่ดีมีสุข"
+      ],
+      "competencies": [
+        2,
+        4,
+        6,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175114-67",
+      "groups": [
+        "อยู่ดีมีสุข"
+      ],
+      "competencies": [
+        2,
+        4,
+        6,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175117-55",
+      "groups": [
+        "อยู่ดีมีสุข"
+      ],
+      "competencies": [
+        2,
+        4,
+        6,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175117-59",
+      "groups": [
+        "อยู่ดีมีสุข"
+      ],
+      "competencies": [
+        2,
+        4,
+        6,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175117-64",
+      "groups": [
+        "อยู่ดีมีสุข"
+      ],
+      "competencies": [
+        2,
+        4,
+        6,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175117-67",
+      "groups": [
+        "อยู่ดีมีสุข"
+      ],
+      "competencies": [
+        2,
+        4,
+        6,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355101-59",
+      "groups": [
+        "ภาษากับการสื่อสาร"
+      ],
+      "competencies": [
+        1,
+        5,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355101-64",
+      "groups": [
+        "ภาษากับการสื่อสาร"
+      ],
+      "competencies": [
+        1,
+        5,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355102-59",
+      "groups": [
+        "ภาษากับการสื่อสาร"
+      ],
+      "competencies": [
+        1,
+        5,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355102-64",
+      "groups": [
+        "ภาษากับการสื่อสาร"
+      ],
+      "competencies": [
+        1,
+        5,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-59",
+      "groups": [
+        "ภาษากับการสื่อสาร"
+      ],
+      "competencies": [
+        1,
+        5,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-64",
+      "groups": [
+        "ภาษากับการสื่อสาร"
+      ],
+      "competencies": [
+        1,
+        5,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "groups": [
+        "ภาษากับการสื่อสาร"
+      ],
+      "competencies": [
+        1,
+        5,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355104-59",
+      "groups": [
+        "ภาษากับการสื่อสาร"
+      ],
+      "competencies": [
+        1,
+        5,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355104-64",
+      "groups": [
+        "ภาษากับการสื่อสาร"
+      ],
+      "competencies": [
+        1,
+        5,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355104-67",
+      "groups": [
+        "ภาษากับการสื่อสาร"
+      ],
+      "competencies": [
+        1,
+        5,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-55",
+      "groups": [
+        "ภาษากับการสื่อสาร"
+      ],
+      "competencies": [
+        1,
+        4,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-59",
+      "groups": [
+        "ภาษากับการสื่อสาร"
+      ],
+      "competencies": [
+        1,
+        4,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-64",
+      "groups": [
+        "ภาษากับการสื่อสาร"
+      ],
+      "competencies": [
+        1,
+        4,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "groups": [
+        "ภาษากับการสื่อสาร"
+      ],
+      "competencies": [
+        1,
+        4,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999032-55",
+      "groups": [
+        "พลเมืองไทยและพลเมืองโลก"
+      ],
+      "competencies": [
+        4,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999032-59",
+      "groups": [
+        "พลเมืองไทยและพลเมืองโลก"
+      ],
+      "competencies": [
+        4,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999032-64",
+      "groups": [
+        "พลเมืองไทยและพลเมืองโลก"
+      ],
+      "competencies": [
+        4,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999032-67",
+      "groups": [
+        "พลเมืองไทยและพลเมืองโลก"
+      ],
+      "competencies": [
+        4,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999033-55",
+      "groups": [
+        "สุนทรียศาสตร์"
+      ],
+      "competencies": [
+        4,
+        5,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999033-59",
+      "groups": [
+        "สุนทรียศาสตร์"
+      ],
+      "competencies": [
+        4,
+        5,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999033-64",
+      "groups": [
+        "สุนทรียศาสตร์"
+      ],
+      "competencies": [
+        4,
+        5,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999033-67",
+      "groups": [
+        "สุนทรียศาสตร์"
+      ],
+      "competencies": [
+        4,
+        5,
+        7
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-55",
+      "groups": [
+        "พลเมืองไทยและพลเมืองโลก"
+      ],
+      "competencies": [
+        4,
+        6,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-59",
+      "groups": [
+        "พลเมืองไทยและพลเมืองโลก"
+      ],
+      "competencies": [
+        4,
+        6,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-64",
+      "groups": [
+        "พลเมืองไทยและพลเมืองโลก"
+      ],
+      "competencies": [
+        4,
+        6,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-67",
+      "groups": [
+        "พลเมืองไทยและพลเมืองโลก"
+      ],
+      "competencies": [
+        4,
+        6,
+        8
+      ],
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "groups": [
+        "พลเมืองไทยและพลเมืองโลก"
+      ],
+      "competencies": [
+        4,
+        6,
+        8
+      ],
+      "status": "mock"
+    }
+  ],
+  "offerings": [
+    {
+      "subject_code": "01001317-67",
+      "section_id": "338457",
+      "offered": true,
+      "remaining": 1,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01001317-67",
+      "section_id": "338235",
+      "offered": true,
+      "remaining": 1,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01001317-67",
+      "section_id": "334131",
+      "offered": true,
+      "remaining": 21,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01001317-67",
+      "section_id": "327832",
+      "offered": true,
+      "remaining": 22,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01001317-67",
+      "section_id": "338456",
+      "offered": true,
+      "remaining": 1,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01001317-67",
+      "section_id": "338458",
+      "offered": true,
+      "remaining": 3,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01001317-67",
+      "section_id": "332471",
+      "offered": true,
+      "remaining": 11,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01004101-67",
+      "section_id": "323551",
+      "offered": true,
+      "remaining": 1,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01005101-67",
+      "section_id": "329430",
+      "offered": true,
+      "remaining": 0,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01005101-67",
+      "section_id": "329431",
+      "offered": true,
+      "remaining": 1,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01007101-67",
+      "section_id": "332457",
+      "offered": true,
+      "remaining": 27,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01009102-67",
+      "section_id": "335465",
+      "offered": true,
+      "remaining": 5,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01009102-67",
+      "section_id": "335490",
+      "offered": true,
+      "remaining": 0,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01015202-67",
+      "section_id": "335884",
+      "offered": true,
+      "remaining": 4,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01051121-67",
+      "section_id": "334095",
+      "offered": true,
+      "remaining": 15,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01051121-67",
+      "section_id": "338518",
+      "offered": true,
+      "remaining": 4,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01051121-67",
+      "section_id": "338353",
+      "offered": true,
+      "remaining": 5,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01101101-67",
+      "section_id": "323607",
+      "offered": true,
+      "remaining": 27,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01173151-67",
+      "section_id": "334848",
+      "offered": true,
+      "remaining": 18,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01174123-67",
+      "section_id": "334077",
+      "offered": true,
+      "remaining": 27,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01174123-67",
+      "section_id": "334076",
+      "offered": true,
+      "remaining": 26,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01174231-67",
+      "section_id": "334099",
+      "offered": true,
+      "remaining": 19,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01174231-67",
+      "section_id": "334098",
+      "offered": true,
+      "remaining": 18,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01174231-67",
+      "section_id": "334100",
+      "offered": true,
+      "remaining": 20,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01174231-67",
+      "section_id": "334116",
+      "offered": true,
+      "remaining": 6,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175111-67",
+      "section_id": "335236",
+      "offered": false,
+      "remaining": 16,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175112-67",
+      "section_id": "339059",
+      "offered": true,
+      "remaining": 29,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175112-67",
+      "section_id": "339061",
+      "offered": true,
+      "remaining": 1,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175112-67",
+      "section_id": "334129",
+      "offered": true,
+      "remaining": 19,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175112-67",
+      "section_id": "335212",
+      "offered": true,
+      "remaining": 22,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175112-67",
+      "section_id": "336034",
+      "offered": true,
+      "remaining": 4,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175112-67",
+      "section_id": "339062",
+      "offered": true,
+      "remaining": 2,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175112-67",
+      "section_id": "339060",
+      "offered": true,
+      "remaining": 0,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175112-67",
+      "section_id": "335876",
+      "offered": true,
+      "remaining": 26,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175112-67",
+      "section_id": "335875",
+      "offered": true,
+      "remaining": 25,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175112-67",
+      "section_id": "336058",
+      "offered": true,
+      "remaining": 28,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175112-67",
+      "section_id": "339267",
+      "offered": true,
+      "remaining": 27,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175112-67",
+      "section_id": "336035",
+      "offered": true,
+      "remaining": 5,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175114-67",
+      "section_id": "334135",
+      "offered": true,
+      "remaining": 25,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175114-67",
+      "section_id": "339063",
+      "offered": true,
+      "remaining": 3,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175114-67",
+      "section_id": "339064",
+      "offered": false,
+      "remaining": 4,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175114-67",
+      "section_id": "339065",
+      "offered": true,
+      "remaining": 5,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175114-67",
+      "section_id": "334134",
+      "offered": true,
+      "remaining": 24,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175114-67",
+      "section_id": "334137",
+      "offered": true,
+      "remaining": 27,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175114-67",
+      "section_id": "334136",
+      "offered": false,
+      "remaining": 26,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175114-67",
+      "section_id": "336634",
+      "offered": true,
+      "remaining": 4,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175114-67",
+      "section_id": "334133",
+      "offered": true,
+      "remaining": 23,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175114-67",
+      "section_id": "336670",
+      "offered": true,
+      "remaining": 10,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175117-67",
+      "section_id": "334184",
+      "offered": true,
+      "remaining": 14,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175117-67",
+      "section_id": "334183",
+      "offered": true,
+      "remaining": 13,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175117-67",
+      "section_id": "334181",
+      "offered": true,
+      "remaining": 11,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01175117-67",
+      "section_id": "334182",
+      "offered": true,
+      "remaining": 12,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355101-64",
+      "section_id": "333897",
+      "offered": true,
+      "remaining": 27,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355101-64",
+      "section_id": "333905",
+      "offered": false,
+      "remaining": 5,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355101-64",
+      "section_id": "338579",
+      "offered": true,
+      "remaining": 1,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355101-64",
+      "section_id": "338474",
+      "offered": true,
+      "remaining": 1,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355101-64",
+      "section_id": "334706",
+      "offered": true,
+      "remaining": 26,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355101-64",
+      "section_id": "338544",
+      "offered": true,
+      "remaining": 7,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355101-64",
+      "section_id": "338700",
+      "offered": true,
+      "remaining": 0,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355101-64",
+      "section_id": "338795",
+      "offered": true,
+      "remaining": 1,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355101-64",
+      "section_id": "338295",
+      "offered": true,
+      "remaining": 1,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355101-64",
+      "section_id": "338475",
+      "offered": true,
+      "remaining": 15,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355101-64",
+      "section_id": "334592",
+      "offered": true,
+      "remaining": 2,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355101-64",
+      "section_id": "334603",
+      "offered": true,
+      "remaining": 13,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355101-64",
+      "section_id": "335980",
+      "offered": true,
+      "remaining": 10,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355102-64",
+      "section_id": "338298",
+      "offered": true,
+      "remaining": 2,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355102-64",
+      "section_id": "339101",
+      "offered": true,
+      "remaining": 1,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355102-64",
+      "section_id": "335981",
+      "offered": true,
+      "remaining": 10,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355102-64",
+      "section_id": "335974",
+      "offered": true,
+      "remaining": 4,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355102-64",
+      "section_id": "338695",
+      "offered": true,
+      "remaining": 4,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355102-64",
+      "section_id": "334707",
+      "offered": true,
+      "remaining": 27,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355102-64",
+      "section_id": "334708",
+      "offered": false,
+      "remaining": 28,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355102-64",
+      "section_id": "334703",
+      "offered": true,
+      "remaining": 23,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355102-64",
+      "section_id": "338476",
+      "offered": true,
+      "remaining": 2,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355102-64",
+      "section_id": "334684",
+      "offered": true,
+      "remaining": 4,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355102-64",
+      "section_id": "338280",
+      "offered": true,
+      "remaining": 0,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355102-64",
+      "section_id": "336016",
+      "offered": true,
+      "remaining": 16,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355102-64",
+      "section_id": "333946",
+      "offered": true,
+      "remaining": 16,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355102-64",
+      "section_id": "333937",
+      "offered": true,
+      "remaining": 7,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355102-64",
+      "section_id": "334395",
+      "offered": true,
+      "remaining": 15,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355102-64",
+      "section_id": "338546",
+      "offered": true,
+      "remaining": 12,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355102-64",
+      "section_id": "338693",
+      "offered": true,
+      "remaining": 7,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355102-64",
+      "section_id": "338694",
+      "offered": true,
+      "remaining": 1,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355102-64",
+      "section_id": "334593",
+      "offered": true,
+      "remaining": 3,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355102-64",
+      "section_id": "334598",
+      "offered": false,
+      "remaining": 8,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355102-64",
+      "section_id": "338549",
+      "offered": true,
+      "remaining": 2,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355102-64",
+      "section_id": "338547",
+      "offered": false,
+      "remaining": 1,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355102-64",
+      "section_id": "338548",
+      "offered": true,
+      "remaining": 1,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355102-64",
+      "section_id": "334683",
+      "offered": true,
+      "remaining": 3,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334147",
+      "offered": false,
+      "remaining": 7,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "340694",
+      "offered": true,
+      "remaining": 1,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334113",
+      "offered": true,
+      "remaining": 3,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "335982",
+      "offered": true,
+      "remaining": 12,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334714",
+      "offered": true,
+      "remaining": 4,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334393",
+      "offered": true,
+      "remaining": 13,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334396",
+      "offered": true,
+      "remaining": 16,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334397",
+      "offered": true,
+      "remaining": 17,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334111",
+      "offered": true,
+      "remaining": 1,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334112",
+      "offered": true,
+      "remaining": 2,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334166",
+      "offered": true,
+      "remaining": 26,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334163",
+      "offered": true,
+      "remaining": 23,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334164",
+      "offered": true,
+      "remaining": 24,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334165",
+      "offered": true,
+      "remaining": 25,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334167",
+      "offered": true,
+      "remaining": 27,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "338479",
+      "offered": true,
+      "remaining": 19,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "338640",
+      "offered": true,
+      "remaining": 0,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "338647",
+      "offered": true,
+      "remaining": 7,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334105",
+      "offered": true,
+      "remaining": 25,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334106",
+      "offered": true,
+      "remaining": 26,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334169",
+      "offered": false,
+      "remaining": 29,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334695",
+      "offered": true,
+      "remaining": 15,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "338294",
+      "offered": false,
+      "remaining": 1,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334700",
+      "offered": true,
+      "remaining": 20,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "338920",
+      "offered": true,
+      "remaining": 1,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334712",
+      "offered": true,
+      "remaining": 2,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334716",
+      "offered": true,
+      "remaining": 6,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334725",
+      "offered": true,
+      "remaining": 15,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "335948",
+      "offered": true,
+      "remaining": 8,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "338250",
+      "offered": false,
+      "remaining": 0,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "338251",
+      "offered": true,
+      "remaining": 1,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "336021",
+      "offered": true,
+      "remaining": 21,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "336022",
+      "offered": true,
+      "remaining": 22,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "338500",
+      "offered": true,
+      "remaining": 10,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334704",
+      "offered": true,
+      "remaining": 24,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334404",
+      "offered": true,
+      "remaining": 24,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334715",
+      "offered": true,
+      "remaining": 5,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334713",
+      "offered": true,
+      "remaining": 3,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334149",
+      "offered": true,
+      "remaining": 9,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334670",
+      "offered": true,
+      "remaining": 20,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "338551",
+      "offered": true,
+      "remaining": 1,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334114",
+      "offered": false,
+      "remaining": 4,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334146",
+      "offered": true,
+      "remaining": 6,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334689",
+      "offered": true,
+      "remaining": 9,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334690",
+      "offered": true,
+      "remaining": 10,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334668",
+      "offered": true,
+      "remaining": 18,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "338793",
+      "offered": true,
+      "remaining": 1,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "338550",
+      "offered": true,
+      "remaining": 0,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334154",
+      "offered": true,
+      "remaining": 14,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334155",
+      "offered": true,
+      "remaining": 15,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334626",
+      "offered": true,
+      "remaining": 6,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "336141",
+      "offered": true,
+      "remaining": 20,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "338552",
+      "offered": true,
+      "remaining": 2,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334600",
+      "offered": true,
+      "remaining": 10,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334628",
+      "offered": true,
+      "remaining": 8,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "338281",
+      "offered": true,
+      "remaining": 1,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "338396",
+      "offered": true,
+      "remaining": 2,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "338397",
+      "offered": true,
+      "remaining": 2,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334627",
+      "offered": true,
+      "remaining": 7,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "338040",
+      "offered": true,
+      "remaining": 0,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334398",
+      "offered": true,
+      "remaining": 18,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334595",
+      "offered": true,
+      "remaining": 5,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334599",
+      "offered": true,
+      "remaining": 9,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334607",
+      "offered": true,
+      "remaining": 17,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334618",
+      "offered": true,
+      "remaining": 28,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334108",
+      "offered": true,
+      "remaining": 28,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334109",
+      "offered": true,
+      "remaining": 29,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334405",
+      "offered": true,
+      "remaining": 25,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "338792",
+      "offered": true,
+      "remaining": 1,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "338553",
+      "offered": true,
+      "remaining": 3,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334152",
+      "offered": true,
+      "remaining": 12,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334153",
+      "offered": true,
+      "remaining": 13,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334387",
+      "offered": true,
+      "remaining": 7,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334162",
+      "offered": true,
+      "remaining": 22,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334168",
+      "offered": true,
+      "remaining": 28,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "338049",
+      "offered": true,
+      "remaining": 9,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334160",
+      "offered": true,
+      "remaining": 20,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334161",
+      "offered": true,
+      "remaining": 21,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334151",
+      "offered": true,
+      "remaining": 11,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334148",
+      "offered": true,
+      "remaining": 8,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334150",
+      "offered": true,
+      "remaining": 10,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334156",
+      "offered": true,
+      "remaining": 16,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334157",
+      "offered": true,
+      "remaining": 17,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334158",
+      "offered": false,
+      "remaining": 18,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334379",
+      "offered": true,
+      "remaining": 29,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334380",
+      "offered": true,
+      "remaining": 0,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "338048",
+      "offered": true,
+      "remaining": 8,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "338478",
+      "offered": true,
+      "remaining": 18,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334159",
+      "offered": true,
+      "remaining": 19,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334107",
+      "offered": true,
+      "remaining": 27,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355103-67",
+      "section_id": "334110",
+      "offered": true,
+      "remaining": 0,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355104-67",
+      "section_id": "333952",
+      "offered": true,
+      "remaining": 22,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355104-67",
+      "section_id": "333953",
+      "offered": true,
+      "remaining": 23,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355104-67",
+      "section_id": "333954",
+      "offered": true,
+      "remaining": 24,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355104-67",
+      "section_id": "333969",
+      "offered": true,
+      "remaining": 9,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01355104-67",
+      "section_id": "333970",
+      "offered": true,
+      "remaining": 10,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "333908",
+      "offered": true,
+      "remaining": 8,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "333910",
+      "offered": true,
+      "remaining": 10,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "333935",
+      "offered": true,
+      "remaining": 5,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "338754",
+      "offered": true,
+      "remaining": 24,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "331791",
+      "offered": true,
+      "remaining": 21,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "331787",
+      "offered": true,
+      "remaining": 17,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "331792",
+      "offered": true,
+      "remaining": 22,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "331794",
+      "offered": true,
+      "remaining": 24,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "331790",
+      "offered": true,
+      "remaining": 20,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "331789",
+      "offered": true,
+      "remaining": 19,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "331788",
+      "offered": true,
+      "remaining": 18,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "331784",
+      "offered": true,
+      "remaining": 14,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "333927",
+      "offered": false,
+      "remaining": 27,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "333925",
+      "offered": true,
+      "remaining": 25,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "331796",
+      "offered": true,
+      "remaining": 26,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "331825",
+      "offered": true,
+      "remaining": 25,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "338751",
+      "offered": true,
+      "remaining": 21,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "338752",
+      "offered": true,
+      "remaining": 22,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "338755",
+      "offered": true,
+      "remaining": 25,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "333916",
+      "offered": false,
+      "remaining": 16,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "333917",
+      "offered": true,
+      "remaining": 17,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "333934",
+      "offered": true,
+      "remaining": 4,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "333936",
+      "offered": true,
+      "remaining": 6,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "331786",
+      "offered": true,
+      "remaining": 16,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "333932",
+      "offered": true,
+      "remaining": 2,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "333924",
+      "offered": true,
+      "remaining": 24,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "333926",
+      "offered": true,
+      "remaining": 26,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "333928",
+      "offered": true,
+      "remaining": 28,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "333929",
+      "offered": true,
+      "remaining": 29,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "333931",
+      "offered": true,
+      "remaining": 1,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "333933",
+      "offered": true,
+      "remaining": 3,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "331795",
+      "offered": true,
+      "remaining": 25,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "333923",
+      "offered": true,
+      "remaining": 23,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "333913",
+      "offered": true,
+      "remaining": 13,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "333922",
+      "offered": true,
+      "remaining": 22,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "333912",
+      "offered": true,
+      "remaining": 12,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "333911",
+      "offered": true,
+      "remaining": 11,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "338753",
+      "offered": true,
+      "remaining": 23,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "333920",
+      "offered": true,
+      "remaining": 20,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "333921",
+      "offered": true,
+      "remaining": 21,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "333918",
+      "offered": true,
+      "remaining": 18,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "333919",
+      "offered": true,
+      "remaining": 19,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "333930",
+      "offered": true,
+      "remaining": 0,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999021-67",
+      "section_id": "333909",
+      "offered": true,
+      "remaining": 9,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999032-67",
+      "section_id": "333619",
+      "offered": false,
+      "remaining": 19,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999032-67",
+      "section_id": "331830",
+      "offered": true,
+      "remaining": 0,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999032-67",
+      "section_id": "338780",
+      "offered": true,
+      "remaining": 20,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999032-67",
+      "section_id": "338781",
+      "offered": true,
+      "remaining": 21,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999032-67",
+      "section_id": "333618",
+      "offered": true,
+      "remaining": 18,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999033-67",
+      "section_id": "331770",
+      "offered": true,
+      "remaining": 0,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999033-67",
+      "section_id": "331771",
+      "offered": false,
+      "remaining": 1,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999033-67",
+      "section_id": "332525",
+      "offered": true,
+      "remaining": 5,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999033-67",
+      "section_id": "332526",
+      "offered": true,
+      "remaining": 6,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999033-67",
+      "section_id": "332527",
+      "offered": true,
+      "remaining": 7,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999033-67",
+      "section_id": "332528",
+      "offered": true,
+      "remaining": 8,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999033-67",
+      "section_id": "332529",
+      "offered": true,
+      "remaining": 9,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999033-67",
+      "section_id": "332530",
+      "offered": false,
+      "remaining": 10,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335661",
+      "offered": true,
+      "remaining": 21,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335516",
+      "offered": true,
+      "remaining": 26,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "338790",
+      "offered": true,
+      "remaining": 0,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "338788",
+      "offered": true,
+      "remaining": 28,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "338786",
+      "offered": true,
+      "remaining": 26,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335524",
+      "offered": true,
+      "remaining": 4,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335515",
+      "offered": true,
+      "remaining": 25,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335514",
+      "offered": true,
+      "remaining": 24,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "338789",
+      "offered": false,
+      "remaining": 29,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335511",
+      "offered": false,
+      "remaining": 21,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335513",
+      "offered": true,
+      "remaining": 23,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335512",
+      "offered": true,
+      "remaining": 22,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335662",
+      "offered": true,
+      "remaining": 22,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335546",
+      "offered": true,
+      "remaining": 26,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335652",
+      "offered": true,
+      "remaining": 12,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335654",
+      "offered": false,
+      "remaining": 14,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335651",
+      "offered": true,
+      "remaining": 11,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335545",
+      "offered": true,
+      "remaining": 25,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335541",
+      "offered": true,
+      "remaining": 21,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335527",
+      "offered": true,
+      "remaining": 7,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335534",
+      "offered": true,
+      "remaining": 14,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335540",
+      "offered": true,
+      "remaining": 20,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "339180",
+      "offered": true,
+      "remaining": 0,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335741",
+      "offered": true,
+      "remaining": 11,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335521",
+      "offered": true,
+      "remaining": 1,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335522",
+      "offered": false,
+      "remaining": 2,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335656",
+      "offered": true,
+      "remaining": 16,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335659",
+      "offered": true,
+      "remaining": 19,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335660",
+      "offered": true,
+      "remaining": 20,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "338785",
+      "offered": true,
+      "remaining": 25,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335657",
+      "offered": true,
+      "remaining": 17,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "338818",
+      "offered": true,
+      "remaining": 20,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335658",
+      "offered": true,
+      "remaining": 18,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335532",
+      "offered": true,
+      "remaining": 12,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335533",
+      "offered": false,
+      "remaining": 13,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335655",
+      "offered": true,
+      "remaining": 15,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335539",
+      "offered": true,
+      "remaining": 19,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335536",
+      "offered": true,
+      "remaining": 16,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335650",
+      "offered": true,
+      "remaining": 10,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "336429",
+      "offered": true,
+      "remaining": 9,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "338819",
+      "offered": true,
+      "remaining": 29,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "338787",
+      "offered": true,
+      "remaining": 25,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "339124",
+      "offered": true,
+      "remaining": 4,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "338784",
+      "offered": true,
+      "remaining": 24,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "336439",
+      "offered": true,
+      "remaining": 19,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335535",
+      "offered": true,
+      "remaining": 15,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335542",
+      "offered": true,
+      "remaining": 22,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335528",
+      "offered": true,
+      "remaining": 8,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335526",
+      "offered": true,
+      "remaining": 6,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335523",
+      "offered": true,
+      "remaining": 3,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335518",
+      "offered": true,
+      "remaining": 28,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335525",
+      "offered": true,
+      "remaining": 5,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335517",
+      "offered": true,
+      "remaining": 27,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335663",
+      "offered": true,
+      "remaining": 23,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335649",
+      "offered": true,
+      "remaining": 9,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335653",
+      "offered": true,
+      "remaining": 13,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335544",
+      "offered": false,
+      "remaining": 24,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335543",
+      "offered": true,
+      "remaining": 23,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335529",
+      "offered": true,
+      "remaining": 9,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335530",
+      "offered": true,
+      "remaining": 10,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335531",
+      "offered": true,
+      "remaining": 11,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335537",
+      "offered": true,
+      "remaining": 17,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335538",
+      "offered": true,
+      "remaining": 18,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335519",
+      "offered": true,
+      "remaining": 29,
+      "programs": [
+        "regular"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    },
+    {
+      "subject_code": "01999111-68",
+      "section_id": "335520",
+      "offered": true,
+      "remaining": 0,
+      "programs": [
+        "special"
+      ],
+      "eligibility_note": "จำลองเฉพาะประเภทภาคเรียน ยังขาดหลักสูตร วิชาบังคับก่อน ชั้นปี และโควตาจริง",
+      "status": "mock"
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+from chat import ChatRequest, ChatState, GEExport
 from schemas import (
     Conflict,
     Course,
@@ -28,6 +29,9 @@ if __name__ == "__main__":
         TimetableRequest,
         TimetableResponse,
         Conflict,
+        ChatRequest,
+        ChatState,
+        GEExport,
     ]:
         (destination / f"{schema.__name__}.schema.json").write_text(
             json.dumps(schema.model_json_schema(), indent=2) + "\n"
