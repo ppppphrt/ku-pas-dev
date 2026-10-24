@@ -9,6 +9,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import TopBar from "./components/TopBar";
 import { Loading } from "./components/ui";
 import CoursePage from "./pages/CoursePage";
+import ChatPage from "./pages/ChatPage";
 import CourseDetailPage from "./pages/CourseDetailPage";
 import TimetablePage from "./pages/TimetablePage";
 import AccountPage from "./pages/AccountPage";
@@ -80,6 +81,7 @@ function Workspace() {
             <TimetableNotice />
             <Routes>
               <Route path="/" element={<CoursePage metadata={metadata} />} />
+              <Route path="/chat" element={<ChatPage />} />
               <Route
                 path="/courses/:subjectCode"
                 element={<CourseDetailPage />}

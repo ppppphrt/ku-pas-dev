@@ -1,0 +1,172 @@
+{
+  "$defs": {
+    "GECourse": {
+      "additionalProperties": false,
+      "properties": {
+        "subject_code": {
+          "title": "Subject Code",
+          "type": "string"
+        },
+        "groups": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Groups",
+          "type": "array"
+        },
+        "competencies": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Competencies",
+          "type": "array"
+        },
+        "status": {
+          "default": "mock",
+          "enum": [
+            "mock",
+            "verified"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "subject_code"
+      ],
+      "title": "GECourse",
+      "type": "object"
+    },
+    "Offering": {
+      "additionalProperties": false,
+      "properties": {
+        "subject_code": {
+          "title": "Subject Code",
+          "type": "string"
+        },
+        "section_id": {
+          "title": "Section Id",
+          "type": "string"
+        },
+        "offered": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Offered"
+        },
+        "remaining": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Remaining"
+        },
+        "programs": {
+          "items": {
+            "enum": [
+              "regular",
+              "special"
+            ],
+            "type": "string"
+          },
+          "title": "Programs",
+          "type": "array"
+        },
+        "eligibility_note": {
+          "default": "\u0e22\u0e31\u0e07\u0e02\u0e32\u0e14\u0e40\u0e07\u0e37\u0e48\u0e2d\u0e19\u0e44\u0e02\u0e2b\u0e25\u0e31\u0e01\u0e2a\u0e39\u0e15\u0e23 \u0e27\u0e34\u0e0a\u0e32\u0e1a\u0e31\u0e07\u0e04\u0e31\u0e1a\u0e01\u0e48\u0e2d\u0e19 \u0e41\u0e25\u0e30\u0e42\u0e04\u0e27\u0e15\u0e32",
+          "maxLength": 1000,
+          "title": "Eligibility Note",
+          "type": "string"
+        },
+        "status": {
+          "default": "mock",
+          "enum": [
+            "mock",
+            "verified"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "subject_code",
+        "section_id"
+      ],
+      "title": "Offering",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "dataset_version": {
+      "title": "Dataset Version",
+      "type": "string"
+    },
+    "source_url": {
+      "title": "Source Url",
+      "type": "string"
+    },
+    "updated_at": {
+      "title": "Updated At",
+      "type": "string"
+    },
+    "academic_year": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Academic Year"
+    },
+    "semester": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Semester"
+    },
+    "courses": {
+      "items": {
+        "$ref": "#/$defs/GECourse"
+      },
+      "title": "Courses",
+      "type": "array"
+    },
+    "offerings": {
+      "items": {
+        "$ref": "#/$defs/Offering"
+      },
+      "title": "Offerings",
+      "type": "array"
+    }
+  },
+  "required": [
+    "dataset_version",
+    "source_url",
+    "updated_at",
+    "courses"
+  ],
+  "title": "GEExport",
+  "type": "object"
+}

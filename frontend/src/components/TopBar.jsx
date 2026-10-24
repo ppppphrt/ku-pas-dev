@@ -17,6 +17,7 @@ export default function TopBar() {
           Course Discovery
         </NavLink>
         <NavLink to="/timetable">Timetable Planner</NavLink>
+        <NavLink to="/chat">GE Chat</NavLink>
         <span className="account">
           {user ? (
             <>
