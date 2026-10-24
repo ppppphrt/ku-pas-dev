@@ -1,0 +1,267 @@
+{
+  "$defs": {
+    "Section": {
+      "additionalProperties": false,
+      "properties": {
+        "section_id": {
+          "title": "Section Id",
+          "type": "string"
+        },
+        "section_code": {
+          "title": "Section Code",
+          "type": "string"
+        },
+        "faculty": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Faculty"
+        },
+        "campus": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Campus"
+        },
+        "time_slots": {
+          "items": {
+            "$ref": "#/$defs/TimeSlot"
+          },
+          "title": "Time Slots",
+          "type": "array"
+        },
+        "schedule_complete": {
+          "default": false,
+          "title": "Schedule Complete",
+          "type": "boolean"
+        },
+        "schedule_note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Schedule Note"
+        },
+        "total_seat": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Total Seat"
+        },
+        "total_registered": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Total Registered"
+        }
+      },
+      "required": [
+        "section_id",
+        "section_code"
+      ],
+      "title": "Section",
+      "type": "object"
+    },
+    "TimeSlot": {
+      "additionalProperties": false,
+      "properties": {
+        "day": {
+          "enum": [
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri",
+            "Sat",
+            "Sun"
+          ],
+          "title": "Day",
+          "type": "string"
+        },
+        "start": {
+          "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+          "title": "Start",
+          "type": "string"
+        },
+        "end": {
+          "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+          "title": "End",
+          "type": "string"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Location"
+        }
+      },
+      "required": [
+        "day",
+        "start",
+        "end"
+      ],
+      "title": "TimeSlot",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "subject_code": {
+      "title": "Subject Code",
+      "type": "string"
+    },
+    "subject_name_th": {
+      "default": "",
+      "title": "Subject Name Th",
+      "type": "string"
+    },
+    "subject_name_en": {
+      "default": "",
+      "title": "Subject Name En",
+      "type": "string"
+    },
+    "subject_desc_th": {
+      "default": "",
+      "title": "Subject Desc Th",
+      "type": "string"
+    },
+    "subject_desc_en": {
+      "default": "",
+      "title": "Subject Desc En",
+      "type": "string"
+    },
+    "credits": {
+      "anyOf": [
+        {
+          "maximum": 100,
+          "minimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Credits"
+    },
+    "faculty": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Faculty"
+    },
+    "campus": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Campus"
+    },
+    "department": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Department"
+    },
+    "prerequisites": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Prerequisites"
+    },
+    "academic_year": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Academic Year"
+    },
+    "semester": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Semester"
+    },
+    "sections": {
+      "items": {
+        "$ref": "#/$defs/Section"
+      },
+      "title": "Sections",
+      "type": "array"
+    }
+  },
+  "required": [
+    "subject_code"
+  ],
+  "title": "Course",
+  "type": "object"
+}

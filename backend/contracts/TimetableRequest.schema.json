@@ -1,0 +1,43 @@
+{
+  "$defs": {
+    "TimetableRef": {
+      "additionalProperties": false,
+      "properties": {
+        "subject_code": {
+          "title": "Subject Code",
+          "type": "string"
+        },
+        "section_id": {
+          "title": "Section Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "subject_code",
+        "section_id"
+      ],
+      "title": "TimetableRef",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "dataset_version": {
+      "title": "Dataset Version",
+      "type": "string"
+    },
+    "items": {
+      "items": {
+        "$ref": "#/$defs/TimetableRef"
+      },
+      "maxItems": 100,
+      "title": "Items",
+      "type": "array"
+    }
+  },
+  "required": [
+    "dataset_version"
+  ],
+  "title": "TimetableRequest",
+  "type": "object"
+}

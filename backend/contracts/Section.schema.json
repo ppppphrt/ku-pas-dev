@@ -1,0 +1,140 @@
+{
+  "$defs": {
+    "TimeSlot": {
+      "additionalProperties": false,
+      "properties": {
+        "day": {
+          "enum": [
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri",
+            "Sat",
+            "Sun"
+          ],
+          "title": "Day",
+          "type": "string"
+        },
+        "start": {
+          "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+          "title": "Start",
+          "type": "string"
+        },
+        "end": {
+          "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+          "title": "End",
+          "type": "string"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Location"
+        }
+      },
+      "required": [
+        "day",
+        "start",
+        "end"
+      ],
+      "title": "TimeSlot",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "section_id": {
+      "title": "Section Id",
+      "type": "string"
+    },
+    "section_code": {
+      "title": "Section Code",
+      "type": "string"
+    },
+    "faculty": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Faculty"
+    },
+    "campus": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Campus"
+    },
+    "time_slots": {
+      "items": {
+        "$ref": "#/$defs/TimeSlot"
+      },
+      "title": "Time Slots",
+      "type": "array"
+    },
+    "schedule_complete": {
+      "default": false,
+      "title": "Schedule Complete",
+      "type": "boolean"
+    },
+    "schedule_note": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Schedule Note"
+    },
+    "total_seat": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Total Seat"
+    },
+    "total_registered": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Total Registered"
+    }
+  },
+  "required": [
+    "section_id",
+    "section_code"
+  ],
+  "title": "Section",
+  "type": "object"
+}

@@ -1,0 +1,62 @@
+{
+  "$defs": {
+    "TimetableRef": {
+      "additionalProperties": false,
+      "properties": {
+        "subject_code": {
+          "title": "Subject Code",
+          "type": "string"
+        },
+        "section_id": {
+          "title": "Section Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "subject_code",
+        "section_id"
+      ],
+      "title": "TimetableRef",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "first": {
+      "$ref": "#/$defs/TimetableRef"
+    },
+    "second": {
+      "$ref": "#/$defs/TimetableRef"
+    },
+    "day": {
+      "enum": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
+      ],
+      "title": "Day",
+      "type": "string"
+    },
+    "start": {
+      "title": "Start",
+      "type": "string"
+    },
+    "end": {
+      "title": "End",
+      "type": "string"
+    }
+  },
+  "required": [
+    "first",
+    "second",
+    "day",
+    "start",
+    "end"
+  ],
+  "title": "Conflict",
+  "type": "object"
+}

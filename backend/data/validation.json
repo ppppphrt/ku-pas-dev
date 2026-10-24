@@ -1,0 +1,101 @@
+{
+  "dataset_version": "nfc-whitespace-v1:b0d1dc6943076b15a4a5a9c94d03c024b2f30d0ab4c5a77efcdbec2d60953c21",
+  "updated_at": "2026-10-23T04:43:37.209622+00:00",
+  "source_file": "cur_m_cur_subject_2563_202605071501.csv",
+  "source_sha256": "8aaf51501caa0163a940fcdcd162b790d1faf9e4de2c7be8c50f87b0363bc267",
+  "normalization_version": "nfc-whitespace-v1",
+  "source_rows": 45039,
+  "prepared_rows": 45029,
+  "duplicates_removed": 10,
+  "rejected_rows": 0,
+  "unique_full_course_codes": 45028,
+  "unique_base_codes_exploratory": 21326,
+  "srs_expected_courses": 12456,
+  "difference_from_srs_full_codes": 32572,
+  "srs_count_confirmed": false,
+  "srs_note": "12,456 is quoted from the backlog; the SRS and its counting rules were not supplied.",
+  "missing_values_in_source": {
+    "subject_code": 0,
+    "subject_name_th": 0,
+    "subject_name_en": 41,
+    "subject_desc_th": 717,
+    "subject_desc_en": 793
+  },
+  "missing_schedule_columns": [
+    "credits",
+    "faculty",
+    "department",
+    "section_id",
+    "day",
+    "start_time",
+    "end_time"
+  ],
+  "duplicate_rows": [
+    {
+      "source_row": 7666,
+      "subject_code": "01003521-59"
+    },
+    {
+      "source_row": 11015,
+      "subject_code": "01002371-00"
+    },
+    {
+      "source_row": 11507,
+      "subject_code": "01007275-00"
+    },
+    {
+      "source_row": 27593,
+      "subject_code": "01140697-56"
+    },
+    {
+      "source_row": 27595,
+      "subject_code": "01140699-56"
+    },
+    {
+      "source_row": 31321,
+      "subject_code": "01542696-55"
+    },
+    {
+      "source_row": 38305,
+      "subject_code": "04821112-55"
+    },
+    {
+      "source_row": 38830,
+      "subject_code": "04804121-55"
+    },
+    {
+      "source_row": 40275,
+      "subject_code": "04804252-55"
+    },
+    {
+      "source_row": 40786,
+      "subject_code": "04804251-55"
+    }
+  ],
+  "rejections": [],
+  "conflicting_codes": {
+    "01009104-00": [
+      {
+        "source_row": 11962,
+        "record": {
+          "subject_code": "01009104-00",
+          "subject_name_th": "ปฐพีวิทยาสิ่งแวดล้อม",
+          "subject_name_en": "Environmental Soil Science",
+          "subject_desc_th": "ความสำคัญของดิน สมบัติของดินทางกายภาพ ทางเคมีและทางชีวภาพ อินทรียวัตถุในดินและจุลินทรีย์ ในดิน การอนุรักษ์ดินและน้ำ การประยุกต์สารสนเทศทางดินและสิ่งแวดล้อม การประเมินผลกระทบต่อสิ่งแวดล้อม",
+          "subject_desc_en": "Importance of soil, physical, chemical and biological soil properties, soil organic matter and soil microorganisms. Soil and water conservation. Applications of soil and environmental information. Environmental impact assessment."
+        }
+      },
+      {
+        "source_row": 13066,
+        "record": {
+          "subject_code": "01009104-00",
+          "subject_name_th": "ปฐพีวิทยาสิ่งแวดล้อม",
+          "subject_name_en": "Environmental Soil Science",
+          "subject_desc_th": "",
+          "subject_desc_en": ""
+        }
+      }
+    ]
+  },
+  "policy": "Deduplicate all five normalized fields. Preserve code suffixes and differing records; no inferred schedules or credits."
+}

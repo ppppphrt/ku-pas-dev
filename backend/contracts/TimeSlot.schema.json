@@ -1,0 +1,47 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "day": {
+      "enum": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
+      ],
+      "title": "Day",
+      "type": "string"
+    },
+    "start": {
+      "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+      "title": "Start",
+      "type": "string"
+    },
+    "end": {
+      "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+      "title": "End",
+      "type": "string"
+    },
+    "location": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Location"
+    }
+  },
+  "required": [
+    "day",
+    "start",
+    "end"
+  ],
+  "title": "TimeSlot",
+  "type": "object"
+}

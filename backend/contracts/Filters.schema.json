@@ -1,0 +1,94 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "faculty": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Faculty"
+    },
+    "min_credits": {
+      "anyOf": [
+        {
+          "maximum": 100,
+          "minimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Min Credits"
+    },
+    "max_credits": {
+      "anyOf": [
+        {
+          "maximum": 100,
+          "minimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Max Credits"
+    },
+    "days": {
+      "items": {
+        "enum": [
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri",
+          "Sat",
+          "Sun"
+        ],
+        "type": "string"
+      },
+      "title": "Days",
+      "type": "array"
+    },
+    "start_time": {
+      "anyOf": [
+        {
+          "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Start Time"
+    },
+    "end_time": {
+      "anyOf": [
+        {
+          "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "End Time"
+    },
+    "offered_only": {
+      "default": false,
+      "title": "Offered Only",
+      "type": "boolean"
+    }
+  },
+  "title": "Filters",
+  "type": "object"
+}
