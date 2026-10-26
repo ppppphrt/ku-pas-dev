@@ -1,5 +1,17 @@
 // UI messages only. Course data and filter identifiers retain their source values.
 export const messages = [
+  ["Your next chapter.", "เทอมใหม่ในแบบคุณ"],
+  ["Your kind of course.", "เริ่มจากวิชาที่ชอบ"],
+  [
+    "Find something you love learning. Build a timetable that leaves room for life.",
+    "ค้นหาวิชาที่อยากเรียน จัดตารางที่ลงตัว แล้วเหลือเวลาให้สิ่งที่ชอบ",
+  ],
+  [
+    "Not sure where to start? Try GE Chat",
+    "ยังไม่รู้จะเรียนอะไร? ลองคุยกับ GE Chat",
+  ],
+  ["A little curiosity goes a long way.", "ลองค้นหา แล้วเจอสิ่งที่ใช่"],
+
   ["Natural Resources and Agro-Industry", "ทรัพยากรธรรมชาติและอุตสาหกรรมเกษตร"],
   ["Business Administration", "บริหารธุรกิจ"],
   ["Fisheries", "ประมง"],

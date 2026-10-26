@@ -27,3 +27,7 @@ Changing language keeps the current route, drafts, filter values and timetable.
 Course names/descriptions use the selected source-language field and fall back
 to the other field if missing. Course codes and API/filter identifiers stay the
 same. The initial language is English if no valid preference is saved.
+
+### New UI branch
+
+`new-ui` uses a study-space theme inspired by the supplied education reference: a soft cyan canvas, rounded white surfaces, orange actions, and an original local SVG illustration. Discovery has a two-column course grid on wide screens and collapsible filters on mobile. On smaller screens, GE Chat puts the conversation before its preference controls. Language selection, canonical filter values, course selection, and saved timetables retain their existing behavior. All changes in this branch are contained in `frontend/`.

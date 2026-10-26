@@ -1,3 +1,5 @@
+import { useState } from "react";
+import Icon from "./Icon";
 import { useLanguage } from "../hooks/useLanguage";
 import { DAYS } from "../utils/timetable";
 export default function FiltersPanel({
@@ -8,15 +10,28 @@ export default function FiltersPanel({
   faculties,
 }) {
   const { t } = useLanguage();
+  const [expanded, setExpanded] = useState(false);
   const set = (key, value) =>
     onChange({
       ...values,
       [key]: value,
     });
   return (
-    <aside className="filters">
-      <h2>{t("Filters")}</h2>
+    <aside className={`filters ${expanded ? "filters-expanded" : ""}`}>
+      <button
+        className="filter-disclosure"
+        type="button"
+        aria-expanded={expanded}
+        aria-controls="discovery-filters"
+        onClick={() => setExpanded((value) => !value)}
+      >
+        <Icon name="filter" />
+        {t("Filters")}
+        <span aria-hidden="true">{expanded ? "−" : "+"}</span>
+      </button>
+      <h2 className="filter-title">{t("Filters")}</h2>
       <form
+        id="discovery-filters"
         onSubmit={(e) => {
           e.preventDefault();
           onApply();

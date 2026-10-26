@@ -341,7 +341,10 @@ it("switches the entire interface without losing the draft or canonical filters"
   await user.click(screen.getByLabelText("Mon", { exact: true }));
   await user.selectOptions(screen.getByLabelText("Language / ภาษา"), "th");
   expect(
-    screen.getByRole("heading", { name: "ค้นหารายวิชา", level: 1 }),
+    screen.getByRole("heading", {
+      name: /เทอมใหม่ในแบบคุณ.*เริ่มจากวิชาที่ชอบ/,
+      level: 1,
+    }),
   ).toBeInTheDocument();
   expect(document.documentElement.lang).toBe("th");
   expect(localStorage.getItem("ku-language")).toBe("th");
@@ -359,7 +362,10 @@ it("switches the entire interface without losing the draft or canonical filters"
   expect(window.location.search).toContain("days=Mon");
   await user.selectOptions(screen.getByLabelText("Language / ภาษา"), "en");
   expect(
-    screen.getByRole("heading", { name: "Course Discovery", level: 1 }),
+    screen.getByRole("heading", {
+      name: /Your next chapter.*Your kind of course/,
+      level: 1,
+    }),
   ).toBeInTheDocument();
   expect(screen.getByLabelText("Faculty")).toHaveValue("Science");
   expect(document.documentElement.lang).toBe("en");

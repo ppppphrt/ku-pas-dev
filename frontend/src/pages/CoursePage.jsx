@@ -1,6 +1,8 @@
+import studySpace from "../assets/study-space.svg";
+import Icon from "../components/Icon";
 import { useLanguage } from "../hooks/useLanguage";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { discover, errorMessage } from "../services/courseApi";
 import SearchBar from "../components/SearchBar";
 import CourseCard from "../components/CourseCard";
@@ -97,22 +99,54 @@ function Discovery({ params, setParams, metadata }) {
   return (
     <main id="main">
       <header className="page-header">
-        <p className="eyebrow">{t("Discover your next course")}</p>
-        <h1>{t("Course Discovery")}</h1>
-        <SearchBar
-          query={query}
-          mode={mode}
-          onSearch={search}
-          loading={loading}
-          semanticReady={metadata.semantic_ready}
-        />
-        {!metadata.semantic_ready && (
-          <p>
-            {t(
-              "Ask mode is unavailable while the semantic model is offline. Search by code or name.",
-            )}
-          </p>
-        )}
+        <div className="hero-main">
+          <div className="hero-copy">
+            <p className="eyebrow">{t("Discover your next course")}</p>
+            <h1>
+              {t("Your next chapter.")}
+              <br />
+              <span>{t("Your kind of course.")}</span>
+            </h1>
+            <p className="hero-description">
+              {t(
+                "Find something you love learning. Build a timetable that leaves room for life.",
+              )}
+            </p>
+            <Link className="hero-link" to="/chat">
+              <Icon name="chat" />
+              {t("Not sure where to start? Try GE Chat")}
+              <Icon name="arrow" />
+            </Link>
+          </div>
+          <img
+            className="hero-art"
+            src={studySpace}
+            alt=""
+            width="600"
+            height="430"
+          />
+        </div>
+        <div className="search-surface">
+          <div className="search-caption">
+            <Icon name="search" />
+            <h2>{t("Course Discovery")}</h2>
+            <span>{t("A little curiosity goes a long way.")}</span>
+          </div>
+          <SearchBar
+            query={query}
+            mode={mode}
+            onSearch={search}
+            loading={loading}
+            semanticReady={metadata.semantic_ready}
+          />
+          {!metadata.semantic_ready && (
+            <p>
+              {t(
+                "Ask mode is unavailable while the semantic model is offline. Search by code or name.",
+              )}
+            </p>
+          )}
+        </div>
       </header>
       <div className="body">
         <FiltersPanel
@@ -148,7 +182,7 @@ function Discovery({ params, setParams, metadata }) {
           )}
           {response && (
             <>
-              <p role="status">
+              <p className="results-summary" role="status">
                 {response.total_results.toLocaleString()}
                 {t(" courses · ")}
                 {active} {t("active filters · Page ")}

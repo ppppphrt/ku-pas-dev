@@ -17,6 +17,7 @@ import TimetablePage from "./pages/TimetablePage";
 import AccountPage from "./pages/AccountPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import "./App.css";
+import "./new-ui.css";
 function TimetableNotice() {
   const { t } = useLanguage();
   const { error } = useTimetable();
@@ -75,7 +76,7 @@ function Workspace() {
         </main>
       ) : (
         <>
-          <div className="notice">
+          <div className="notice dataset-notice">
             {t(
               "KU Drive course snapshot. Academic year and semester are unconfirmed. Sections with missing or invalid schedules cannot be added.",
             )}

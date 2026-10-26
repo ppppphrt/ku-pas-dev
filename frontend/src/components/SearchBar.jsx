@@ -1,3 +1,4 @@
+import Icon from "./Icon";
 import { useLanguage } from "../hooks/useLanguage";
 import { useState } from "react";
 export default function SearchBar({
@@ -50,6 +51,7 @@ export default function SearchBar({
       </label>
       <button className="primary" disabled={!input.trim() || loading}>
         {t("Search courses")}
+        <Icon name="arrow" />
       </button>
     </form>
   );

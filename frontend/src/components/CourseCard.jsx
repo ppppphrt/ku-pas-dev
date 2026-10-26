@@ -1,3 +1,4 @@
+import Icon from "./Icon";
 import { useLanguage } from "../hooks/useLanguage";
 import { Link } from "react-router-dom";
 import { Badge } from "./ui";
@@ -26,6 +27,9 @@ export default function CourseCard({ course, mode, query }) {
   return (
     <article className="course-card">
       <div className="course-heading">
+        <span className="course-symbol">
+          <Icon name="book" />
+        </span>
         <Badge>{course.subject_code}</Badge>
         {added && <Badge>{t("Already added")}</Badge>}
       </div>
@@ -75,6 +79,7 @@ export default function CourseCard({ course, mode, query }) {
         }}
       >
         {added ? t("View selected course") : t("Details and section selection")}
+        <Icon name="arrow" />
       </Link>
     </article>
   );

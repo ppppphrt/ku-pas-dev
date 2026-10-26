@@ -1,3 +1,4 @@
+import Icon from "./Icon";
 import { useLanguage } from "../hooks/useLanguage";
 import { NavLink, Link, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
@@ -13,13 +14,25 @@ export default function TopBar() {
       </a>
       <nav className="top-bar" aria-label={t("Main navigation")}>
         <Link className="logo" to="/">
+          <span className="logo-mark">
+            <Icon name="book" />
+          </span>{" "}
           KU-PAS
         </Link>
-        <NavLink to={discovery} end>
-          {t("Course Discovery")}
-        </NavLink>
-        <NavLink to="/timetable">{t("Timetable Planner")}</NavLink>
-        <NavLink to="/chat">{t("GE Chat")}</NavLink>
+        <div className="nav-links">
+          <NavLink to={discovery} end>
+            <Icon name="search" />
+            {t("Course Discovery")}
+          </NavLink>
+          <NavLink to="/timetable">
+            <Icon name="calendar" />
+            {t("Timetable Planner")}
+          </NavLink>
+          <NavLink to="/chat">
+            <Icon name="chat" />
+            {t("GE Chat")}
+          </NavLink>
+        </div>
         <label className="language-picker">
           <span>Language / ภาษา</span>
           <select
