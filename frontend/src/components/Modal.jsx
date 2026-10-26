@@ -1,6 +1,7 @@
+import { useLanguage } from "../hooks/useLanguage";
 import { useEffect, useRef } from "react";
-
 export default function Modal({ title, children, onClose }) {
+  const { t } = useLanguage();
   const ref = useRef(null);
   const close = useRef(onClose);
   useEffect(() => {
@@ -25,7 +26,7 @@ export default function Modal({ title, children, onClose }) {
     <dialog ref={ref} aria-labelledby="dialog-title">
       <h2 id="dialog-title">{title}</h2>
       {children}
-      <button onClick={onClose}>Close</button>
+      <button onClick={onClose}>{t("Close")}</button>
     </dialog>
   );
 }

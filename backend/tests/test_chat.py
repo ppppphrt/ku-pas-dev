@@ -200,3 +200,16 @@ def test_export_rejects_mismatched_snapshot_and_unknown_identity(tmp_path):
     path.write_text(json.dumps(payload))
     with pytest.raises(ValueError, match="Unknown GE course"):
         GEData(catalog, path)
+
+
+def test_english_ui_chat_preferences_keep_context():
+    first = local_parse("Interested in languages", ChatState())
+    assert first.interest == "ภาษา"
+    second = local_parse("Friday only 09:00-16:00", first)
+    assert second.days == ["Fri"]
+    assert second.start_time == "09:00"
+    assert second.end_time == "16:00"
+    assert second.interest == "ภาษา"
+    assert local_parse("any day", second).days == []
+    assert local_parse("regular program", second).program == "regular"
+    assert local_parse("Competencies 67, area 4", ChatState()).competency == 4

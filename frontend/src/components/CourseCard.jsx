@@ -1,3 +1,5 @@
+import Icon from "./Icon";
+import { useLanguage } from "../hooks/useLanguage";
 import { Link } from "react-router-dom";
 import { Badge } from "./ui";
 import { useTimetable } from "../hooks/useTimetable";
@@ -16,6 +18,7 @@ function Highlight({ text, query }) {
   );
 }
 export default function CourseCard({ course, mode, query }) {
+  const { t, courseText } = useLanguage();
   const { items } = useTimetable();
   const added = items.some(
     (item) => item.course.subject_code === course.subject_code,
@@ -24,37 +27,59 @@ export default function CourseCard({ course, mode, query }) {
   return (
     <article className="course-card">
       <div className="course-heading">
+        <span className="course-symbol">
+          <Icon name="book" />
+        </span>
         <Badge>{course.subject_code}</Badge>
-        {added && <Badge>Already added</Badge>}
+        {added && <Badge>{t("Already added")}</Badge>}
       </div>
       <h2>
-        <Link to={detailUrl} state={{ from: window.location.search }}>
+        <Link
+          to={detailUrl}
+          state={{
+            from: window.location.search,
+          }}
+        >
           <Highlight
-            text={course.subject_name_en || course.subject_name_th}
+            text={courseText(course, "name")}
             query={mode === "search" ? query : ""}
           />
         </Link>
       </h2>
-      <p lang="th">{course.subject_name_th}</p>
+      <p lang="th">
+        {course.subject_name_th !== courseText(course, "name")
+          ? course.subject_name_th
+          : null}
+      </p>
       <div className="badges">
-        <Badge>{course.credits ?? "Unknown"} credits</Badge>
-        <Badge>{course.faculty || "Faculty unavailable"}</Badge>
-        <Badge>{course.sections.length} sections</Badge>
+        <Badge>
+          {course.credits ?? t("Unknown")}
+          {t(" credits")}
+        </Badge>
+        <Badge>{t(course.faculty) || t("Faculty unavailable")}</Badge>
+        <Badge>
+          {course.sections.length}
+          {t(" sections")}
+        </Badge>
         {mode === "ask" && course.similarity_score != null && (
-          <Badge>{Math.round(course.similarity_score * 100)}% similarity</Badge>
+          <Badge>
+            {Math.round(course.similarity_score * 100)}
+            {t("% similarity")}
+          </Badge>
         )}
       </div>
       <p className="description">
-        {course.subject_desc_en ||
-          course.subject_desc_th ||
-          "No description available."}
+        {courseText(course, "description") || t("No description available.")}
       </p>
       <Link
         className="button"
         to={detailUrl}
-        state={{ from: window.location.search }}
+        state={{
+          from: window.location.search,
+        }}
       >
-        {added ? "View selected course" : "Details and section selection"}
+        {added ? t("View selected course") : t("Details and section selection")}
+        <Icon name="arrow" />
       </Link>
     </article>
   );

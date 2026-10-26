@@ -1,3 +1,5 @@
+import { LanguageProvider } from "./context/LanguageContext";
+import { useLanguage } from "./hooks/useLanguage";
 import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
@@ -15,18 +17,21 @@ import TimetablePage from "./pages/TimetablePage";
 import AccountPage from "./pages/AccountPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import "./App.css";
-
+import "./new-ui.css";
 function TimetableNotice() {
+  const { t } = useLanguage();
   const { error } = useTimetable();
   return (
     error && (
       <div className="notice error" role="alert">
-        {error} <Link to="/timetable">Review or clear saved timetable</Link>
+        {t(error)}{" "}
+        <Link to="/timetable">{t("Review or clear saved timetable")}</Link>
       </div>
     )
   );
 }
 function Workspace() {
+  const { t } = useLanguage();
   const { ready, user, notice } = useAuth();
   const [metadata, setMetadata] = useState(null);
   const [error, setError] = useState("");
@@ -34,45 +39,47 @@ function Workspace() {
   useEffect(() => {
     const controller = new AbortController();
     api
-      .get("/metadata", { signal: controller.signal })
+      .get("/metadata", {
+        signal: controller.signal,
+      })
       .then(({ data }) => setMetadata(data))
       .catch((e) => {
         if (e.code !== "ERR_CANCELED") setError(errorMessage(e));
       });
     return () => controller.abort();
   }, [retry]);
-  if (!ready) return <Loading text="Checking your session…" />;
+  if (!ready) return <Loading text={t("Checking your session…")} />;
   return (
     <>
       <TopBar />
       {notice && (
         <p className="notice" role="status">
-          {notice}
+          {t(notice)}
         </p>
       )}
       {error ? (
         <main id="main" className="container error" role="alert">
-          <h1>Unable to load the catalog</h1>
-          <p>{error}</p>
+          <h1>{t("Unable to load the catalog")}</h1>
+          <p>{t(error)}</p>
           <button
             onClick={() => {
               setError("");
               setRetry((n) => n + 1);
             }}
           >
-            Retry connection
+            {t("Retry connection")}
           </button>
         </main>
       ) : !metadata ? (
         <main id="main">
-          <Loading text="Loading the course catalog…" />
+          <Loading text={t("Loading the course catalog…")} />
         </main>
       ) : (
         <>
-          <div className="notice">
-            KU Drive course snapshot. Academic year and semester are
-            unconfirmed. Sections with missing or invalid schedules cannot be
-            added.
+          <div className="notice dataset-notice">
+            {t(
+              "KU Drive course snapshot. Academic year and semester are unconfirmed. Sections with missing or invalid schedules cannot be added.",
+            )}
           </div>
           <TimetableProvider
             key={`${metadata.dataset_version}:${user?.id || "guest"}`}
@@ -102,12 +109,14 @@ function Workspace() {
 }
 export default function App() {
   return (
-    <ErrorBoundary>
-      <AuthProvider>
-        <BrowserRouter>
-          <Workspace />
-        </BrowserRouter>
-      </AuthProvider>
-    </ErrorBoundary>
+    <LanguageProvider>
+      <ErrorBoundary>
+        <AuthProvider>
+          <BrowserRouter>
+            <Workspace />
+          </BrowserRouter>
+        </AuthProvider>
+      </ErrorBoundary>
+    </LanguageProvider>
   );
 }

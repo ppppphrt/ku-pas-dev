@@ -1,3 +1,6 @@
+import { useState } from "react";
+import Icon from "./Icon";
+import { useLanguage } from "../hooks/useLanguage";
 import { DAYS } from "../utils/timetable";
 export default function FiltersPanel({
   values,
@@ -6,25 +9,45 @@ export default function FiltersPanel({
   onReset,
   faculties,
 }) {
-  const set = (key, value) => onChange({ ...values, [key]: value });
+  const { t } = useLanguage();
+  const [expanded, setExpanded] = useState(false);
+  const set = (key, value) =>
+    onChange({
+      ...values,
+      [key]: value,
+    });
   return (
-    <aside className="filters">
-      <h2>Filters</h2>
+    <aside className={`filters ${expanded ? "filters-expanded" : ""}`}>
+      <button
+        className="filter-disclosure"
+        type="button"
+        aria-expanded={expanded}
+        aria-controls="discovery-filters"
+        onClick={() => setExpanded((value) => !value)}
+      >
+        <Icon name="filter" />
+        {t("Filters")}
+        <span aria-hidden="true">{expanded ? "−" : "+"}</span>
+      </button>
+      <h2 className="filter-title">{t("Filters")}</h2>
       <form
+        id="discovery-filters"
         onSubmit={(e) => {
           e.preventDefault();
           onApply();
         }}
       >
         <label>
-          Faculty
+          {t("Faculty")}
           <select
             value={values.faculty}
             onChange={(e) => set("faculty", e.target.value)}
           >
-            <option value="">All faculties</option>
+            <option value="">{t("All faculties")}</option>
             {faculties.map((faculty) => (
-              <option key={faculty}>{faculty}</option>
+              <option key={faculty} value={faculty}>
+                {t(faculty)}
+              </option>
             ))}
           </select>
         </label>
@@ -34,11 +57,11 @@ export default function FiltersPanel({
             checked={values.offered_only}
             onChange={(e) => set("offered_only", e.target.checked)}
           />{" "}
-          Has sections in this snapshot
+          {t("Has sections in this snapshot")}
         </label>
         <div className="field-pair">
           <label>
-            Min credits
+            {t("Min credits")}
             <input
               type="number"
               min="0"
@@ -49,7 +72,7 @@ export default function FiltersPanel({
             />
           </label>
           <label>
-            Max credits
+            {t("Max credits")}
             <input
               type="number"
               min="0"
@@ -61,13 +84,13 @@ export default function FiltersPanel({
           </label>
         </div>
         <fieldset>
-          <legend>Available days</legend>
+          <legend>{t("Available days")}</legend>
           <p className="hint">
-            Every meeting must fit the days and times you choose.
+            {t("Every meeting must fit the days and times you choose.")}
           </p>
           <div className="days">
             {DAYS.map((day) => (
-              <label key={day}>
+              <label key={t(day)}>
                 <input
                   type="checkbox"
                   checked={values.days.includes(day)}
@@ -80,13 +103,13 @@ export default function FiltersPanel({
                     )
                   }
                 />
-                {day}
+                {t(day)}
               </label>
             ))}
           </div>
         </fieldset>
         <label>
-          Earliest start
+          {t("Earliest start")}
           <input
             type="time"
             value={values.start_time}
@@ -94,16 +117,16 @@ export default function FiltersPanel({
           />
         </label>
         <label>
-          Latest end
+          {t("Latest end")}
           <input
             type="time"
             value={values.end_time}
             onChange={(e) => set("end_time", e.target.value)}
           />
         </label>
-        <button className="primary">Apply filters</button>
+        <button className="primary">{t("Apply filters")}</button>
         <button type="button" onClick={onReset}>
-          Reset filters
+          {t("Reset filters")}
         </button>
       </form>
     </aside>

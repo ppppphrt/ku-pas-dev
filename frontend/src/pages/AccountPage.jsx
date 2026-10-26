@@ -1,8 +1,10 @@
+import { useLanguage } from "../hooks/useLanguage";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { errorMessage } from "../services/courseApi";
 export default function AccountPage({ register = false }) {
+  const { t } = useLanguage();
   const { authenticate } = useAuth();
   const navigate = useNavigate();
   const [values, setValues] = useState({
@@ -16,7 +18,7 @@ export default function AccountPage({ register = false }) {
   function field(key, label, type = "text") {
     return (
       <label>
-        {label}
+        {t(label)}
         <input
           type={type}
           value={values[key]}
@@ -45,7 +47,12 @@ export default function AccountPage({ register = false }) {
           }
           pattern={key === "username" ? "[a-zA-Z0-9_.-]+" : undefined}
           required
-          onChange={(e) => setValues({ ...values, [key]: e.target.value })}
+          onChange={(e) =>
+            setValues({
+              ...values,
+              [key]: e.target.value,
+            })
+          }
         />
       </label>
     );
@@ -59,7 +66,10 @@ export default function AccountPage({ register = false }) {
     setBusy(true);
     setError("");
     try {
-      const body = { username: values.username, password: values.password };
+      const body = {
+        username: values.username,
+        password: values.password,
+      };
       if (register) body.email = values.email;
       await authenticate(register ? "register" : "login", body);
       navigate("/timetable");
@@ -72,26 +82,32 @@ export default function AccountPage({ register = false }) {
   return (
     <main id="main" className="account-page">
       <form className="account-card" onSubmit={submit}>
-        <h1>{register ? "Create account" : "Sign in"}</h1>
-        <p>Save a timetable to your local account.</p>
+        <h1>{register ? t("Create account") : t("Sign in")}</h1>
+        <p>{t("Save a timetable to your local account.")}</p>
         {field("username", "Username")}
         {register && field("email", "Email", "email")}
         {field("password", "Password (at least 10 characters)", "password")}
         {register && field("confirm", "Confirm password", "password")}
         {error && (
           <p className="error" role="alert">
-            {error}
+            {t(error)}
           </p>
         )}
         <button className="primary" disabled={busy}>
-          {busy ? "Please wait…" : register ? "Create account" : "Sign in"}
+          {busy
+            ? t("Please wait…")
+            : register
+              ? t("Create account")
+              : t("Sign in")}
         </button>
         <Link to={register ? "/login" : "/register"}>
-          {register ? "Already registered? Sign in" : "Create a new account"}
+          {register
+            ? t("Already registered? Sign in")
+            : t("Create a new account")}
         </Link>
-        <Link to="/">Continue as guest</Link>
+        <Link to="/">{t("Continue as guest")}</Link>
         <p className="hint">
-          Guest and account timetables are kept separately.
+          {t("Guest and account timetables are kept separately.")}
         </p>
       </form>
     </main>

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { api, errorMessage } from "../services/courseApi";
 import { AuthContext } from "./auth";
-
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [ready, setReady] = useState(!sessionStorage.getItem("ku-token"));
@@ -56,7 +55,15 @@ export function AuthProvider({ children }) {
     setNotice("Signed out. Your account timetable remains saved.");
   }
   return (
-    <AuthContext.Provider value={{ user, ready, notice, authenticate, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        ready,
+        notice,
+        authenticate,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

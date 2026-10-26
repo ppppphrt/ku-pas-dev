@@ -1,11 +1,13 @@
+import studySpace from "../assets/study-space.svg";
+import Icon from "../components/Icon";
+import { useLanguage } from "../hooks/useLanguage";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { discover, errorMessage } from "../services/courseApi";
 import SearchBar from "../components/SearchBar";
 import CourseCard from "../components/CourseCard";
 import FiltersPanel from "../components/FiltersPanel";
 import { EmptyState, Loading } from "../components/ui";
-
 const emptyFilters = {
   faculty: "",
   min_credits: "",
@@ -46,8 +48,9 @@ export default function CoursePage({ metadata }) {
   );
 }
 function Discovery({ params, setParams, metadata }) {
+  const { t } = useLanguage();
   const query = params.get("q") || "";
-  const mode = params.get("mode") === "ask" ? "ask" : "search";
+  const mode = "search";
   const page = Math.max(1, Number(params.get("page")) || 1);
   const [draft, setDraft] = useState(() => filterValues(params));
   const [response, setResponse] = useState(null);
@@ -73,10 +76,10 @@ function Discovery({ params, setParams, metadata }) {
   function update(next) {
     setParams(next);
   }
-  function search(value, chosenMode) {
+  function search(value) {
     const next = new URLSearchParams(params);
     next.set("q", value);
-    next.set("mode", chosenMode);
+    next.set("mode", mode);
     next.delete("page");
     update(next);
   }
@@ -96,21 +99,41 @@ function Discovery({ params, setParams, metadata }) {
   return (
     <main id="main">
       <header className="page-header">
-        <p className="eyebrow">Discover your next course</p>
-        <h1>Course Discovery</h1>
-        <SearchBar
-          query={query}
-          mode={mode}
-          onSearch={search}
-          loading={loading}
-          semanticReady={metadata.semantic_ready}
-        />
-        {!metadata.semantic_ready && (
-          <p>
-            Ask mode is unavailable while the semantic model is offline. Search
-            by code or name.
-          </p>
-        )}
+        <div className="hero-main">
+          <div className="hero-copy">
+            <p className="eyebrow">{t("Discover your next course")}</p>
+            <h1>
+              {t("Your next chapter.")}
+              <br />
+              <span>{t("Your kind of course.")}</span>
+            </h1>
+            <p className="hero-description">
+              {t(
+                "Find something you love learning. Build a timetable that leaves room for life.",
+              )}
+            </p>
+            <Link className="hero-link" to="/chat">
+              <Icon name="chat" />
+              {t("Not sure where to start? Try GE Chat")}
+              <Icon name="arrow" />
+            </Link>
+          </div>
+          <img
+            className="hero-art"
+            src={studySpace}
+            alt=""
+            width="600"
+            height="430"
+          />
+        </div>
+        <div className="search-surface">
+          <div className="search-caption">
+            <Icon name="search" />
+            <h2>{t("Course Discovery")}</h2>
+            <span>{t("A little curiosity goes a long way.")}</span>
+          </div>
+          <SearchBar query={query} onSearch={search} loading={loading} />
+        </div>
       </header>
       <div className="body">
         <FiltersPanel
@@ -127,32 +150,36 @@ function Discovery({ params, setParams, metadata }) {
         />
         <section
           className="courses"
-          aria-label="Course results"
+          aria-label={t("Course results")}
           aria-busy={loading}
         >
-          {loading && <Loading text="Finding courses…" />}
+          {loading && <Loading text={t("Finding courses…")} />}
           {error && (
             <div className="error" role="alert">
-              <p>{error}</p>
+              <p>{t(error)}</p>
               <button
                 onClick={() => {
                   setError("");
                   setRetry((v) => v + 1);
                 }}
               >
-                Retry
+                {t("Retry")}
               </button>
             </div>
           )}
           {response && (
             <>
-              <p role="status">
-                {response.total_results.toLocaleString()} courses · {active}{" "}
-                active filters · Page {page}
+              <p className="results-summary" role="status">
+                {response.total_results.toLocaleString()}
+                {t(" courses · ")}
+                {active} {t("active filters · Page ")}
+                {page}
               </p>
               {!response.results.length && (
                 <EmptyState>
-                  No courses match. Try another query or reset your filters.
+                  {t(
+                    "No courses match. Try another query or reset your filters.",
+                  )}
                 </EmptyState>
               )}
               {response.results.map((course) => (
@@ -172,7 +199,7 @@ function Discovery({ params, setParams, metadata }) {
                     update(next);
                   }}
                 >
-                  Previous page
+                  {t("Previous page")}
                 </button>
                 <button
                   disabled={!response.has_more}
@@ -182,7 +209,7 @@ function Discovery({ params, setParams, metadata }) {
                     update(next);
                   }}
                 >
-                  Next page
+                  {t("Next page")}
                 </button>
               </div>
             </>

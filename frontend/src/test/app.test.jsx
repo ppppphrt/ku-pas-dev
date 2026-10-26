@@ -230,6 +230,7 @@ it("allows explicit recovery from damaged saved data", async () => {
 });
 
 it("chats with context, labels mocks and shares the existing timetable", async () => {
+  localStorage.setItem("ku-language", "th");
   const requests = [];
   server.use(
     http.post(`${root}/chat`, async ({ request }) => {
@@ -302,10 +303,11 @@ it("chats with context, labels mocks and shares the existing timetable", async (
     JSON.parse(localStorage.getItem("ku-timetable-v2")).items,
   ).toHaveLength(1);
   await user.click(screen.getByRole("link", { name: /ดูตารางของฉัน/ }));
-  await screen.findByText("1 courses");
+  await screen.findByText("1 วิชา");
 });
 
 it("keeps the chat draft after an API error so the user can retry", async () => {
+  localStorage.setItem("ku-language", "th");
   server.use(
     http.post(`${root}/chat`, () =>
       HttpResponse.json(
@@ -325,4 +327,108 @@ it("keeps the chat draft after an API error so the user can retry", async () => 
   await screen.findByText(/Chat unavailable/);
   expect(input).toHaveValue("สนใจภาษา");
   expect(send).toBeEnabled();
+});
+
+it("switches the entire interface without losing the draft or canonical filters", async () => {
+  const user = userEvent.setup();
+  render(<App />);
+  await screen.findByRole("link", { name: "Programming", exact: true });
+  await user.type(
+    screen.getByRole("textbox", { name: "Course search" }),
+    "Programming",
+  );
+  await user.selectOptions(screen.getByLabelText("Faculty"), "Science");
+  await user.click(screen.getByLabelText("Mon", { exact: true }));
+  await user.click(screen.getByRole("button", { name: "ไทย", exact: true }));
+  expect(
+    screen.getByRole("heading", {
+      name: /เทอมใหม่ในแบบคุณ.*เริ่มจากวิชาที่ชอบ/,
+      level: 1,
+    }),
+  ).toBeInTheDocument();
+  expect(document.documentElement.lang).toBe("th");
+  expect(localStorage.getItem("ku-language")).toBe("th");
+  expect(screen.getByLabelText("คณะ")).toHaveValue("Science");
+  expect(
+    screen.getByRole("checkbox", { name: "จันทร์", exact: true }),
+  ).toBeChecked();
+  expect(screen.getByRole("textbox", { name: "ค้นหารายวิชา" })).toHaveValue(
+    "Programming",
+  );
+  await user.click(screen.getByRole("button", { name: "ใช้ตัวกรอง" }));
+  await waitFor(() =>
+    expect(window.location.search).toContain("faculty=Science"),
+  );
+  expect(window.location.search).toContain("days=Mon");
+  await user.click(
+    screen.getByRole("button", { name: "English", exact: true }),
+  );
+  expect(
+    screen.getByRole("heading", {
+      name: /Your next chapter.*Your kind of course/,
+      level: 1,
+    }),
+  ).toBeInTheDocument();
+  expect(screen.getByLabelText("Faculty")).toHaveValue("Science");
+  expect(document.documentElement.lang).toBe("en");
+});
+
+it("retains a saved timetable and language after remounting the app", async () => {
+  const user = userEvent.setup();
+  render(<App />);
+  await openCourse(user, "Programming");
+  await screen.findByText("Section added to your timetable.");
+  await user.click(screen.getByRole("button", { name: "ไทย", exact: true }));
+  expect(
+    screen.getByRole("heading", { name: "วิชาทดสอบ", level: 1 }),
+  ).toBeInTheDocument();
+  expect(
+    screen.getByRole("button", { name: "เพิ่มในตารางแล้ว" }),
+  ).toBeDisabled();
+  expect(screen.getByText("เพิ่มหมู่เรียนลงตารางแล้ว")).toBeInTheDocument();
+  await user.click(
+    screen.getByRole("link", { name: "จัดตารางเรียน", exact: true }),
+  );
+  expect(await screen.findByText("1 วิชา")).toBeInTheDocument();
+  expect(
+    screen.getByText("3 หน่วยกิต", { selector: "strong" }),
+  ).toBeInTheDocument();
+  expect(screen.getAllByText(/จันทร์/).length).toBeGreaterThan(0);
+  cleanup();
+  render(<App />);
+  await screen.findByText("1 วิชา");
+  expect(
+    screen.getByRole("button", { name: "ไทย", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await user.click(
+    screen.getByRole("button", { name: "English", exact: true }),
+  );
+  expect(screen.getByText("1 courses")).toBeInTheDocument();
+  expect(
+    screen.getByRole("link", { name: "Programming", exact: true }),
+  ).toBeInTheDocument();
+});
+
+it("localizes chat controls while preserving the user's exact draft", async () => {
+  window.history.replaceState({}, "", "/chat");
+  const user = userEvent.setup();
+  render(<App />);
+  const input = await screen.findByLabelText("Ask about GE courses");
+  await user.type(input, "สนใจภาษา");
+  expect(input).toHaveValue("สนใจภาษา");
+  await user.selectOptions(screen.getByLabelText("GE curriculum"), "64");
+  await user.selectOptions(
+    screen.getByLabelText("GE group"),
+    "ภาษากับการสื่อสาร",
+  );
+  expect(
+    screen.getByRole("option", { name: "Language and communication" }),
+  ).toHaveValue("ภาษากับการสื่อสาร");
+  await user.click(screen.getByRole("button", { name: "ไทย", exact: true }));
+  expect(screen.getByLabelText("ถามเรื่องรายวิชา GE")).toHaveValue("สนใจภาษา");
+  expect(screen.getByLabelText("กลุ่มสาระ")).toHaveValue("ภาษากับการสื่อสาร");
+  await user.click(
+    screen.getByRole("button", { name: "English", exact: true }),
+  );
+  expect(screen.getByLabelText("Ask about GE courses")).toHaveValue("สนใจภาษา");
 });

@@ -130,13 +130,24 @@ def local_parse(message, previous):
     text = message.lower().strip()
     days = [code for name, code in DAYS.items() if name in text]
     days += [d for d in DAYS.values() if re.search(rf"\b{d.lower()}\b", text)]
+    english_days = dict(
+        zip(
+            ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
+            DAYS.values(),
+            strict=True,
+        )
+    )
+    days += [code for name, code in english_days.items() if re.search(rf"\b{name}\b", text)]
     if days:
-        if any(term in text for term in ["ไม่ว่าง", "ไม่เอาวัน", "ยกเว้น"]):
+        if any(
+            term in text
+            for term in ["ไม่ว่าง", "ไม่เอาวัน", "ยกเว้น", "except", "not available", "not on"]
+        ):
             data["days"] = [d for d in DAYS.values() if d not in days]
         else:
             data["days"] = list(dict.fromkeys(days))
-    if "ทุกวัน" in text:
-        if "ยกเว้น" not in text:
+    if any(term in text for term in ["ทุกวัน", "any day", "every day"]):
+        if not any(term in text for term in ["ยกเว้น", "except"]):
             data["days"] = []
     times = re.findall(r"(?<!\d)([01]?\d|2[0-3])[:.]([0-5]\d)(?!\d)", text)
     if times:
@@ -144,15 +155,15 @@ def local_parse(message, previous):
         data["end_time"] = f"{int(times[1][0]):02}:{times[1][1]}" if len(times) > 1 else None
         if len(times) == 1 and any(t in text for t in ["ก่อน", "ไม่เกิน", "before"]):
             data["end_time"], data["start_time"] = data["start_time"], None
-    if "ทุกเวลา" in text:
+    if "ทุกเวลา" in text or "any time" in text:
         data["start_time"] = data["end_time"] = None
-    if "ตอนเช้า" in text:
+    if "ตอนเช้า" in text or "morning" in text:
         data.update(start_time="08:00", end_time="12:00")
-    if "ตอนบ่าย" in text:
+    if "ตอนบ่าย" in text or "afternoon" in text:
         data.update(start_time="12:00", end_time="17:00")
-    if re.search(r"(?:หลักสูตร|กลุ่มสาระ)\s*(?:25)?64", text):
+    if re.search(r"(?:หลักสูตร|กลุ่มสาระ|curriculum|ge groups?|groups?)\s*(?:25)?64", text):
         data.update(curriculum="64", competency=None)
-    if re.search(r"(?:หลักสูตร|สมรรถนะ)\s*(?:25)?67", text):
+    if re.search(r"(?:หลักสูตร|สมรรถนะ|curriculum|competencies)\s*(?:25)?67", text):
         data.update(curriculum="67", group=None)
     category_named = False
     for group in GROUPS:
@@ -166,16 +177,37 @@ def local_parse(message, previous):
     match = re.search(r"สมรรถนะ(?:\s*67)?(?:\s*(?:ที่|ด้าน))?\s*([1-8])(?!\d)", text)
     if match:
         data.update(competency=int(match[1]), curriculum="67", group=None)
-    if "ภาคปกติ" in text:
+    english_competency = re.search(
+        r"competenc(?:y|ies)(?:\s*67)?(?:[,\s]*(?:area|number))?\s*([1-8])(?!\d)", text
+    )
+    if english_competency:
+        data.update(competency=int(english_competency[1]), curriculum="67", group=None)
+    if "ภาคปกติ" in text or "regular program" in text:
         data["program"] = "regular"
-    if "ภาคพิเศษ" in text:
+    if "ภาคพิเศษ" in text or "special program" in text:
         data["program"] = "special"
     credit = re.search(r"(\d+(?:\.\d+)?)\s*หน่วยกิต", text)
     if credit:
         data["min_credits"] = data["max_credits"] = float(credit[1])
     code = re.search(r"\b\d{8}(?:-\d{2})?\b", text)
     topic = next((t for t in TOPICS if t in text), None)
-    interest = re.search(r"(?:สนใจ|อยากเรียน|ค้นหา|เกี่ยวกับ|search)\s*(.+)", text)
+    english_topics = {
+        "languages?": "ภาษา",
+        "english": "อังกฤษ",
+        "business": "ธุรกิจ",
+        "technology": "เทคโนโลยี",
+        "health": "สุขภาพ",
+        "art": "ศิลปะ",
+        "environment": "สิ่งแวดล้อม",
+    }
+    topic = topic or next(
+        (value for pattern, value in english_topics.items() if re.search(rf"\b{pattern}\b", text)),
+        None,
+    )
+    interest = re.search(
+        r"(?:สนใจ|อยากเรียน|ค้นหา|เกี่ยวกับ|interested in|want to learn|want to study|find|search)\s*(.+)",
+        text,
+    )
     if code:
         data["interest"] = code[0]
     elif topic and not category_named:
@@ -199,6 +231,12 @@ def local_parse(message, previous):
             "ภาค" in text,
             "ตอนเช้า" in text,
             "ตอนบ่าย" in text,
+            "morning" in text,
+            "afternoon" in text,
+            "program" in text,
+            "any day" in text,
+            "any time" in text,
+            bool(english_competency),
         ]
     ):
         if not any(
