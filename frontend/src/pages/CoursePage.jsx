@@ -50,7 +50,7 @@ export default function CoursePage({ metadata }) {
 function Discovery({ params, setParams, metadata }) {
   const { t } = useLanguage();
   const query = params.get("q") || "";
-  const mode = params.get("mode") === "ask" ? "ask" : "search";
+  const mode = "search";
   const page = Math.max(1, Number(params.get("page")) || 1);
   const [draft, setDraft] = useState(() => filterValues(params));
   const [response, setResponse] = useState(null);
@@ -76,10 +76,10 @@ function Discovery({ params, setParams, metadata }) {
   function update(next) {
     setParams(next);
   }
-  function search(value, chosenMode) {
+  function search(value) {
     const next = new URLSearchParams(params);
     next.set("q", value);
-    next.set("mode", chosenMode);
+    next.set("mode", mode);
     next.delete("page");
     update(next);
   }
@@ -132,20 +132,7 @@ function Discovery({ params, setParams, metadata }) {
             <h2>{t("Course Discovery")}</h2>
             <span>{t("A little curiosity goes a long way.")}</span>
           </div>
-          <SearchBar
-            query={query}
-            mode={mode}
-            onSearch={search}
-            loading={loading}
-            semanticReady={metadata.semantic_ready}
-          />
-          {!metadata.semantic_ready && (
-            <p>
-              {t(
-                "Ask mode is unavailable while the semantic model is offline. Search by code or name.",
-              )}
-            </p>
-          )}
+          <SearchBar query={query} onSearch={search} loading={loading} />
         </div>
       </header>
       <div className="body">

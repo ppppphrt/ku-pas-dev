@@ -976,3 +976,48 @@ html[lang="th"] h1 {
     order: -1;
   }
 }
+
+.language-switch {
+  display: inline-flex;
+  flex-shrink: 0;
+  gap: 3px;
+  padding: 4px;
+  border: 1px solid #284b70;
+  border-radius: 999px;
+  background: #172f4b;
+}
+.language-switch button {
+  min-height: 38px;
+  padding: 6px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #c0cfdf;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.language-switch button:hover {
+  background: #25466b;
+  color: #fff;
+}
+.language-switch button[aria-pressed="true"] {
+  background: #244d78;
+  color: #70e2f1;
+}
+.language-switch button:focus-visible {
+  outline-color: #f5ab21;
+}
+@media (max-width: 540px) {
+  .top-bar {
+    column-gap: 8px;
+  }
+  .language-switch {
+    padding: 3px;
+    gap: 0;
+  }
+  .language-switch button {
+    padding: 6px 10px;
+    min-height: 38px;
+    font-size: 0.75rem;
+  }
+}

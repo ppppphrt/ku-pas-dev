@@ -33,21 +33,28 @@ export default function TopBar() {
             {t("GE Chat")}
           </NavLink>
         </div>
-        <label className="language-picker">
-          <span>Language / ภาษา</span>
-          <select
-            aria-label="Language / ภาษา"
-            value={language}
-            onChange={(event) => setLanguage(event.target.value)}
+        <div
+          className="language-switch"
+          role="group"
+          aria-label="Language / ภาษา"
+        >
+          <button
+            type="button"
+            lang="th"
+            aria-pressed={language === "th"}
+            onClick={() => setLanguage("th")}
           >
-            <option value="en" lang="en">
-              English
-            </option>
-            <option value="th" lang="th">
-              ภาษาไทย
-            </option>
-          </select>
-        </label>
+            ไทย
+          </button>
+          <button
+            type="button"
+            lang="en"
+            aria-pressed={language === "en"}
+            onClick={() => setLanguage("en")}
+          >
+            English
+          </button>
+        </div>
         <span className="account">
           {user ? (
             <>

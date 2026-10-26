@@ -339,7 +339,7 @@ it("switches the entire interface without losing the draft or canonical filters"
   );
   await user.selectOptions(screen.getByLabelText("Faculty"), "Science");
   await user.click(screen.getByLabelText("Mon", { exact: true }));
-  await user.selectOptions(screen.getByLabelText("Language / ภาษา"), "th");
+  await user.click(screen.getByRole("button", { name: "ไทย", exact: true }));
   expect(
     screen.getByRole("heading", {
       name: /เทอมใหม่ในแบบคุณ.*เริ่มจากวิชาที่ชอบ/,
@@ -360,7 +360,9 @@ it("switches the entire interface without losing the draft or canonical filters"
     expect(window.location.search).toContain("faculty=Science"),
   );
   expect(window.location.search).toContain("days=Mon");
-  await user.selectOptions(screen.getByLabelText("Language / ภาษา"), "en");
+  await user.click(
+    screen.getByRole("button", { name: "English", exact: true }),
+  );
   expect(
     screen.getByRole("heading", {
       name: /Your next chapter.*Your kind of course/,
@@ -376,7 +378,7 @@ it("retains a saved timetable and language after remounting the app", async () =
   render(<App />);
   await openCourse(user, "Programming");
   await screen.findByText("Section added to your timetable.");
-  await user.selectOptions(screen.getByLabelText("Language / ภาษา"), "th");
+  await user.click(screen.getByRole("button", { name: "ไทย", exact: true }));
   expect(
     screen.getByRole("heading", { name: "วิชาทดสอบ", level: 1 }),
   ).toBeInTheDocument();
@@ -395,8 +397,12 @@ it("retains a saved timetable and language after remounting the app", async () =
   cleanup();
   render(<App />);
   await screen.findByText("1 วิชา");
-  expect(screen.getByLabelText("Language / ภาษา")).toHaveValue("th");
-  await user.selectOptions(screen.getByLabelText("Language / ภาษา"), "en");
+  expect(
+    screen.getByRole("button", { name: "ไทย", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await user.click(
+    screen.getByRole("button", { name: "English", exact: true }),
+  );
   expect(screen.getByText("1 courses")).toBeInTheDocument();
   expect(
     screen.getByRole("link", { name: "Programming", exact: true }),
@@ -418,9 +424,11 @@ it("localizes chat controls while preserving the user's exact draft", async () =
   expect(
     screen.getByRole("option", { name: "Language and communication" }),
   ).toHaveValue("ภาษากับการสื่อสาร");
-  await user.selectOptions(screen.getByLabelText("Language / ภาษา"), "th");
+  await user.click(screen.getByRole("button", { name: "ไทย", exact: true }));
   expect(screen.getByLabelText("ถามเรื่องรายวิชา GE")).toHaveValue("สนใจภาษา");
   expect(screen.getByLabelText("กลุ่มสาระ")).toHaveValue("ภาษากับการสื่อสาร");
-  await user.selectOptions(screen.getByLabelText("Language / ภาษา"), "en");
+  await user.click(
+    screen.getByRole("button", { name: "English", exact: true }),
+  );
   expect(screen.getByLabelText("Ask about GE courses")).toHaveValue("สนใจภาษา");
 });
