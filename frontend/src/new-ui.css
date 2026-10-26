@@ -982,9 +982,9 @@ html[lang="th"] h1 {
   flex-shrink: 0;
   gap: 3px;
   padding: 4px;
-  border: 1px solid #284b70;
+  border: 1px solid var(--line);
   border-radius: 999px;
-  background: #172f4b;
+  background: #e8f3f4;
 }
 .language-switch button {
   min-height: 38px;
@@ -992,20 +992,20 @@ html[lang="th"] h1 {
   border: 0;
   border-radius: 999px;
   background: transparent;
-  color: #c0cfdf;
+  color: var(--teal);
   font-size: 0.85rem;
   font-weight: 700;
 }
 .language-switch button:hover {
-  background: #25466b;
-  color: #fff;
+  background: #d9ecee;
+  color: #205d64;
 }
 .language-switch button[aria-pressed="true"] {
-  background: #244d78;
-  color: #70e2f1;
+  background: var(--orange);
+  color: #33290f;
 }
 .language-switch button:focus-visible {
-  outline-color: #f5ab21;
+  outline-color: #297b96;
 }
 @media (max-width: 540px) {
   .top-bar {
