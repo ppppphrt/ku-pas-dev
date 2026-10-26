@@ -6,7 +6,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { TimetableProvider } from "./context/TimetableContext";
 import { useAuth } from "./hooks/useAuth";
 import { useTimetable } from "./hooks/useTimetable";
-import { api, errorMessage } from "./services/courseApi";
+import { api, errorMessage, DEMO_MODE } from "./services/courseApi";
 import ErrorBoundary from "./components/ErrorBoundary";
 import TopBar from "./components/TopBar";
 import { Loading } from "./components/ui";
@@ -76,6 +76,13 @@ function Workspace() {
         </main>
       ) : (
         <>
+          {DEMO_MODE && (
+            <div className="notice" role="status">
+              {t(
+                "Demo timetables are saved in this browser. Accounts are unavailable.",
+              )}
+            </div>
+          )}
           <div className="notice dataset-notice">
             {t(
               "KU Drive course snapshot. Academic year and semester are unconfirmed. Sections with missing or invalid schedules cannot be added.",

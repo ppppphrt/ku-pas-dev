@@ -1,4 +1,9 @@
-# KU-PAS local MVP
+# KU-PAS MVP
+
+## Public demo บน Vercel
+
+รวมงาน GE Chat, ไทย/อังกฤษ และ UI ล่าสุดเข้า `main` แล้ว ตั้งค่า deploy จากราก repository ตาม [คู่มือ Vercel demo](docs/VERCEL-DEMO.md) เปิดฟีเจอร์หลักแบบ Guest และเก็บตารางใน browser โดยปิดบัญชีเฉพาะ public demo
+
 
 ## GE Chat — branch `gened-regis`
 
@@ -36,7 +41,7 @@ Windows/Linux ใช้ `python run_local.py` หรือ `python3 run_local.py
 
 ## ทดลองฟีเจอร์หลัก
 
-1. ค้นหารหัส `01001241-64` หรือค้นหาชื่อวิชา เลือก **Ask** เพื่อค้นหาด้วยภาษาธรรมชาติเมื่อโมเดลพร้อม
+1. ค้นหารหัส `01001241-64` หรือค้นหาชื่อวิชา
 2. กรองคณะ หน่วยกิต วัน และช่วงเวลา แล้วกด **Apply filters** ทุกคาบในหมู่ที่ตรงเงื่อนไขต้องอยู่ในวัน/เวลาที่อนุญาต
 3. เปิด **Details and section selection** เลือกหมู่ที่มีตารางครบ แล้วกด **Add selected section**
 4. เปิด **Timetable Planner** ตรวจจำนวนวิชา หน่วยกิต และคาบเรียน รีเฟรชหน้าเพื่อทดสอบการบันทึก

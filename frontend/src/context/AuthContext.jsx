@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import { api, errorMessage } from "../services/courseApi";
+import { api, errorMessage, DEMO_MODE } from "../services/courseApi";
 import { AuthContext } from "./auth";
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [ready, setReady] = useState(!sessionStorage.getItem("ku-token"));
+  const [ready, setReady] = useState(
+    DEMO_MODE || !sessionStorage.getItem("ku-token"),
+  );
   const [notice, setNotice] = useState("");
   useEffect(() => {
     let active = true;
-    if (sessionStorage.getItem("ku-token"))
+    if (!DEMO_MODE && sessionStorage.getItem("ku-token"))
       api
         .get("/auth/me")
         .then(({ data }) => {

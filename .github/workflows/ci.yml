@@ -16,7 +16,7 @@ jobs:
           cache: pip
           cache-dependency-path: backend/requirements*.txt
       - run: pip install -r requirements.txt -r requirements-dev.txt
-      - run: ruff check .
+      - run: ruff check . ../app.py
       - run: pytest -q
   frontend:
     runs-on: ubuntu-latest
@@ -37,3 +37,5 @@ jobs:
       - run: pnpm lint
       - run: pnpm test
       - run: pnpm build
+
+      - run: VITE_API_URL=/api VITE_DEMO_MODE=true pnpm exec vite build --outDir ../.local/demo-dist

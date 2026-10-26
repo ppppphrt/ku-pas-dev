@@ -1,5 +1,11 @@
 // UI messages only. Course data and filter identifiers retain their source values.
 export const messages = [
+  ["Guest demo", "เดโมแบบ Guest"],
+  [
+    "Demo timetables are saved in this browser. Accounts are unavailable.",
+    "เดโมบันทึกตารางในเบราว์เซอร์นี้ ยังไม่เปิดใช้งานบัญชีผู้ใช้",
+  ],
+
   ["Your next chapter.", "เทอมใหม่ในแบบคุณ"],
   ["Your kind of course.", "เริ่มจากวิชาที่ชอบ"],
   [

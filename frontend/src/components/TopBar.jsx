@@ -1,3 +1,4 @@
+import { DEMO_MODE } from "../services/courseApi";
 import Icon from "./Icon";
 import { useLanguage } from "../hooks/useLanguage";
 import { NavLink, Link, useLocation } from "react-router-dom";
@@ -56,7 +57,9 @@ export default function TopBar() {
           </button>
         </div>
         <span className="account">
-          {user ? (
+          {DEMO_MODE ? (
+            <span className="badge">{t("Guest demo")}</span>
+          ) : user ? (
             <>
               <span>{user.username}</span>
               <button onClick={logout}>{t("Sign out")}</button>

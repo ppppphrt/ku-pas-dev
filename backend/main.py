@@ -32,7 +32,7 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s | %(message)s")
 log = logging.getLogger(__name__)
 
 
-def create_app(catalog_path=None, database_path=None, semantic=None):
+def create_app(catalog_path=None, database_path=None, semantic=None, demo=False):
     catalog_path = catalog_path or os.getenv("CATALOG_PATH", str(ROOT / "data/catalog.json.gz"))
     database_path = database_path or os.getenv(
         "DATABASE_PATH", str(ROOT / ".local/accounts.sqlite")
@@ -49,7 +49,7 @@ def create_app(catalog_path=None, database_path=None, semantic=None):
     async def lifespan(app):
         app.state.catalog = None
         app.state.data_error = None
-        app.state.accounts = Accounts(database_path, os.getenv("JWT_SECRET"))
+        app.state.accounts = None if demo else Accounts(database_path, os.getenv("JWT_SECRET"))
         try:
             app.state.catalog = Catalog(catalog_path)
         except (OSError, ValueError, KeyError):
@@ -139,6 +139,8 @@ def create_app(catalog_path=None, database_path=None, semantic=None):
     bearer = HTTPBearer(auto_error=False)
 
     def current_user(credentials: HTTPAuthorizationCredentials | None = Depends(bearer)):
+        if demo:
+            raise HTTPException(403, "Accounts are unavailable in the public demo. Use guest mode.")
         if credentials is None:
             raise HTTPException(401, "Please sign in.")
         try:
@@ -166,6 +168,7 @@ def create_app(catalog_path=None, database_path=None, semantic=None):
                 | {course["faculty"] for course in c.courses if course["faculty"]}
             ),
             "semantic_ready": c.embeddings is not None,
+            "demo_mode": demo,
             "min_credits": minimum,
             "max_credits": maximum,
             "credit_rules_note": "Configurable planning thresholds; confirm your program rules.",
@@ -334,6 +337,8 @@ def create_app(catalog_path=None, database_path=None, semantic=None):
 
     @app.post("/auth/register", tags=["Account"], status_code=201)
     def register(body: Registration):
+        if demo:
+            raise HTTPException(403, "Accounts are unavailable in the public demo. Use guest mode.")
         try:
             return app.state.accounts.register(body.username, body.email, body.password)
         except ValueError as exc:
@@ -341,6 +346,8 @@ def create_app(catalog_path=None, database_path=None, semantic=None):
 
     @app.post("/auth/login", tags=["Account"])
     def login(body: Credentials):
+        if demo:
+            raise HTTPException(403, "Accounts are unavailable in the public demo. Use guest mode.")
         try:
             return app.state.accounts.login(body.username, body.password)
         except ValueError as exc:

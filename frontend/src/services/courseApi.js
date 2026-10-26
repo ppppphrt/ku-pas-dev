@@ -1,11 +1,13 @@
 import axios from "axios";
 
+export const DEMO_MODE = import.meta.env.VITE_DEMO_MODE === "true";
+
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://127.0.0.1:8000",
   timeout: 30000,
 });
 api.interceptors.request.use((config) => {
-  const token = sessionStorage.getItem("ku-token");
+  const token = !DEMO_MODE && sessionStorage.getItem("ku-token");
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
