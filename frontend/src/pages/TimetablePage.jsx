@@ -1,11 +1,12 @@
+import { useLanguage } from "../hooks/useLanguage";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTimetable } from "../hooks/useTimetable";
 import { useAuth } from "../hooks/useAuth";
 import { courseColor, creditState, DAYS, minutes } from "../utils/timetable";
 import Modal from "../components/Modal";
-
 export default function TimetablePage() {
+  const { t, courseText } = useLanguage();
   const {
     items,
     metadata,
@@ -33,43 +34,57 @@ export default function TimetablePage() {
     ...slots.map((slot) => Math.ceil(minutes(slot.end) / 60)),
   );
   const hours = Array.from(
-    { length: endHour - startHour },
+    {
+      length: endHour - startHour,
+    },
     (_, index) => index + startHour,
   );
   return (
     <main id="main" className="container">
       <header className="planner-heading">
         <div>
-          <p className="eyebrow">Make room for what matters</p>
-          <h1>Timetable Planner</h1>
-          <p>{metadata.data_source} · Period unconfirmed</p>
+          <p className="eyebrow">{t("Make room for what matters")}</p>
+          <h1>{t("Timetable Planner")}</h1>
+          <p>
+            {t(metadata.data_source)}
+            {t(" · Period unconfirmed")}
+          </p>
         </div>
         <div className="credit-widget">
-          <strong>{count} courses</strong>
-          <strong>{credits} credits</strong>
-          <span>{status}</span>
+          <strong>
+            {count}
+            {t(" courses")}
+          </strong>
+          <strong>
+            {credits}
+            {t(" credits")}
+          </strong>
+          <span>{t(status)}</span>
         </div>
       </header>
       <p>
-        {metadata.min_credits}–{metadata.max_credits} credits: configurable
-        planning range. Confirm your program rules.
+        {metadata.min_credits}–{metadata.max_credits}
+        {t(
+          " credits: configurable planning range. Confirm your program rules.",
+        )}
       </p>
       <p>
-        {items.length ? "Conflict-free timetable" : "No courses selected"} ·{" "}
-        {user ? "Saved to your account" : "Saved in this browser"}
+        {items.length ? t("Conflict-free timetable") : t("No courses selected")}{" "}
+        · {user ? t("Saved to your account") : t("Saved in this browser")}
       </p>
-      {!ready && !error && <p role="status">Restoring timetable…</p>}
+      {!ready && !error && <p role="status">{t("Restoring timetable…")}</p>}
       {error && (
         <p role="alert" className="error">
-          {error}
+          {t(error)}
         </p>
       )}
       <div className="planner-body">
         <aside className="selected">
-          <h2>Selected courses</h2>
+          <h2>{t("Selected courses")}</h2>
           {!items.length && (
             <p>
-              Add a section from <Link to="/">Course Discovery</Link>.
+              {t("Add a section from ")}
+              <Link to="/">{t("Course Discovery")}</Link>.
             </p>
           )}
           {items.map(({ course, section }) => (
@@ -83,17 +98,19 @@ export default function TimetablePage() {
                 <Link
                   to={`/courses/${encodeURIComponent(course.subject_code)}`}
                 >
-                  {course.subject_name_en || course.subject_name_th}
+                  {courseText(course, "name")}
                 </Link>
               </h3>
               <p>
-                {course.subject_code} · Section {section.section_code} ·{" "}
-                {course.credits} credits
+                {course.subject_code}
+                {t(" · Section ")}
+                {section.section_code} · {course.credits}
+                {t(" credits")}
               </p>
               <ul>
                 {section.time_slots.map((slot, i) => (
                   <li key={i}>
-                    {slot.day} {slot.start}–{slot.end}
+                    {t(slot.day)} {slot.start}–{slot.end}
                   </li>
                 ))}
               </ul>
@@ -101,7 +118,8 @@ export default function TimetablePage() {
                 disabled={busy}
                 onClick={() => remove(course.subject_code)}
               >
-                Remove {course.subject_code}
+                {t("Remove ")}
+                {course.subject_code}
               </button>
             </article>
           ))}
@@ -109,13 +127,13 @@ export default function TimetablePage() {
             disabled={busy || (ready && !items.length)}
             onClick={() => setConfirm(true)}
           >
-            Clear timetable
+            {t("Clear timetable")}
           </button>
         </aside>
-        <section className="week-wrap" aria-label="Weekly timetable">
+        <section className="week-wrap" aria-label={t("Weekly timetable")}>
           <div className="week">
             <div className="time-axis">
-              <div className="day-header">Time</div>
+              <div className="day-header">{t("Time")}</div>
               {hours.map((h) => (
                 <div
                   className="hour"
@@ -125,10 +143,12 @@ export default function TimetablePage() {
             </div>
             {DAYS.map((day) => (
               <div key={day}>
-                <div className="day-header">{day}</div>
+                <div className="day-header">{t(day)}</div>
                 <div
                   className="day-column"
-                  style={{ height: (endHour - startHour) * 48 }}
+                  style={{
+                    height: (endHour - startHour) * 48,
+                  }}
                 >
                   {items.flatMap(({ course, section }) =>
                     section.time_slots
@@ -143,16 +163,17 @@ export default function TimetablePage() {
                               (minutes(slot.end) - minutes(slot.start)) * 0.8,
                             background: courseColor(course.subject_code),
                           }}
-                          title={`${course.subject_name_en || course.subject_name_th}: ${slot.start}–${slot.end}`}
+                          title={`${courseText(course, "name")}: ${slot.start}–${slot.end}`}
                         >
                           <strong>{course.subject_code}</strong>
                           <span>
                             {slot.start}–{slot.end}
                           </span>
+                          <span>{courseText(course, "name")}</span>
                           <span>
-                            {course.subject_name_en || course.subject_name_th}
+                            {t("Section ")}
+                            {section.section_code}
                           </span>
-                          <span>Section {section.section_code}</span>
                         </div>
                       )),
                   )}
@@ -163,8 +184,12 @@ export default function TimetablePage() {
         </section>
       </div>
       {confirm && (
-        <Modal title="Clear timetable?" onClose={() => setConfirm(false)}>
-          <p>This removes every selected section from this saved timetable.</p>
+        <Modal title={t("Clear timetable?")} onClose={() => setConfirm(false)}>
+          <p>
+            {t(
+              "This removes every selected section from this saved timetable.",
+            )}
+          </p>
           <button
             className="danger"
             disabled={busy}
@@ -172,7 +197,7 @@ export default function TimetablePage() {
               if (await clear()) setConfirm(false);
             }}
           >
-            Clear all sections
+            {t("Clear all sections")}
           </button>
         </Modal>
       )}

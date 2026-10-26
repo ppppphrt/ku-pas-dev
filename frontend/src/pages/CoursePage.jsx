@@ -1,3 +1,4 @@
+import { useLanguage } from "../hooks/useLanguage";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { discover, errorMessage } from "../services/courseApi";
@@ -5,7 +6,6 @@ import SearchBar from "../components/SearchBar";
 import CourseCard from "../components/CourseCard";
 import FiltersPanel from "../components/FiltersPanel";
 import { EmptyState, Loading } from "../components/ui";
-
 const emptyFilters = {
   faculty: "",
   min_credits: "",
@@ -46,6 +46,7 @@ export default function CoursePage({ metadata }) {
   );
 }
 function Discovery({ params, setParams, metadata }) {
+  const { t } = useLanguage();
   const query = params.get("q") || "";
   const mode = params.get("mode") === "ask" ? "ask" : "search";
   const page = Math.max(1, Number(params.get("page")) || 1);
@@ -96,8 +97,8 @@ function Discovery({ params, setParams, metadata }) {
   return (
     <main id="main">
       <header className="page-header">
-        <p className="eyebrow">Discover your next course</p>
-        <h1>Course Discovery</h1>
+        <p className="eyebrow">{t("Discover your next course")}</p>
+        <h1>{t("Course Discovery")}</h1>
         <SearchBar
           query={query}
           mode={mode}
@@ -107,8 +108,9 @@ function Discovery({ params, setParams, metadata }) {
         />
         {!metadata.semantic_ready && (
           <p>
-            Ask mode is unavailable while the semantic model is offline. Search
-            by code or name.
+            {t(
+              "Ask mode is unavailable while the semantic model is offline. Search by code or name.",
+            )}
           </p>
         )}
       </header>
@@ -127,32 +129,36 @@ function Discovery({ params, setParams, metadata }) {
         />
         <section
           className="courses"
-          aria-label="Course results"
+          aria-label={t("Course results")}
           aria-busy={loading}
         >
-          {loading && <Loading text="Finding courses…" />}
+          {loading && <Loading text={t("Finding courses…")} />}
           {error && (
             <div className="error" role="alert">
-              <p>{error}</p>
+              <p>{t(error)}</p>
               <button
                 onClick={() => {
                   setError("");
                   setRetry((v) => v + 1);
                 }}
               >
-                Retry
+                {t("Retry")}
               </button>
             </div>
           )}
           {response && (
             <>
               <p role="status">
-                {response.total_results.toLocaleString()} courses · {active}{" "}
-                active filters · Page {page}
+                {response.total_results.toLocaleString()}
+                {t(" courses · ")}
+                {active} {t("active filters · Page ")}
+                {page}
               </p>
               {!response.results.length && (
                 <EmptyState>
-                  No courses match. Try another query or reset your filters.
+                  {t(
+                    "No courses match. Try another query or reset your filters.",
+                  )}
                 </EmptyState>
               )}
               {response.results.map((course) => (
@@ -172,7 +178,7 @@ function Discovery({ params, setParams, metadata }) {
                     update(next);
                   }}
                 >
-                  Previous page
+                  {t("Previous page")}
                 </button>
                 <button
                   disabled={!response.has_more}
@@ -182,7 +188,7 @@ function Discovery({ params, setParams, metadata }) {
                     update(next);
                   }}
                 >
-                  Next page
+                  {t("Next page")}
                 </button>
               </div>
             </>
