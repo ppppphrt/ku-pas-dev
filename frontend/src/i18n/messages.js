@@ -1,5 +1,12 @@
 // UI messages only. Course data and filter identifiers retain their source values.
 export const messages = [
+  ["courses found", "วิชาที่พบ"],
+  ["View results", "ดูผลลัพธ์"],
+  [
+    "No courses found. Try changing your interests or filters.",
+    "ไม่พบวิชาที่ตรงเงื่อนไข ลองเปลี่ยนความสนใจหรือตัวกรอง",
+  ],
+
   ["Guest demo", "เดโมแบบ Guest"],
   [
     "Demo timetables are saved in this browser. Accounts are unavailable.",

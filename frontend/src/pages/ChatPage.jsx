@@ -1,5 +1,5 @@
 import { useLanguage } from "../hooks/useLanguage";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { api, errorMessage } from "../services/courseApi";
 import { useTimetable } from "../hooks/useTimetable";
@@ -65,6 +65,22 @@ export default function ChatPage() {
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const pending = useRef(false);
+  const resultsHeading = useRef(null);
+  function showResults() {
+    const heading = resultsHeading.current;
+    if (!heading) return;
+    heading.focus({ preventScroll: true });
+    heading.scrollIntoView?.({
+      behavior: window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+        ? "instant"
+        : "smooth",
+      block: "start",
+    });
+  }
+  useEffect(() => {
+    if (response) showResults();
+  }, [response]);
+
   async function send(text = message, displayText = text) {
     if (!text.trim() || pending.current || !timetable.ready) return;
     pending.current = true;
@@ -277,6 +293,23 @@ export default function ChatPage() {
               {t("ไม่เรียก API แบบเสียเงิน · ยังไม่ยืนยันภาคเรียนปัจจุบัน")}
             </span>
           </div>
+          {response && (
+            <div className="chat-result-jump">
+              <span role="status">
+                {busy ? (
+                  t("กำลังค้นหา…")
+                ) : (
+                  <>
+                    <strong>{response.total_results}</strong>{" "}
+                    {t("courses found")}
+                  </>
+                )}
+              </span>
+              <button type="button" onClick={showResults} disabled={busy}>
+                {t("View results")} <span aria-hidden="true">↓</span>
+              </button>
+            </div>
+          )}
           <div
             className="chat-transcript"
             role="log"
@@ -347,6 +380,22 @@ export default function ChatPage() {
               aria-busy={busy}
               className="chat-results"
             >
+              <h2
+                ref={resultsHeading}
+                tabIndex={-1}
+                className="chat-results-heading"
+              >
+                {t("ผลล่าสุด · ")}
+                {response.total_results}
+                {t(" วิชา")}
+              </h2>
+              {response.results.length === 0 && (
+                <p className="empty">
+                  {t(
+                    "No courses found. Try changing your interests or filters.",
+                  )}
+                </p>
+              )}
               <p className="warning">{t(response.notice)}</p>
               <p className="hint">
                 {t("แหล่งข้อมูล:")}{" "}
@@ -368,11 +417,6 @@ export default function ChatPage() {
                   ? `${response.sources.ge.semester}/${response.sources.ge.academic_year}`
                   : t("รอยืนยัน")}
               </p>
-              <h2>
-                {t("ผลล่าสุด · ")}
-                {response.total_results}
-                {t(" วิชา")}
-              </h2>
               {response.results.map((result) => (
                 <ChatCourse
                   key={result.course.subject_code}

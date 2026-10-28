@@ -289,7 +289,12 @@ it("chats with context, labels mocks and shares the existing timetable", async (
   );
   await user.type(input, "สนใจภาษา");
   await user.click(screen.getByRole("button", { name: "ส่งข้อความ" }));
-  await screen.findByText("ผลล่าสุด · 1 วิชา");
+  const resultsHeading = await screen.findByRole("heading", {
+    name: "ผลล่าสุด · 1 วิชา",
+  });
+  await waitFor(() => expect(resultsHeading).toHaveFocus());
+  await user.click(screen.getByRole("button", { name: "ดูผลลัพธ์" }));
+  expect(resultsHeading).toHaveFocus();
   expect(screen.getByText("GE จำลอง")).toBeInTheDocument();
   expect(screen.getByText(/โหมดทดลองฟรี/)).toBeInTheDocument();
   await user.type(input, "เฉพาะวันศุกร์");
