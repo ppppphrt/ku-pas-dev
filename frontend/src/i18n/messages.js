@@ -1,5 +1,43 @@
 // UI messages only. Course data and filter identifiers retain their source values.
 export const messages = [
+  ["Only confirmed GE courses", "เฉพาะวิชาที่รับรอง GE แล้ว"],
+  [
+    "By default, search the Bangkhen catalog. Each course shows its GE status separately.",
+    "ค้นหาทุกรายวิชาใน catalog บางเขนเป็นค่าเริ่มต้น สถานะ GE แสดงแยกในแต่ละวิชา",
+  ],
+  ["Any GE category", "ไม่จำกัดกลุ่ม GE"],
+  ["Current topic:", "คำค้นปัจจุบัน:"],
+  ["Any interest", "ทุกความสนใจ"],
+  ["Bangkhen catalog", "catalog บางเขน"],
+  ["GE confirmed by export", "GE ยืนยันจาก export"],
+  ["GE unconfirmed", "ยังไม่ยืนยันว่าเป็น GE"],
+  [
+    "Sections in snapshot · current offering unconfirmed",
+    "มีหมู่เรียนใน snapshot · ไม่ยืนยันการเปิดสอนปัจจุบัน",
+  ],
+  [
+    "Course in catalog · no matching sections in snapshot",
+    "พบรายวิชาใน catalog · ไม่พบหมู่ที่ตรงเงื่อนไขใน snapshot",
+  ],
+
+  ["Please clarify", "ขอรายละเอียดเพิ่มเติม"],
+  ["Chat GE · Bangkhen", "Chat GE · บางเขน"],
+  ["Course recommendation assistant", "ผู้ช่วยแนะนำรายวิชา"],
+  ["LLM unavailable · search fallback", "LLM ไม่พร้อม · ใช้การค้นหาสำรอง"],
+  [
+    "Rule-based search · LLM is not enabled",
+    "โหมดค้นหาตามกฎ · ยังไม่ได้เปิด LLM",
+  ],
+  ["Chat GE · Course assistant", "Chat GE · ผู้ช่วยค้นหารายวิชา"],
+  [
+    "Grounded in course data · current semester unconfirmed",
+    "อ้างอิงข้อมูลรายวิชา · ยังไม่ยืนยันภาคเรียนปัจจุบัน",
+  ],
+  ["Thinking…", "กำลังคิดคำตอบ…"],
+  [
+    "Hi! What would you like to study? Tell me your interests or availability, for example: ‘I want to practise English, but mornings don’t work for me.’ We can refine your preferences as we chat.",
+    "สวัสดีครับ วันนี้อยากหาวิชาแบบไหน ลองเล่าความสนใจหรือเวลาที่สะดวกได้เลย เช่น “อยากฝึกภาษาอังกฤษ แต่ไม่สะดวกเรียนเช้า” แล้วค่อยคุยปรับเงื่อนไขกันได้ครับ",
+  ],
   ["courses found", "วิชาที่พบ"],
   ["View results", "ดูผลลัพธ์"],
   [

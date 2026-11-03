@@ -13,3 +13,6 @@ __pycache__/
 backend/data/catalog.json
 
 .vercel/
+
+# Local server-only LLM credentials
+backend/chat.local.toml

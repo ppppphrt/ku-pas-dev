@@ -636,6 +636,7 @@ mark {
   padding: 1.2rem 0;
 }
 .chat-bubble {
+  white-space: pre-wrap;
   padding: 1rem 1.2rem;
   border-radius: 14px;
   margin: 0;

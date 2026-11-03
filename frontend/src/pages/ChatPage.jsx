@@ -31,6 +31,7 @@ const days = {
 };
 const initial = {
   interest: "",
+  verified_ge_only: false,
   curriculum: null,
   group: null,
   competency: null,
@@ -77,9 +78,12 @@ export default function ChatPage() {
       block: "start",
     });
   }
+  const transcriptEnd = useRef(null);
+  const messageInput = useRef(null);
   useEffect(() => {
-    if (response) showResults();
-  }, [response]);
+    transcriptEnd.current?.scrollIntoView?.({ block: "nearest" });
+    if (messages.length) messageInput.current?.focus();
+  }, [messages]);
 
   async function send(text = message, displayText = text) {
     if (!text.trim() || pending.current || !timetable.ready) return;
@@ -88,15 +92,24 @@ export default function ChatPage() {
     setError("");
     setNotice("");
     try {
-      const { data } = await api.post("/chat", {
-        message: text,
-        state,
-        dataset_version: timetable.metadata.dataset_version,
-        items: timetable.items.map(({ course, section }) => ({
-          subject_code: course.subject_code,
-          section_id: section.section_id,
-        })),
-      });
+      const { data } = await api.post(
+        "/chat",
+        {
+          message: text,
+          language,
+          history: messages.slice(-12).map(({ role, text }) => ({
+            role,
+            content: text.slice(0, 5000),
+          })),
+          state,
+          dataset_version: timetable.metadata.dataset_version,
+          items: timetable.items.map(({ course, section }) => ({
+            subject_code: course.subject_code,
+            section_id: section.section_id,
+          })),
+        },
+        { timeout: 45000 },
+      );
       setMessages((old) => [
         ...old.slice(-18),
         {
@@ -128,7 +141,7 @@ export default function ChatPage() {
     <main id="main" className="container chat-page" lang={language}>
       <header className="chat-heading">
         <div>
-          <p className="eyebrow">{t("GENED REGIS · บางเขน")}</p>
+          <p className="eyebrow">{t("Chat GE · บางเขน")}</p>
           <h1>{t("คุยเพื่อหาวิชาที่ใช่")}</h1>
           <p>{t("บอกความสนใจและเวลาว่าง แล้วเลือกหมู่เรียนใส่ตารางของคุณ")}</p>
         </div>
@@ -151,6 +164,19 @@ export default function ChatPage() {
             />
           </label>
           <label>
+            <input
+              type="checkbox"
+              checked={Boolean(state.verified_ge_only)}
+              onChange={(e) => update("verified_ge_only", e.target.checked)}
+            />
+            {t("เฉพาะวิชาที่รับรอง GE แล้ว")}
+          </label>
+          <p className="hint">
+            {t(
+              "ค้นหาทุกรายวิชาใน catalog บางเขนเป็นค่าเริ่มต้น สถานะ GE แสดงแยกในแต่ละวิชา",
+            )}
+          </p>
+          <label>
             {t("รูปแบบ GE")}
             <select
               value={state.curriculum || ""}
@@ -163,7 +189,7 @@ export default function ChatPage() {
                 }))
               }
             >
-              <option value="">{t("ทั้งหมดในชุดทดลอง")}</option>
+              <option value="">{t("ไม่จำกัดกลุ่ม GE")}</option>
               <option value="64">{t("กลุ่มสาระ 64")}</option>
               <option value="67">{t("สมรรถนะ 67")}</option>
             </select>
@@ -285,15 +311,42 @@ export default function ChatPage() {
         >
           <div className="chat-mode">
             <strong>
-              {response?.engine === "ollama"
-                ? t("AI บนเครื่อง · Ollama")
-                : t("โหมดทดลองฟรี · ตัวช่วยแชทตามกฎ")}
+              {response?.needs_clarification
+                ? t("ขอรายละเอียดเพิ่มเติม")
+                : response?.engine === "ollama"
+                  ? t("AI บนเครื่อง · Ollama")
+                  : response?.engine === "llm-api"
+                    ? t("ผู้ช่วยแนะนำรายวิชา")
+                    : response?.engine === "local-rules-fallback"
+                      ? t("LLM ไม่พร้อม · ใช้การค้นหาสำรอง")
+                      : response
+                        ? t("โหมดค้นหาตามกฎ · ยังไม่ได้เปิด LLM")
+                        : t("Chat GE · ผู้ช่วยค้นหารายวิชา")}
             </strong>
             <span>
-              {t("ไม่เรียก API แบบเสียเงิน · ยังไม่ยืนยันภาคเรียนปัจจุบัน")}
+              {t("อ้างอิงข้อมูลรายวิชา · ยังไม่ยืนยันภาคเรียนปัจจุบัน")}
             </span>
           </div>
-          {response && (
+          {response?.search_context && !response.needs_clarification && (
+            <p className="hint" role="status">
+              {t("คำค้นปัจจุบัน:")}{" "}
+              {response.search_context.interest || t("ทุกความสนใจ")}
+              {" · "}
+              {t(
+                response.search_context.scope === "verified-ge"
+                  ? "เฉพาะวิชาที่รับรอง GE แล้ว"
+                  : "catalog บางเขน",
+              )}
+              {" · "}
+              {response.search_context.days
+                .map((day) => t(days[day]))
+                .join(", ") || t("ทุกวัน")}
+              {" · "}
+              {response.search_context.start_time || "00:00"}–
+              {response.search_context.end_time || "24:00"}
+            </p>
+          )}
+          {response && !response.needs_clarification && (
             <div className="chat-result-jump">
               <span role="status">
                 {busy ? (
@@ -318,14 +371,20 @@ export default function ChatPage() {
           >
             <p className="chat-bubble assistant">
               {t(
-                "สวัสดีครับ ลองบอกว่าอยากเรียนเกี่ยวกับอะไร แล้วค่อยถามต่อเรื่องวันและเวลาได้ เช่น “สนใจภาษา” ตามด้วย “เฉพาะวันศุกร์” ข้อมูลที่ขาดจะติดป้ายจำลอง และการเพิ่มตารางยังไม่ใช่การลงทะเบียนจริง",
+                "สวัสดีครับ วันนี้อยากหาวิชาแบบไหน ลองเล่าความสนใจหรือเวลาที่สะดวกได้เลย เช่น “อยากฝึกภาษาอังกฤษ แต่ไม่สะดวกเรียนเช้า” แล้วค่อยคุยปรับเงื่อนไขกันได้ครับ",
               )}
             </p>
             {messages.map((entry, i) => (
               <p className={`chat-bubble ${entry.role}`} key={i}>
-                {entry.role === "assistant" ? t(entry.text) : entry.text}
+                {entry.text}
               </p>
             ))}
+            {busy && (
+              <p className="chat-bubble assistant" role="status">
+                {t("กำลังคิดคำตอบ…")}
+              </p>
+            )}
+            <div ref={transcriptEnd} />
           </div>
           <div className="chat-examples">
             {examples.map((text) => (
@@ -349,6 +408,7 @@ export default function ChatPage() {
             <div>
               <input
                 id="chat-message"
+                ref={messageInput}
                 value={message}
                 maxLength={1000}
                 onChange={(e) => setMessage(e.target.value)}
@@ -374,7 +434,7 @@ export default function ChatPage() {
               {t(notice)}
             </p>
           )}
-          {response && (
+          {response && !response.needs_clarification && (
             <section
               aria-label={t("ผลการค้นหาล่าสุด")}
               aria-busy={busy}
@@ -453,8 +513,11 @@ function ChatCourse({ result, timetable, busy, onAdded }) {
         <span
           className={classification.status === "mock" ? "chat-mock" : "badge"}
         >
-          {t("GE ")}
-          {classification.status === "mock" ? t("จำลอง") : t("จาก export")}
+          {classification.status === "verified"
+            ? t("GE ยืนยันจาก export")
+            : classification.status === "mock"
+              ? t("GE จำลอง")
+              : t("ยังไม่ยืนยันว่าเป็น GE")}
         </span>
       </div>
       <h3>
@@ -473,6 +536,13 @@ function ChatCourse({ result, timetable, busy, onAdded }) {
           t("ไม่ทราบ")}
         {t(" · สมรรถนะ 67: ")}
         {classification.competencies.join(", ") || t("ไม่ทราบ")}
+      </p>
+      <p className="hint">
+        {t(
+          sections.length
+            ? "มีหมู่เรียนใน snapshot · ไม่ยืนยันการเปิดสอนปัจจุบัน"
+            : "พบรายวิชาใน catalog · ไม่พบหมู่ที่ตรงเงื่อนไขใน snapshot",
+        )}
       </p>
       <p className="chat-description">
         {courseText(course, "description") || t("No description available.")}

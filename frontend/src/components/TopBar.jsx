@@ -7,7 +7,7 @@ export default function TopBar() {
   const { t, language, setLanguage } = useLanguage();
   const { user, logout } = useAuth();
   const location = useLocation();
-  const discovery = `/${location.pathname === "/" ? location.search : sessionStorage.getItem("ku-discovery-query") || ""}`;
+  const discovery = `/courses${location.pathname === "/courses" ? location.search : sessionStorage.getItem("ku-discovery-query") || ""}`;
   return (
     <>
       <a className="skip-link" href="#main">
@@ -21,6 +21,14 @@ export default function TopBar() {
           KU-PAS
         </Link>
         <div className="nav-links">
+          <NavLink
+            to="/"
+            end
+            className={location.pathname === "/chat" ? "active" : undefined}
+          >
+            <Icon name="chat" />
+            {t("GE Chat")}
+          </NavLink>
           <NavLink to={discovery} end>
             <Icon name="search" />
             {t("Course Discovery")}
@@ -28,10 +36,6 @@ export default function TopBar() {
           <NavLink to="/timetable">
             <Icon name="calendar" />
             {t("Timetable Planner")}
-          </NavLink>
-          <NavLink to="/chat">
-            <Icon name="chat" />
-            {t("GE Chat")}
           </NavLink>
         </div>
         <div

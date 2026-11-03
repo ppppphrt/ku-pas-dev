@@ -94,7 +94,7 @@ afterEach(() => server.resetHandlers());
 beforeEach(() => {
   localStorage.clear();
   sessionStorage.clear();
-  window.history.replaceState({}, "", "/");
+  window.history.replaceState({}, "", "/courses");
 });
 
 async function openCourse(user, name) {
@@ -292,15 +292,20 @@ it("chats with context, labels mocks and shares the existing timetable", async (
   const resultsHeading = await screen.findByRole("heading", {
     name: "ผลล่าสุด · 1 วิชา",
   });
-  await waitFor(() => expect(resultsHeading).toHaveFocus());
+  expect(input).toHaveFocus();
   await user.click(screen.getByRole("button", { name: "ดูผลลัพธ์" }));
   expect(resultsHeading).toHaveFocus();
   expect(screen.getByText("GE จำลอง")).toBeInTheDocument();
-  expect(screen.getByText(/โหมดทดลองฟรี/)).toBeInTheDocument();
+  expect(screen.getByText(/โหมดค้นหาตามกฎ/)).toBeInTheDocument();
   await user.type(input, "เฉพาะวันศุกร์");
   await user.click(screen.getByRole("button", { name: "ส่งข้อความ" }));
   await waitFor(() => expect(requests).toHaveLength(2));
   expect(requests[1].state.interest).toBe("ภาษา");
+  expect(requests[1].language).toBe("th");
+  expect(requests[1].history).toEqual([
+    { role: "user", content: "สนใจภาษา" },
+    { role: "assistant", content: "พบวิชาทดลอง" },
+  ]);
   await user.click(screen.getByText(/ดูหมู่และเวลาเรียน/));
   await user.click(screen.getByRole("button", { name: "เพิ่มหมู่นี้ลงตาราง" }));
   await screen.findByText(/เพิ่ม 001 หมู่ 1 ลงตารางแล้ว/);
@@ -436,4 +441,97 @@ it("localizes chat controls while preserving the user's exact draft", async () =
     screen.getByRole("button", { name: "English", exact: true }),
   );
   expect(screen.getByLabelText("Ask about GE courses")).toHaveValue("สนใจภาษา");
+});
+
+it("opens GE Chat on the homepage and keeps course discovery accessible", async () => {
+  window.history.replaceState({}, "", "/");
+  const user = userEvent.setup();
+  render(<App />);
+  await screen.findByLabelText("Ask about GE courses");
+  expect(screen.queryByRole("searchbox")).not.toBeInTheDocument();
+  await user.click(
+    within(screen.getByRole("navigation")).getByRole("link", {
+      name: "Course Discovery",
+      exact: true,
+    }),
+  );
+  expect(window.location.pathname).toBe("/courses");
+  await screen.findByRole("link", { name: "Programming", exact: true });
+});
+
+it("shows catalog courses with unknown GE and asks about reversed times before showing results", async () => {
+  localStorage.setItem("ku-language", "th");
+  const requests = [];
+  server.use(
+    http.post(`${root}/chat`, async ({ request }) => {
+      const body = await request.json();
+      requests.push(body);
+      const clarify = body.message.includes("16:00-09:00");
+      return HttpResponse.json({
+        state: clarify ? body.state : { ...body.state, interest: "ญี่ปุ่น" },
+        engine: clarify ? "clarification" : "llm-api",
+        needs_clarification: clarify,
+        message: clarify
+          ? "ช่วงเวลา 16:00–09:00 ต้องยืนยันเวลาสิ้นสุดก่อนครับ"
+          : "พบภาษาญี่ปุ่นใน catalog แต่ยังไม่ยืนยัน GE",
+        total_results: clarify ? 0 : 1,
+        search_context: {
+          scope: "catalog",
+          interest: "ญี่ปุ่น",
+          days: [],
+          start_time: null,
+          end_time: null,
+        },
+        notice: "ข้อมูล snapshot",
+        sources: {
+          catalog: {
+            source_url: "https://kudrive.ku.ac.th",
+            updated_at: "2026-10-24",
+          },
+          ge: { source_url: "demo://test", updated_at: "2026-10-24" },
+        },
+        results: clarify
+          ? []
+          : [
+              {
+                course: {
+                  ...courses[0],
+                  subject_name_th: "ภาษาญี่ปุ่นเบื้องต้น I",
+                },
+                classification: {
+                  status: "unknown",
+                  groups: [],
+                  competencies: [],
+                },
+                sections: [],
+              },
+            ],
+      });
+    }),
+  );
+  window.history.replaceState({}, "", "/");
+  const user = userEvent.setup();
+  render(<App />);
+  const input = await screen.findByLabelText("ถามเรื่องรายวิชา GE");
+  await waitFor(() =>
+    expect(screen.getByRole("button", { name: "สนใจภาษา" })).toBeEnabled(),
+  );
+  await user.type(input, "อยากเรียนภาษาญี่ปุ่น มีเปิดวันไหนบ้าง");
+  await user.click(screen.getByRole("button", { name: "ส่งข้อความ" }));
+  await screen.findByText("ยังไม่ยืนยันว่าเป็น GE");
+  expect(
+    screen.getByRole("link", { name: "ภาษาญี่ปุ่นเบื้องต้น I" }),
+  ).toBeInTheDocument();
+  expect(screen.getByText(/คำค้นปัจจุบัน:/)).toHaveTextContent("ญี่ปุ่น");
+  expect(screen.getByLabelText("เฉพาะวิชาที่รับรอง GE แล้ว")).not.toBeChecked();
+  await user.type(input, "ว่างวันศุกร์ 16:00-09:00 มีวิชาไหนเปิดบ้าง");
+  await user.click(screen.getByRole("button", { name: "ส่งข้อความ" }));
+  await screen.findByText("ช่วงเวลา 16:00–09:00 ต้องยืนยันเวลาสิ้นสุดก่อนครับ");
+  expect(
+    screen.queryByRole("heading", { name: /ผลล่าสุด/ }),
+  ).not.toBeInTheDocument();
+  expect(
+    screen.queryByRole("button", { name: "ดูผลลัพธ์" }),
+  ).not.toBeInTheDocument();
+  expect(requests[1].state.interest).toBe("ญี่ปุ่น");
 });

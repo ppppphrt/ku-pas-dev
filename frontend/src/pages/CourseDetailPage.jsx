@@ -32,7 +32,7 @@ function Details({ code }) {
   const section = course?.sections.find((s) => s.section_id === selected);
   return (
     <main id="main" className="container detail">
-      <Link to={`/${location.state?.from || ""}`}>
+      <Link to={`/courses${location.state?.from || ""}`}>
         {t("← Back to results")}
       </Link>
       {error ? (

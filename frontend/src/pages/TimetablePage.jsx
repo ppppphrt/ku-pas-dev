@@ -84,7 +84,7 @@ export default function TimetablePage() {
           {!items.length && (
             <p>
               {t("Add a section from ")}
-              <Link to="/">{t("Course Discovery")}</Link>.
+              <Link to="/courses">{t("Course Discovery")}</Link>.
             </p>
           )}
           {items.map(({ course, section }) => (

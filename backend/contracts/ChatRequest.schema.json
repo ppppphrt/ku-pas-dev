@@ -96,6 +96,11 @@
           "title": "Interest",
           "type": "string"
         },
+        "verified_ge_only": {
+          "default": false,
+          "title": "Verified Ge Only",
+          "type": "boolean"
+        },
         "curriculum": {
           "anyOf": [
             {
@@ -159,6 +164,31 @@
       "title": "ChatState",
       "type": "object"
     },
+    "ChatTurn": {
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "enum": [
+            "user",
+            "assistant"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "content": {
+          "maxLength": 5000,
+          "minLength": 1,
+          "title": "Content",
+          "type": "string"
+        }
+      },
+      "required": [
+        "role",
+        "content"
+      ],
+      "title": "ChatTurn",
+      "type": "object"
+    },
     "TimetableRef": {
       "additionalProperties": false,
       "properties": {
@@ -200,6 +230,23 @@
     },
     "dataset_version": {
       "title": "Dataset Version",
+      "type": "string"
+    },
+    "history": {
+      "items": {
+        "$ref": "#/$defs/ChatTurn"
+      },
+      "maxItems": 12,
+      "title": "History",
+      "type": "array"
+    },
+    "language": {
+      "default": "th",
+      "enum": [
+        "th",
+        "en"
+      ],
+      "title": "Language",
       "type": "string"
     }
   },

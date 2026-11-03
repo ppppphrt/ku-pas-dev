@@ -94,6 +94,11 @@
       "title": "Interest",
       "type": "string"
     },
+    "verified_ge_only": {
+      "default": false,
+      "title": "Verified Ge Only",
+      "type": "boolean"
+    },
     "curriculum": {
       "anyOf": [
         {

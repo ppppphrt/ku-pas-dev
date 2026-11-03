@@ -6,7 +6,7 @@ export default function NotFoundPage() {
     <main id="main" className="container">
       <h1>{t("Page not found")}</h1>
       <p>{t("That page is unavailable.")}</p>
-      <Link to="/">{t("Return to Course Discovery")}</Link>
+      <Link to="/courses">{t("Return to Course Discovery")}</Link>
     </main>
   );
 }

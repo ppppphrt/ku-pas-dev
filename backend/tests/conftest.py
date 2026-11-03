@@ -3,6 +3,7 @@ import json
 import pytest
 from fastapi.testclient import TestClient
 
+import chat_llm
 from main import create_app
 from schemas import Course, Section, TimeSlot
 
@@ -43,3 +44,11 @@ def client(tmp_path):
     app = create_app(path, tmp_path / "accounts.sqlite", semantic=False)
     with TestClient(app) as instance:
         yield instance
+
+
+@pytest.fixture(autouse=True)
+def isolated_llm(monkeypatch, tmp_path):
+    # Tests must never spend tokens or send fixture conversations to a real provider.
+    for name in ("LLM_API_KEY", "LLM_MODEL", "LLM_BASE_URL", "CHAT_OLLAMA_MODEL"):
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setattr(chat_llm, "CONFIG_PATH", tmp_path / "no-local-credentials.toml")

@@ -1,0 +1,5 @@
+# Server-side Typhoon configuration. This file must never be served by the frontend.
+# Copy to chat.local.toml and fill in locally. Environment variables take priority.
+api_key = ""
+model = ""
+base_url = "https://api.opentyphoon.ai/v1"

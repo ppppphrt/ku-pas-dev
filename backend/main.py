@@ -289,12 +289,10 @@ def create_app(catalog_path=None, database_path=None, semantic=None, demo=False)
         c = catalog()
         if body.dataset_version != c.metadata["dataset_version"]:
             raise HTTPException(409, "ข้อมูลเปลี่ยนแล้ว กรุณาโหลดหน้าใหม่และตรวจตารางอีกครั้ง")
-        if app.state.ge is None:
-            raise HTTPException(503, "ยังไม่มีข้อมูล GE ที่ตรงกับ snapshot นี้ โปรดตรวจ GE_DATA_PATH")
         if not body.message.strip():
             raise HTTPException(422, "กรุณาพิมพ์คำถาม")
         try:
-            return respond(body, c, app.state.ge)
+            return respond(body, c, app.state.ge or GEData.unavailable(c))
         except ValueError as exc:
             raise HTTPException(422, "ตรวจเงื่อนไขวัน เวลา หน่วยกิต และรายการในตารางอีกครั้ง") from exc
 

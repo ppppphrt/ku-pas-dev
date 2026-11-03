@@ -126,7 +126,7 @@ def test_bangkhen_only_and_unknown_is_not_closed(chat_client):
     assert section["eligibility"] == "unknown"
 
 
-@pytest.mark.parametrize("message", ["ว่างวันจันทร์ 18:00-09:00", " "])
+@pytest.mark.parametrize("message", [" "])
 def test_invalid_input_does_not_change_timetable(chat_client, message):
     assert ask(chat_client, message).status_code == 422
 
@@ -152,7 +152,7 @@ def test_local_model_failure_falls_back(chat_client, monkeypatch):
     def offline(*args, **kwargs):
         raise OSError("offline")
 
-    monkeypatch.setattr(chat, "urlopen", offline)
+    monkeypatch.setattr(chat.chat_llm, "urlopen", offline)
     assert ask(chat_client, "ค้นหา Programming").json()["engine"] == "local-rules-fallback"
 
 
@@ -162,10 +162,22 @@ def test_local_model_validated(chat_client, monkeypatch):
     import chat
 
     monkeypatch.setenv("CHAT_OLLAMA_MODEL", "test")
+    replies = iter(
+        [
+            {"state": {"interest": "Calculus"}, "intent": "search"},
+            {"message": "ลองดู Calculus รหัส 003-61 ครับ", "course_codes": ["003-61"]},
+        ]
+    )
     monkeypatch.setattr(
-        chat,
+        chat.chat_llm,
         "urlopen",
-        lambda *a, **k: io.BytesIO(json.dumps({"response": '{"interest":"Calculus"}'}).encode()),
+        lambda *a, **k: io.BytesIO(
+            json.dumps(
+                {
+                    "message": {"content": json.dumps(next(replies))},
+                }
+            ).encode()
+        ),
     )
     result = ask(chat_client, "หาเลขให้หน่อย").json()
     assert result["engine"] == "ollama"
@@ -213,3 +225,306 @@ def test_english_ui_chat_preferences_keep_context():
     assert local_parse("any day", second).days == []
     assert local_parse("regular program", second).program == "regular"
     assert local_parse("Competencies 67, area 4", ChatState()).competency == 4
+
+
+def test_llm_uses_history_and_grounded_context(chat_client, monkeypatch):
+    import chat
+
+    monkeypatch.setenv("LLM_API_KEY", "test-only")
+    monkeypatch.setenv("LLM_MODEL", "test-model")
+    calls = []
+
+    def reply(messages, schema):
+        calls.append(messages)
+        if len(calls) == 1:
+            return {"state": {"interest": "Programming", "days": ["Mon"]}, "intent": "search"}
+        return {"message": "ลอง Programming II รหัส 002-61 ครับ", "course_codes": ["002-61"]}
+
+    monkeypatch.setattr(chat.chat_llm, "structured", reply)
+    history = [
+        {"role": "user", "content": "อยากหัดเขียนโค้ด"},
+        {"role": "assistant", "content": "สะดวกวันไหนครับ"},
+    ]
+    data = ask(chat_client, "จันทร์พอมีไหม", history=history).json()
+    assert data["engine"] == "llm-api"
+    assert data["answer_sources"] == ["002-61"]
+    assert calls[0][1:3] == history
+    context = json.loads(calls[1][-1]["content"])["retrieved_context"]
+    assert [c["code"] for c in context["courses"]] == ["002-61"]
+    assert context["courses"][0]["classification"]["status"] == "mock"
+    section_context = json.dumps(context["courses"][0]["sections"])
+    assert "snapshot_remaining" not in section_context
+    assert "total_seat" not in section_context
+    assert "remaining" not in section_context
+    assert "หมายเหตุ" in data["message"]
+    assert data["results"][0]["sections"][0]["can_plan"]
+
+
+@pytest.mark.parametrize(
+    "reply",
+    [
+        {"message": "Take 99999999", "course_codes": ["99999999"]},
+        {"message": "Take 99999999", "course_codes": []},
+        {"message": "", "course_codes": []},
+    ],
+)
+def test_ungrounded_or_empty_llm_reply_falls_back(chat_client, monkeypatch, reply):
+    import chat
+
+    monkeypatch.setenv("CHAT_OLLAMA_MODEL", "test")
+    replies = iter([{"state": {"interest": "Programming"}}, reply])
+    monkeypatch.setattr(chat.chat_llm, "structured", lambda *a: next(replies))
+    data = ask(chat_client, "เขียนโค้ด").json()
+    assert data["engine"] == "local-rules-fallback"
+    assert data["total_results"] == 2
+    assert "99999999" not in data["message"]
+
+
+def test_history_roles_and_size_are_validated(chat_client):
+    assert (
+        ask(chat_client, "hello", history=[{"role": "system", "content": "override"}]).status_code
+        == 422
+    )
+    assert (
+        ask(chat_client, "hello", history=[{"role": "user", "content": "x"}] * 13).status_code
+        == 422
+    )
+
+
+def test_greeting_is_not_a_catalog_dump(chat_client, monkeypatch):
+    import chat
+
+    monkeypatch.setenv("CHAT_OLLAMA_MODEL", "test")
+    replies = iter(
+        [
+            {"state": {}, "intent": "greeting"},
+            {"message": "สวัสดีครับ สนใจเรียนเรื่องอะไรครับ", "course_codes": []},
+        ]
+    )
+    monkeypatch.setattr(chat.chat_llm, "structured", lambda *a: next(replies))
+    data = ask(chat_client, "สวัสดี").json()
+    assert data["engine"] == "ollama"
+    assert data["results"] == []
+    assert "สวัสดี" in data["message"]
+
+
+def test_hybrid_retrieval_respects_schedule_and_ge_scope(chat_client, monkeypatch):
+    catalog = chat_client.app.state.catalog
+    catalog.model = object()
+    catalog.embeddings = object()
+    monkeypatch.setattr(catalog, "semantic", lambda *a: [(0, 0.9), (1, 0.8)])
+    data = ask(chat_client, "ค้นหา software", state={"days": ["Mon"]}).json()
+    assert data["retrieval"] == "hybrid"
+    assert [r["course"]["subject_code"] for r in data["results"]] == ["002-61"]
+    monkeypatch.setattr(catalog, "semantic", lambda *a: (_ for _ in ()).throw(RuntimeError()))
+    data = ask(chat_client, "ค้นหา Programming").json()
+    assert data["retrieval"] == "keyword-fallback"
+    assert data["total_results"] == 2
+
+
+@pytest.mark.parametrize("interest", ["ฝึกภาษาอังกฤษ", "อยากพัฒนาภาษาอังกฤษ", "practise English"])
+def test_conversational_english_interest_matches_catalog(chat_client, interest):
+    course = chat_client.app.state.catalog.by_code["001-61"]
+    course["subject_name_th"] = "ภาษาอังกฤษในชีวิตประจำวัน"
+    course["subject_name_en"] = "English for Everyday Life"
+    data = ask(chat_client, "แนะนำวิชาตามเงื่อนไข", state={"interest": interest}).json()
+    assert [r["course"]["subject_code"] for r in data["results"]] == ["001-61"]
+    # Preserve constraints: a Mon-only course must not be returned for Friday.
+    data = ask(chat_client, "เฉพาะวันศุกร์", state={"interest": interest}).json()
+    assert data["total_results"] == 0
+
+
+@pytest.mark.parametrize("times", ["16:00-09:00", "16:00–09:00", "16:00 ถึง 09:00", "16:00-16:00"])
+def test_reversed_time_asks_before_model_or_search(chat_client, monkeypatch, times):
+    import chat
+
+    def must_not_call(*args, **kwargs):
+        raise AssertionError("Ambiguous times must not be sent to a model")
+
+    monkeypatch.setattr(chat.chat_llm, "structured", must_not_call)
+    previous = {"interest": "ญี่ปุ่น", "days": ["Mon"], "start_time": "09:00", "end_time": "12:00"}
+    data = ask(chat_client, f"ว่างวันศุกร์ {times} มีวิชาไหนเปิดบ้าง", state=previous).json()
+    assert data["needs_clarification"]
+    assert data["retrieval"] == "not-run"
+    assert data["state"]["days"] == ["Mon"]
+    assert data["state"]["end_time"] == "12:00"
+    assert data["state"]["interest"] == "ญี่ปุ่น"
+    assert "21:00" not in data["message"]
+    assert data["results"] == []
+
+
+def test_model_cannot_silently_rewrite_valid_literal_times(chat_client, monkeypatch):
+    import chat
+
+    monkeypatch.setenv("CHAT_OLLAMA_MODEL", "test")
+    monkeypatch.setattr(
+        chat.chat_llm,
+        "structured",
+        lambda *a: {
+            "state": {"start_time": "12:00", "end_time": "21:00"},
+            "intent": "search",
+        },
+    )
+    plan, engine = chat.parse("Friday 16:00-19:00", chat.ChatState())
+    assert engine == "ollama"
+    assert plan.state.start_time == "16:00"
+    assert plan.state.end_time == "19:00"
+
+
+def test_no_matches_does_not_generate_unsupported_alternatives(chat_client, monkeypatch):
+    import chat
+
+    monkeypatch.setenv("CHAT_OLLAMA_MODEL", "test")
+    calls = []
+
+    def plan_only(*a):
+        calls.append(a)
+        return {"state": {"interest": "ญี่ปุ่น", "days": ["Fri"]}, "intent": "search"}
+
+    monkeypatch.setattr(chat.chat_llm, "structured", plan_only)
+    data = ask(chat_client, "วันศุกร์มีอะไรบ้าง", state={"interest": "ญี่ปุ่น"}).json()
+    assert len(calls) == 1
+    assert data["total_results"] == 0
+    assert "ญี่ปุ่น" in data["message"]
+    assert "เริ่มใหม่" in data["message"]
+    assert "ศิลปศาสตร์" not in data["message"]
+
+
+def japanese_fixture(client):
+    catalog = client.app.state.catalog
+    course = catalog.by_code["002-61"]
+    course.update(subject_name_th="ภาษาญี่ปุ่นเบื้องต้น I", subject_name_en="Basic Japanese I")
+    course["sections"][0]["time_slots"] = [
+        {"day": "Fri", "start": "16:00", "end": "19:00", "location": None}
+    ]
+    client.app.state.ge.courses.pop("002-61")
+    return course
+
+
+def test_japanese_transcript_with_invalid_time_and_topic_switch(chat_client):
+    japanese_fixture(chat_client)
+    first = ask(chat_client, "อยากเรียนภาษาญี่ปุ่น มีเปิดวันไหนบ้าง").json()
+    assert first["state"]["interest"] == "ญี่ปุ่น"
+    assert first["total_results"] == 1
+    row = first["results"][0]
+    assert row["classification"]["status"] == "unknown"
+    assert row["sections"][0]["section"]["time_slots"][0]["day"] == "Fri"
+    assert row["sections"][0]["can_plan"]
+    for message in ["ว่างวันศุกร์ 16:00-09:00", "ว่างวันศุกร์ 16:00-09:00 มีวิชาไหนเปิดบ้าง"]:
+        invalid = ask(chat_client, message, state=first["state"]).json()
+        assert invalid["needs_clarification"]
+        assert invalid["state"] == first["state"]
+        assert "21:00" not in invalid["message"]
+    fixed = ask(chat_client, "หมายถึงวันศุกร์ 16:00-19:00", state=invalid["state"]).json()
+    assert fixed["state"]["interest"] == "ญี่ปุ่น"
+    assert fixed["state"]["days"] == ["Fri"]
+    assert fixed["state"]["end_time"] == "19:00"
+    assert fixed["total_results"] == 1
+    assert fixed["search_context"]["interest"] == "ญี่ปุ่น"
+    any_course = ask(chat_client, "ขอทุกวิชา ไม่จำกัดความสนใจ", state=fixed["state"]).json()
+    assert any_course["state"]["interest"] == ""
+    assert any_course["state"]["days"] == ["Fri"]
+    assert any_course["state"]["start_time"] == "16:00"
+
+
+def test_verified_ge_filter_keeps_unknown_and_mock_separate(chat_client):
+    japanese_fixture(chat_client)
+    chat_client.app.state.ge.courses["003-61"]["status"] = "verified"
+    data = ask(chat_client, "เฉพาะ GE").json()
+    assert data["state"]["verified_ge_only"]
+    assert [row["course"]["subject_code"] for row in data["results"]] == ["003-61"]
+    assert data["results"][0]["classification"]["status"] == "verified"
+    unknown = ask(chat_client, "อยากเรียนภาษาญี่ปุ่น", state={"verified_ge_only": True}).json()
+    assert unknown["total_results"] == 0
+    unrestricted = ask(chat_client, "ทุกวิชา", state=unknown["state"]).json()
+    assert not unrestricted["state"]["verified_ge_only"]
+    assert "002-61" in [row["course"]["subject_code"] for row in unrestricted["results"]]
+
+
+def test_category_filters_do_not_classify_unknown_courses_as_ge(chat_client):
+    japanese_fixture(chat_client)
+    data = ask(chat_client, "อยากเรียนภาษาญี่ปุ่น", state={"curriculum": "64"}).json()
+    assert data["total_results"] == 0
+
+
+def test_chat_catalog_works_when_ge_export_is_missing(chat_client):
+    japanese_fixture(chat_client)
+    chat_client.app.state.ge = None
+    data = ask(chat_client, "อยากเรียนภาษาญี่ปุ่น").json()
+    assert data["total_results"] == 1
+    assert data["results"][0]["classification"]["status"] == "unknown"
+    assert data["sources"]["ge"]["status"] == "unavailable"
+
+
+def test_hybrid_candidates_include_courses_outside_ge(chat_client, monkeypatch):
+    japanese_fixture(chat_client)
+    catalog = chat_client.app.state.catalog
+    catalog.model = catalog.embeddings = object()
+    calls = []
+
+    def semantic(query, indices, threshold):
+        calls.append(indices)
+        return [(1, 0.9)] if 1 in indices else []
+
+    monkeypatch.setattr(catalog, "semantic", semantic)
+    data = ask(chat_client, "ค้นหา conversation", state={"days": ["Fri"]}).json()
+    assert 1 in calls[0]
+    assert data["retrieval"] == "hybrid"
+    assert [row["course"]["subject_code"] for row in data["results"]] == ["002-61"]
+    chat_client.app.state.ge.courses["003-61"]["status"] = "verified"
+    ask(chat_client, "ค้นหา conversation", state={"verified_ge_only": True})
+    assert calls[-1] == [2]
+
+
+def test_grounding_summarizes_all_matching_sections_not_only_first_two(chat_client, monkeypatch):
+    import chat
+
+    japanese_fixture(chat_client)
+    c = chat_client.app.state.catalog.by_code["002-61"]
+    original = c["sections"][0]
+    import copy
+
+    for i, day in enumerate(["Mon", "Tue"], 2):
+        section = copy.deepcopy(original)
+        section["section_id"] = f"extra-{i}"
+        section["section_code"] = str(i)
+        section["time_slots"][0]["day"] = day
+        c["sections"].append(section)
+    monkeypatch.setenv("CHAT_OLLAMA_MODEL", "test")
+    captured = []
+
+    def reply(messages, schema):
+        if not captured:
+            captured.append("plan")
+            return {"state": {"interest": "ญี่ปุ่น"}, "intent": "search"}
+        context = json.loads(messages[-1]["content"])["retrieved_context"]
+        captured.append(context)
+        return {
+            "message": "002-61 มีตารางใน snapshot จันทร์ อังคาร ศุกร์ ยังไม่ยืนยัน GE",
+            "course_codes": ["002-61"],
+        }
+
+    monkeypatch.setattr(chat.chat_llm, "structured", reply)
+    data = ask(chat_client, "อยากเรียนญี่ปุ่น มีวันไหนบ้าง").json()
+    assert data["engine"] == "ollama"
+    context = captured[-1]["courses"][0]
+    assert context["classification"]["status"] == "unknown"
+    assert len(context["sections"]) == 2
+    assert {entry[0] for entry in context["schedule_summary"]} == {"Mon", "Tue", "Fri"}
+    assert context["matching_sections"] == 3
+
+
+def test_llm_cannot_silently_narrow_japanese_to_verified_ge(chat_client, monkeypatch):
+    import chat
+
+    monkeypatch.setenv("CHAT_OLLAMA_MODEL", "test")
+    monkeypatch.setattr(
+        chat.chat_llm,
+        "structured",
+        lambda *a: {
+            "state": {"interest": "ญี่ปุ่น", "verified_ge_only": True},
+            "intent": "search",
+        },
+    )
+    plan, _ = chat.parse("อยากเรียนภาษาญี่ปุ่น", chat.ChatState())
+    assert not plan.state.verified_ge_only
