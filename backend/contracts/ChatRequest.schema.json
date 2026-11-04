@@ -211,6 +211,19 @@
   },
   "additionalProperties": false,
   "properties": {
+    "conversation_id": {
+      "anyOf": [
+        {
+          "pattern": "^[A-Za-z0-9-]{1,64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Conversation Id"
+    },
     "message": {
       "maxLength": 1000,
       "minLength": 1,

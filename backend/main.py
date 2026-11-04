@@ -16,6 +16,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from accounts import Accounts
 from catalog import Catalog
 from chat import ChatRequest, GEData, respond
+from feedback import FeedbackService, install_routes
 from schemas import (
     Credentials,
     Filters,
@@ -71,9 +72,23 @@ def create_app(catalog_path=None, database_path=None, semantic=None, demo=False)
                 )
             except (OSError, ValueError):
                 log.exception("GE data unavailable; existing discovery remains available")
+        app.state.feedback = None
+        try:
+            app.state.feedback = FeedbackService.configured(demo, Path(database_path).parent)
+        except Exception:
+            log.warning("Feedback storage unavailable; chat remains available")
         yield
 
     app = FastAPI(title="KU-PAS Course and Timetable API", version="2.0.0", lifespan=lifespan)
+    install_routes(app)
+
+    @app.middleware("http")
+    async def private_feedback_responses(request, call_next):
+        response = await call_next(request)
+        if request.url.path.startswith("/feedback"):
+            response.headers["Cache-Control"] = "no-store"
+        return response
+
     origins = [
         v.strip()
         for v in os.getenv("CORS_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173").split(",")
@@ -83,7 +98,7 @@ def create_app(catalog_path=None, database_path=None, semantic=None, demo=False)
         CORSMiddleware,
         allow_origins=origins,
         allow_methods=["GET", "POST", "PUT"],
-        allow_headers=["Authorization", "Content-Type"],
+        allow_headers=["Authorization", "Content-Type", "X-Feedback-Review-Key"],
     )
 
     @app.exception_handler(StarletteHTTPException)
@@ -292,7 +307,11 @@ def create_app(catalog_path=None, database_path=None, semantic=None, demo=False)
         if not body.message.strip():
             raise HTTPException(422, "กรุณาพิมพ์คำถาม")
         try:
-            return respond(body, c, app.state.ge or GEData.unavailable(c))
+            result = respond(body, c, app.state.ge or GEData.unavailable(c))
+            result["feedback_receipt"] = None
+            if app.state.feedback is not None:
+                result["feedback_receipt"] = app.state.feedback.receipt(body, result)
+            return result
         except ValueError as exc:
             raise HTTPException(422, "ตรวจเงื่อนไขวัน เวลา หน่วยกิต และรายการในตารางอีกครั้ง") from exc
 

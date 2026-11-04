@@ -68,6 +68,7 @@ class ChatAnswer(StrictModel):
 
 
 class ChatRequest(StrictModel):
+    conversation_id: str | None = Field(default=None, pattern=r"^[A-Za-z0-9-]{1,64}$")
     message: str = Field(min_length=1, max_length=1000)
     state: ChatState = Field(default_factory=ChatState)
     items: list[TimetableRef] = Field(default_factory=list, max_length=100)

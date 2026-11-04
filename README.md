@@ -101,3 +101,7 @@ pnpm build
 อัปเดตข้อมูลด้วย `python backend/import_ku_data.py /path/to/workbooks --output-dir backend/data` หลังติดตั้ง dependencies แล้ว รายการอ้างอิงหมู่เรียนในตารางผูกกับ dataset version หาก snapshot เปลี่ยน ระบบให้ตรวจ/ล้างตารางเก่าแทนการจับคู่ข้อมูลใหม่โดยเงียบ ๆ
 
 ยังไม่ได้ deploy หรือรับรอง production security/SSO งานประเมิน AI เชิงวิจัยและทดสอบกับนักศึกษาเป็นงานระยะถัดไปตาม `next-task.md`
+
+## Feedback และการตรวจตัวอย่างก่อนเรียนรู้
+
+เพิ่ม feedback ต่อคำตอบพร้อมเหตุผลและความยินยอม หน้าผู้ตรวจ `/feedback/review` ต้องมีรหัสเฉพาะ ผู้ตรวจแก้และอนุมัติตัวอย่างก่อนส่งออก JSONL แยก train/eval ระบบไม่ฝึกโมเดลหรือเขียนฐานความรู้จาก feedback โดยอัตโนมัติ รองรับ PostgreSQL บน Vercel และ SQLite สำหรับทดลอง local ดู [คู่มือ feedback/review](docs/FEEDBACK-REVIEW.md)

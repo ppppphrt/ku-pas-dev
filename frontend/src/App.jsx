@@ -11,6 +11,8 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import TopBar from "./components/TopBar";
 import { Loading } from "./components/ui";
 import CoursePage from "./pages/CoursePage";
+import FeedbackReviewPage from "./pages/FeedbackReviewPage";
+import "./feedback.css";
 import ChatPage from "./pages/ChatPage";
 import CourseDetailPage from "./pages/CourseDetailPage";
 import TimetablePage from "./pages/TimetablePage";
@@ -101,6 +103,7 @@ function Workspace() {
                 element={<CoursePage metadata={metadata} />}
               />
               <Route path="/chat" element={<ChatPage />} />
+              <Route path="/feedback/review" element={<FeedbackReviewPage />} />
               <Route
                 path="/courses/:subjectCode"
                 element={<CourseDetailPage />}

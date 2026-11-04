@@ -1,4 +1,5 @@
 import Icon from "../components/Icon";
+import ChatFeedback from "../components/ChatFeedback";
 import { useLanguage } from "../hooks/useLanguage";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
@@ -83,6 +84,9 @@ export default function ChatPage() {
   const [message, setMessage] = useState("");
   const [state, setState] = useState(initial);
   const [messages, setMessages] = useState([]);
+  const [conversationId, setConversationId] = useState(() =>
+    crypto.randomUUID(),
+  );
   const [response, setResponse] = useState(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -118,6 +122,7 @@ export default function ChatPage() {
         "/chat",
         {
           message: text,
+          conversation_id: conversationId,
           language,
           history: messages.slice(-12).map(({ role, text }) => ({
             role,
@@ -136,11 +141,14 @@ export default function ChatPage() {
         ...old.slice(-18),
         {
           role: "user",
+          id: crypto.randomUUID(),
           text: displayText,
         },
         {
           role: "assistant",
+          id: crypto.randomUUID(),
           text: data.message,
+          feedbackReceipt: data.feedback_receipt,
         },
       ]);
       setResponse(data);
@@ -330,6 +338,7 @@ export default function ChatPage() {
               setState(initial);
               setResponse(null);
               setMessages([]);
+              setConversationId(crypto.randomUUID());
               setError("");
               setNotice("");
             }}
@@ -373,6 +382,7 @@ export default function ChatPage() {
                   setState(initial);
                   setResponse(null);
                   setMessages([]);
+                  setConversationId(crypto.randomUUID());
                   setMessage("");
                   setError("");
                   setNotice("");
@@ -439,9 +449,12 @@ export default function ChatPage() {
             aria-live="polite"
           >
             {messages.map((entry, i) => (
-              <p className={`chat-bubble ${entry.role}`} key={i}>
-                {entry.text}
-              </p>
+              <div className={`chat-turn ${entry.role}`} key={entry.id || i}>
+                <p className={`chat-bubble ${entry.role}`}>{entry.text}</p>
+                {entry.role === "assistant" && (
+                  <ChatFeedback receipt={entry.feedbackReceipt} />
+                )}
+              </div>
             ))}
             {busy && (
               <p className="chat-bubble assistant" role="status">
