@@ -18,6 +18,7 @@ import AccountPage from "./pages/AccountPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import "./App.css";
 import "./new-ui.css";
+import "./pages/ChatPage.css";
 function TimetableNotice() {
   const { t } = useLanguage();
   const { error } = useTimetable();

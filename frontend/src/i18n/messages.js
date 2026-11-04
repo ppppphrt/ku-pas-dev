@@ -1,5 +1,22 @@
 // UI messages only. Course data and filter identifiers retain their source values.
 export const messages = [
+  ["Search preferences", "เงื่อนไขการค้นหา"],
+  ["My timetable", "ตารางของฉัน"],
+  ["What would you like to learn?", "วันนี้อยากเรียนรู้อะไร?"],
+  ["The right course. At the right time.", "หาวิชาที่ใช่ ในเวลาที่ชอบ"],
+  [
+    "Share your interests and let Chat GE help you discover courses and plan your timetable.",
+    "เล่าความสนใจของคุณ แล้วให้ Chat GE ช่วยค้นหาและวางแผนตารางเรียน",
+  ],
+  ["Start with a little inspiration", "เริ่มต้นจากคำถามเหล่านี้"],
+  ["Follow your interests", "หาวิชาที่ตรงใจ"],
+  ["Start with something you enjoy", "เริ่มจากสิ่งที่คุณสนใจ"],
+  ["Explore your GE options", "เก็บวิชา GE ให้ครบ"],
+  ["Search by group or competency", "ค้นหาตามกลุ่มหรือสมรรถนะ"],
+  ["Find a course that fits", "หาวิชาในเวลาว่าง"],
+  ["Make learning fit your schedule", "ให้เวลาเรียนเข้ากับชีวิตคุณ"],
+  ["Have a course in mind?", "มีวิชาในใจแล้ว"],
+  ["Look up a course name or code", "ค้นหาด้วยชื่อหรือรหัสวิชา"],
   ["Only confirmed GE courses", "เฉพาะวิชาที่รับรอง GE แล้ว"],
   [
     "By default, search the Bangkhen catalog. Each course shows its GE status separately.",

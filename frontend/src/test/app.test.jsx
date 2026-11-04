@@ -312,7 +312,7 @@ it("chats with context, labels mocks and shares the existing timetable", async (
   expect(
     JSON.parse(localStorage.getItem("ku-timetable-v2")).items,
   ).toHaveLength(1);
-  await user.click(screen.getByRole("link", { name: /ดูตารางของฉัน/ }));
+  await user.click(screen.getByRole("link", { name: /ตารางของฉัน/ }));
   await screen.findByText("1 วิชา");
 });
 
@@ -426,6 +426,7 @@ it("localizes chat controls while preserving the user's exact draft", async () =
   const input = await screen.findByLabelText("Ask about GE courses");
   await user.type(input, "สนใจภาษา");
   expect(input).toHaveValue("สนใจภาษา");
+  await user.click(screen.getByRole("button", { name: "Search preferences" }));
   await user.selectOptions(screen.getByLabelText("GE curriculum"), "64");
   await user.selectOptions(
     screen.getByLabelText("GE group"),

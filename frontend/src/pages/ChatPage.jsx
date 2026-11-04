@@ -1,3 +1,4 @@
+import Icon from "../components/Icon";
 import { useLanguage } from "../hooks/useLanguage";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
@@ -41,10 +42,30 @@ const initial = {
   end_time: null,
 };
 const examples = [
-  "สนใจภาษา",
-  "สมรรถนะ 67 ด้าน 4",
-  "ว่างวันศุกร์ 09:00-16:00",
-  "ค้นหา 01001317",
+  {
+    text: "สนใจภาษา",
+    icon: "chat",
+    title: "หาวิชาที่ตรงใจ",
+    description: "เริ่มจากสิ่งที่คุณสนใจ",
+  },
+  {
+    text: "สมรรถนะ 67 ด้าน 4",
+    icon: "book",
+    title: "เก็บวิชา GE ให้ครบ",
+    description: "ค้นหาตามกลุ่มหรือสมรรถนะ",
+  },
+  {
+    text: "ว่างวันศุกร์ 09:00-16:00",
+    icon: "calendar",
+    title: "หาวิชาในเวลาว่าง",
+    description: "ให้เวลาเรียนเข้ากับชีวิตคุณ",
+  },
+  {
+    text: "ค้นหา 01001317",
+    icon: "search",
+    title: "มีวิชาในใจแล้ว",
+    description: "ค้นหาด้วยชื่อหรือรหัสวิชา",
+  },
 ];
 function SourceLink({ url, children }) {
   return /^https?:\/\//.test(url || "") ? (
@@ -58,6 +79,7 @@ function SourceLink({ url, children }) {
 export default function ChatPage() {
   const { t, language } = useLanguage();
   const timetable = useTimetable();
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [state, setState] = useState(initial);
   const [messages, setMessages] = useState([]);
@@ -138,21 +160,36 @@ export default function ChatPage() {
     }));
   }
   return (
-    <main id="main" className="container chat-page" lang={language}>
-      <header className="chat-heading">
-        <div>
-          <p className="eyebrow">{t("Chat GE · บางเขน")}</p>
-          <h1>{t("คุยเพื่อหาวิชาที่ใช่")}</h1>
-          <p>{t("บอกความสนใจและเวลาว่าง แล้วเลือกหมู่เรียนใส่ตารางของคุณ")}</p>
+    <main
+      id="main"
+      className={`container chat-page ${messages.length ? "chat-active" : "chat-welcome"}`}
+      lang={language}
+    >
+      <header className="chat-toolbar">
+        <div className="chat-identity">
+          <Icon name="chat" />
+          <strong>Chat GE</strong>
+          <span>{t("ผู้ช่วยค้นหารายวิชา")}</span>
         </div>
-        <Link to="/timetable">
-          {t("ดูตารางของฉัน · ")}
-          {timetable.items.length}
-          {t(" วิชา →")}
-        </Link>
+        <div className="chat-tools">
+          <button
+            type="button"
+            aria-expanded={filtersOpen}
+            aria-controls="chat-filters"
+            onClick={() => setFiltersOpen((open) => !open)}
+          >
+            <Icon name="filter" />
+            {t("เงื่อนไขการค้นหา")}
+          </button>
+          <Link to="/timetable">
+            <Icon name="calendar" />
+            {t("ตารางของฉัน")}
+            <span className="chat-count">{timetable.items.length}</span>
+          </Link>
+        </div>
       </header>
-      <div className="chat-layout">
-        <aside className="chat-sidebar">
+      <div className={`chat-layout ${filtersOpen ? "chat-filters-open" : ""}`}>
+        <aside id="chat-filters" className="chat-sidebar" hidden={!filtersOpen}>
           <h2>{t("เงื่อนไขที่คุยกัน")}</h2>
           <p>{t("พิมพ์เปลี่ยนในแชท หรือปรับตรงนี้แล้วกดค้นหา")}</p>
           <label>
@@ -309,24 +346,56 @@ export default function ChatPage() {
           className="chat-conversation"
           aria-label={t("บทสนทนาค้นหา GE")}
         >
-          <div className="chat-mode">
-            <strong>
-              {response?.needs_clarification
+          {!messages.length && (
+            <div className="chat-intro">
+              <div className="chat-avatar">
+                <Icon name="book" />
+                <span aria-hidden="true">✦</span>
+              </div>
+              <p className="eyebrow">YOUR COURSE COMPANION</p>
+              <h1>{t("วันนี้อยากเรียนรู้อะไร?")}</h1>
+              <p>
+                {t("หาวิชาที่ใช่ ในเวลาที่ชอบ")}
+                <br />
+                {t(
+                  "เล่าความสนใจของคุณ แล้วให้ Chat GE ช่วยค้นหาและวางแผนตารางเรียน",
+                )}
+              </p>
+            </div>
+          )}
+          {messages.length > 0 && (
+            <div className="chat-session-heading">
+              <h1>{t("คุยเพื่อหาวิชาที่ใช่")}</h1>
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => {
+                  setState(initial);
+                  setResponse(null);
+                  setMessages([]);
+                  setMessage("");
+                  setError("");
+                  setNotice("");
+                  messageInput.current?.focus();
+                }}
+              >
+                {t("เริ่มบทสนทนาใหม่")}
+              </button>
+            </div>
+          )}
+          {response && (
+            <p className="hint" role="status">
+              {response.needs_clarification
                 ? t("ขอรายละเอียดเพิ่มเติม")
-                : response?.engine === "ollama"
+                : response.engine === "ollama"
                   ? t("AI บนเครื่อง · Ollama")
-                  : response?.engine === "llm-api"
+                  : response.engine === "llm-api"
                     ? t("ผู้ช่วยแนะนำรายวิชา")
-                    : response?.engine === "local-rules-fallback"
+                    : response.engine === "local-rules-fallback"
                       ? t("LLM ไม่พร้อม · ใช้การค้นหาสำรอง")
-                      : response
-                        ? t("โหมดค้นหาตามกฎ · ยังไม่ได้เปิด LLM")
-                        : t("Chat GE · ผู้ช่วยค้นหารายวิชา")}
-            </strong>
-            <span>
-              {t("อ้างอิงข้อมูลรายวิชา · ยังไม่ยืนยันภาคเรียนปัจจุบัน")}
-            </span>
-          </div>
+                      : t("โหมดค้นหาตามกฎ · ยังไม่ได้เปิด LLM")}
+            </p>
+          )}
           {response?.search_context && !response.needs_clarification && (
             <p className="hint" role="status">
               {t("คำค้นปัจจุบัน:")}{" "}
@@ -369,11 +438,6 @@ export default function ChatPage() {
             aria-label={t("ข้อความสนทนา")}
             aria-live="polite"
           >
-            <p className="chat-bubble assistant">
-              {t(
-                "สวัสดีครับ วันนี้อยากหาวิชาแบบไหน ลองเล่าความสนใจหรือเวลาที่สะดวกได้เลย เช่น “อยากฝึกภาษาอังกฤษ แต่ไม่สะดวกเรียนเช้า” แล้วค่อยคุยปรับเงื่อนไขกันได้ครับ",
-              )}
-            </p>
             {messages.map((entry, i) => (
               <p className={`chat-bubble ${entry.role}`} key={i}>
                 {entry.text}
@@ -386,17 +450,32 @@ export default function ChatPage() {
             )}
             <div ref={transcriptEnd} />
           </div>
-          <div className="chat-examples">
-            {examples.map((text) => (
-              <button
-                key={text}
-                disabled={busy || !timetable.ready}
-                onClick={() => send(text, t(text))}
-              >
-                {t(text)}
-              </button>
-            ))}
-          </div>
+          {!messages.length && (
+            <div className="chat-starters">
+              <p className="chat-starters-caption">
+                {t("เริ่มต้นจากคำถามเหล่านี้")}
+              </p>
+              <div className="chat-starter-grid">
+                {examples.map(({ text, icon, title, description }) => (
+                  <button
+                    key={text}
+                    aria-label={t(text)}
+                    disabled={busy || !timetable.ready}
+                    onClick={() => send(text, t(text))}
+                  >
+                    <span className={`starter-icon starter-${icon}`}>
+                      <Icon name={icon} />
+                    </span>
+                    <strong>{t(title)}</strong>
+                    <span>{t(description)}</span>
+                    <span className="starter-prompt">
+                      {t(text)} <Icon name="arrow" />
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
           <form
             className="chat-compose"
             onSubmit={(e) => {
@@ -404,7 +483,9 @@ export default function ChatPage() {
               send();
             }}
           >
-            <label htmlFor="chat-message">{t("ถามเรื่องรายวิชา GE")}</label>
+            <label className="sr-only" htmlFor="chat-message">
+              {t("ถามเรื่องรายวิชา GE")}
+            </label>
             <div>
               <input
                 id="chat-message"
@@ -416,13 +497,17 @@ export default function ChatPage() {
                 disabled={busy}
               />
               <button
-                className="primary"
+                className="primary chat-send"
+                aria-label={busy ? t("กำลังค้นหา…") : t("ส่งข้อความ")}
                 disabled={busy || !message.trim() || !timetable.ready}
               >
-                {busy ? t("กำลังค้นหา…") : t("ส่งข้อความ")}
+                <Icon name="arrow" />
               </button>
             </div>
           </form>
+          <p className="chat-footnote">
+            {t("อ้างอิงข้อมูลรายวิชา · ยังไม่ยืนยันภาคเรียนปัจจุบัน")}
+          </p>
           {error && (
             <p className="error" role="alert">
               {t(error)}
