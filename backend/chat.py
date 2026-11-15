@@ -311,6 +311,15 @@ def resolve_state(message, previous, proposed):
         data["verified_ge_only"] = False
     elif re.search(r"เฉพาะ\s*(?:วิชา\s*)?ge|verified ge|ge only", text):
         data["verified_ge_only"] = True
+    # A day/topic follow-up must not let model-supplied defaults erase availability.
+    time_cue = re.search(
+        r"\d{1,2}[:.]\d{2}|\d{1,2}\s*[-–]\s*\d{1,2}|"
+        r"เวลา|โมง|นาฬิกา|เช้า|บ่าย|เย็น|ค่ำ|เที่ยง|ดึก|"
+        r"\b(?:time|morning|afternoon|evening|night|noon|before|after|am|pm|lunch|early|late)\b",
+        text,
+    )
+    if not reset and not time_cue:
+        data.update(start_time=previous.start_time, end_time=previous.end_time)
     explicit = explicit_time_range(message)
     if explicit:
         data.update(start_time=explicit[0], end_time=explicit[1])
@@ -373,6 +382,8 @@ def parse(message, previous, history=(), diagnostics=None):
         + json.dumps(chat_llm.compact_schema(ChatPlan.model_json_schema()), separators=(",", ":"))
         + ". "
         "Return state as a PATCH: include ONLY changed filters; omit unchanged fields. "
+        "Example: previous start_time=12:00,end_time=17:00; 'เปลี่ยนเป็นวันจันทร์แทน' "
+        'must return state={"days":["Mon"]} and keep the previous time window. '
         "Use null or empty lists/strings to clear filters. Clear all filters on "
         "reset; clear obsolete interest on a topic switch. Understand negations and colloquial "
         "preferences (no early classes, Fridays only, etc). Use concise Thai/English search "
