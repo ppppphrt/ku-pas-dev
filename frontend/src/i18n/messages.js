@@ -501,6 +501,7 @@ export const messages = [
     "ยังไม่มีข้อมูล GE ที่ตรงกับ snapshot นี้ โปรดตรวจ GE_DATA_PATH",
   ],
   ["Please enter a question.", "กรุณาพิมพ์คำถาม"],
+  ["Searching the course catalog", "ค้นหาจากข้อมูลรายวิชา"],
   [
     "Check the days, times, credits and timetable selections.",
     "ตรวจเงื่อนไขวัน เวลา หน่วยกิต และรายการในตารางอีกครั้ง",

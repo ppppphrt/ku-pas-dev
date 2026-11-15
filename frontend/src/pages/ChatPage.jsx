@@ -117,6 +117,19 @@ export default function ChatPage() {
     setBusy(true);
     setError("");
     setNotice("");
+    const lastTurn = messages.at(-1);
+    const retry = lastTurn?.failed && lastTurn.text === displayText;
+    const userTurn = {
+      role: "user",
+      id: retry ? lastTurn.id : crypto.randomUUID(),
+      text: displayText,
+    };
+    setMessages((old) =>
+      retry
+        ? old.map((entry) => (entry.id === userTurn.id ? userTurn : entry))
+        : [...old.slice(-18), userTurn],
+    );
+    setMessage("");
     try {
       const { data } = await api.post(
         "/chat",
@@ -124,10 +137,13 @@ export default function ChatPage() {
           message: text,
           conversation_id: conversationId,
           language,
-          history: messages.slice(-12).map(({ role, text }) => ({
-            role,
-            content: text.slice(0, 5000),
-          })),
+          history: messages
+            .filter((entry) => !entry.failed)
+            .slice(-12)
+            .map(({ role, text }) => ({
+              role,
+              content: text.slice(0, 5000),
+            })),
           state,
           dataset_version: timetable.metadata.dataset_version,
           items: timetable.items.map(({ course, section }) => ({
@@ -139,12 +155,7 @@ export default function ChatPage() {
         { timeout: 65000 },
       );
       setMessages((old) => [
-        ...old.slice(-18),
-        {
-          role: "user",
-          id: crypto.randomUUID(),
-          text: displayText,
-        },
+        ...old,
         {
           role: "assistant",
           id: crypto.randomUUID(),
@@ -154,8 +165,13 @@ export default function ChatPage() {
       ]);
       setResponse(data);
       setState(data.state);
-      setMessage("");
     } catch (e) {
+      setMessages((old) =>
+        old.map((entry) =>
+          entry.id === userTurn.id ? { ...entry, failed: true } : entry,
+        ),
+      );
+      setMessage(text);
       setError(errorMessage(e));
     } finally {
       pending.current = false;
@@ -394,7 +410,7 @@ export default function ChatPage() {
               </button>
             </div>
           )}
-          {response && (
+          {response && !busy && (
             <p className="hint" role="status">
               {response.needs_clarification
                 ? t("ขอรายละเอียดเพิ่มเติม")
@@ -402,30 +418,34 @@ export default function ChatPage() {
                   ? t("AI บนเครื่อง · Ollama")
                   : response.engine === "llm-api"
                     ? t("ผู้ช่วยแนะนำรายวิชา")
-                    : response.engine === "local-rules-fallback"
-                      ? t("LLM ไม่พร้อม · ใช้การค้นหาสำรอง")
-                      : t("โหมดค้นหาตามกฎ · ยังไม่ได้เปิด LLM")}
+                    : response.engine === "local-rules-fast"
+                      ? t("ค้นหาจากข้อมูลรายวิชา")
+                      : response.engine === "local-rules-fallback"
+                        ? t("LLM ไม่พร้อม · ใช้การค้นหาสำรอง")
+                        : t("โหมดค้นหาตามกฎ · ยังไม่ได้เปิด LLM")}
             </p>
           )}
-          {response?.search_context && !response.needs_clarification && (
-            <p className="hint" role="status">
-              {t("คำค้นปัจจุบัน:")}{" "}
-              {response.search_context.interest || t("ทุกความสนใจ")}
-              {" · "}
-              {t(
-                response.search_context.scope === "verified-ge"
-                  ? "เฉพาะวิชาที่รับรอง GE แล้ว"
-                  : "catalog บางเขน",
-              )}
-              {" · "}
-              {response.search_context.days
-                .map((day) => t(days[day]))
-                .join(", ") || t("ทุกวัน")}
-              {" · "}
-              {response.search_context.start_time || "00:00"}–
-              {response.search_context.end_time || "24:00"}
-            </p>
-          )}
+          {response?.search_context &&
+            !response.needs_clarification &&
+            !busy && (
+              <p className="hint" role="status">
+                {t("คำค้นปัจจุบัน:")}{" "}
+                {response.search_context.interest || t("ทุกความสนใจ")}
+                {" · "}
+                {t(
+                  response.search_context.scope === "verified-ge"
+                    ? "เฉพาะวิชาที่รับรอง GE แล้ว"
+                    : "catalog บางเขน",
+                )}
+                {" · "}
+                {response.search_context.days
+                  .map((day) => t(days[day]))
+                  .join(", ") || t("ทุกวัน")}
+                {" · "}
+                {response.search_context.start_time || "00:00"}–
+                {response.search_context.end_time || "24:00"}
+              </p>
+            )}
           {response && !response.needs_clarification && (
             <div className="chat-result-jump">
               <span role="status">

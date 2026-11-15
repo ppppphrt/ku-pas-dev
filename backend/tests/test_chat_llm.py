@@ -78,7 +78,7 @@ def test_plan_has_smaller_output_and_turn_deadline_is_shared(monkeypatch):
     with chat_llm.turn_budget():
         chat_llm.structured([], {"properties": {"state": {}}})
         chat_llm.structured([], {"properties": {"message": {}}})
-    assert [call[0]["max_tokens"] for call in calls] == [512, 1000]
+    assert [call[0]["max_tokens"] for call in calls] == [512, 450]
     assert [call[1] for call in calls] == [30, 23]
     assert chat_llm._turn_deadline.get() is None
 

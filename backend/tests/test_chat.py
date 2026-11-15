@@ -57,6 +57,69 @@ def test_followup_and_reset():
     assert local_parse("เริ่มใหม่", state) == ChatState()
 
 
+def test_language_search_and_followup_use_one_llm_call_each(chat_client, monkeypatch):
+    import chat
+
+    catalog = chat_client.app.state.catalog
+    chinese = catalog.by_code["005-61"]
+    chinese.update(subject_name_th="ภาษาจีนเบื้องต้น", subject_name_en="Chinese")
+    spanish = catalog.by_code["002-61"]
+    spanish.update(subject_name_th="ภาษาสเปนเบื้องต้น", subject_name_en="Spanish")
+    spanish["sections"][0]["time_slots"][0]["day"] = "Tue"
+    monkeypatch.setenv("CHAT_OLLAMA_MODEL", "test")
+    calls = []
+
+    def reply(messages, schema):
+        assert "message" in schema["properties"] and "state" not in schema["properties"]
+        calls.append(messages)
+        context = json.loads(messages[-1]["content"])["retrieved_context"]
+        code = context["courses"][0]["code"]
+        return {"message": f"ลองดู {code} ในการ์ดรายวิชาครับ", "course_codes": [code]}
+
+    monkeypatch.setattr(chat.chat_llm, "structured", reply)
+    first = ask(chat_client, "อยากเรียนภาษาจีน ว่างเฉพาะวันอังคาร ศุกร์").json()
+    assert first["engine"] == "ollama" and first["understanding_engine"] == "local-rules-fast"
+    assert first["state"]["interest"] == "จีน"
+    assert first["state"]["days"] == ["Tue", "Fri"]
+    assert first["answer_sources"] == ["005-61"]
+    second = ask(chat_client, "แล้วถ้าเป็นภาษาสเปนละ มีมั้ย", state=first["state"]).json()
+    assert second["state"]["interest"] == "สเปน"
+    assert second["state"]["days"] == ["Tue", "Fri"]
+    assert second["answer_sources"] == ["002-61"]
+    assert len(calls) == 2
+
+
+@pytest.mark.parametrize(
+    "message",
+    [
+        "อังกฤษแต่ไม่เอาวันศุกร์",
+        "อังกฤษหลังบ่ายสอง",
+        "ภาษาอังกฤษกับภาษาจีน",
+        "ภาษาจีนต้องมีพื้นฐานไหม",
+        "ภาษาสเปนง่ายกว่าอังกฤษมั้ย",
+        "วันศุกร์ยกเว้นตอนเช้า",
+    ],
+)
+def test_complex_questions_still_use_full_llm_understanding(message):
+    from chat import fast_search_plan
+
+    assert fast_search_plan(message, ChatState()) is None
+
+
+def test_fast_no_matches_does_not_claim_llm_failed(chat_client, monkeypatch):
+    import chat
+
+    monkeypatch.setenv("CHAT_OLLAMA_MODEL", "test")
+
+    def unexpected(*args):
+        raise AssertionError("No LLM needed for a clear search with zero matches")
+
+    monkeypatch.setattr(chat.chat_llm, "structured", unexpected)
+    data = ask(chat_client, "อยากเรียนภาษาสเปน").json()
+    assert data["engine"] == "local-rules-fast" and data["llm_failure"] is None
+    assert data["total_results"] == 0 and "สเปน" in data["message"]
+
+
 def test_llm_patch_preserves_unchanged_filters_and_can_clear_them(monkeypatch):
     import chat
 
