@@ -247,6 +247,9 @@ def test_llm_uses_history_and_grounded_context(chat_client, monkeypatch):
     ]
     data = ask(chat_client, "จันทร์พอมีไหม", history=history).json()
     assert data["engine"] == "llm-api"
+    recap, response = data["message"].split("\n\n", 1)
+    assert "Programming" in recap and "จันทร์" in recap and "ใช่ไหมครับ" in recap
+    assert "002-61" in response
     assert data["answer_sources"] == ["002-61"]
     assert calls[0][1:3] == history
     context = json.loads(calls[1][-1]["content"])["retrieved_context"]
@@ -276,6 +279,7 @@ def test_ungrounded_or_empty_llm_reply_falls_back(chat_client, monkeypatch, repl
     monkeypatch.setattr(chat.chat_llm, "structured", lambda *a: next(replies))
     data = ask(chat_client, "เขียนโค้ด").json()
     assert data["engine"] == "local-rules-fallback"
+    assert data["message"].startswith("ผมเข้าใจว่าคุณต้องการค้นหา")
     assert data["total_results"] == 2
     assert "99999999" not in data["message"]
 
@@ -306,6 +310,71 @@ def test_greeting_is_not_a_catalog_dump(chat_client, monkeypatch):
     assert data["engine"] == "ollama"
     assert data["results"] == []
     assert "สวัสดี" in data["message"]
+    assert "ผมเข้าใจว่าคุณต้องการค้นหา" not in data["message"]
+
+
+def test_search_restates_retained_filters_before_results(chat_client):
+    first = ask(chat_client, "ค้นหา Programming").json()
+    data = ask(chat_client, "วันจันทร์ 10:00-11:00 3 หน่วยกิต", state=first["state"]).json()
+    recap, response = data["message"].split("\n\n", 1)
+    assert all(term in recap for term in ["programming", "จันทร์", "10:00–11:00", "3 หน่วยกิต"])
+    assert "พิมพ์แก้ได้เลย" in recap
+    assert "พบ 1 รายวิชา" in response
+    assert data["results"][0]["course"]["subject_code"] == "002-61"
+
+
+def test_no_matches_still_restates_understanding(chat_client):
+    data = ask(chat_client, "วันศุกร์", state={"interest": "Programming"}).json()
+    recap, response = data["message"].split("\n\n", 1)
+    assert "Programming" in recap and "ศุกร์" in recap
+    assert "ยังไม่พบ" in response
+    assert data["results"] == []
+
+
+def test_reset_recap_drops_previous_filters(chat_client):
+    data = ask(chat_client, "เริ่มใหม่", state={"interest": "ญี่ปุ่น", "days": ["Fri"]}).json()
+    recap = data["message"].split("\n\n", 1)[0]
+    assert "บางเขน" in recap
+    assert "ญี่ปุ่น" not in recap and "ศุกร์" not in recap
+    assert data["state"] == ChatState().model_dump()
+
+
+def test_english_recap_uses_resolved_filters(chat_client):
+    data = ask(chat_client, "Monday before 11:00", language="en").json()
+    recap, response = data["message"].split("\n\n", 1)
+    assert "Monday" in recap and "ending no later than 11:00" in recap
+    assert "Is that right?" in recap and "please correct me" in recap
+    assert "I found" in response
+
+
+def test_recap_distinguishes_ge_and_snapshot_filters(chat_client):
+    data = ask(
+        chat_client,
+        "เฉพาะวิชา GE",
+        state={
+            "curriculum": "67",
+            "competency": 4,
+            "program": "special",
+            "offered_only": True,
+            "faculty": "Science",
+            "min_credits": 2,
+            "max_credits": 4,
+        },
+    ).json()
+    recap = data["message"].split("\n\n", 1)[0]
+    assert all(
+        term in recap
+        for term in [
+            "หลักสูตร GE 67",
+            "สมรรถนะที่ 4",
+            "ภาคพิเศษ",
+            "Science",
+            "2–4 หน่วยกิต",
+            "เฉพาะวิชาที่ยืนยันว่าเป็น GE",
+            "มีหมู่เรียนใน snapshot",
+        ]
+    )
+    assert "เปิดสอนปัจจุบัน" not in recap
 
 
 def test_hybrid_retrieval_respects_schedule_and_ge_scope(chat_client, monkeypatch):

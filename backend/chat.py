@@ -470,6 +470,9 @@ def answer(body, payload, saved):
         + ". "
         "Respond to what the person actually asked, acknowledge changes, explain relevant "
         "courses and ask at most one useful follow-up. Greetings/thanks need no course list. "
+        "For search/explanation replies, the application already prefixes a summary of the "
+        "resolved search filters and invites corrections. Do not repeat that summary or ask "
+        "the user to confirm it; continue directly with the answer. "
         "Ground ALL course facts in the supplied retrieved context, never history or your "
         "own knowledge. If evidence is missing, say so. Do not invent difficulty, reviews, "
         "teachers, current seats, eligibility or registration success. Mock classifications "
@@ -509,6 +512,80 @@ def answer(body, payload, saved):
     if any(code not in allowed for code in re.findall(r"\b\d{8}(?:-\d{2})?\b", reply.message)):
         raise ValueError("Model mentioned an unretrieved course")
     return reply
+
+
+def restate_understanding(state, language, intent="search"):
+    """Reflect the resolved search, including retained filters, without another model call."""
+    thai = language == "th"
+    parts = ["รายวิชาในแค็ตตาล็อกบางเขน" if thai else "courses in the Bangkhen catalog"]
+    if state.interest:
+        topic = " ".join(state.interest.split())
+        parts.append(f"เกี่ยวกับ ‘{topic}’" if thai else f"about ‘{topic}’")
+    if state.days:
+        day_names = (
+            dict(zip(DAYS.values(), DAYS, strict=True))
+            if thai
+            else {
+                "Mon": "Monday",
+                "Tue": "Tuesday",
+                "Wed": "Wednesday",
+                "Thu": "Thursday",
+                "Fri": "Friday",
+                "Sat": "Saturday",
+                "Sun": "Sunday",
+            }
+        )
+        days = ", ".join(day_names[day] for day in state.days)
+        parts.append(f"วัน{days}" if thai else f"on {days}")
+    if state.start_time and state.end_time:
+        times = f"{state.start_time}–{state.end_time}"
+        parts.append(f"ช่วง {times}" if thai else f"between {times}")
+    elif state.start_time:
+        parts.append(
+            f"เริ่มไม่ก่อน {state.start_time}"
+            if thai
+            else f"starting no earlier than {state.start_time}"
+        )
+    elif state.end_time:
+        parts.append(
+            f"สิ้นสุดไม่เกิน {state.end_time}" if thai else f"ending no later than {state.end_time}"
+        )
+    low, high = state.min_credits, state.max_credits
+    if low is not None and high is not None:
+        credits = f"{low:g}" if low == high else f"{low:g}–{high:g}"
+        parts.append(f"{credits} หน่วยกิต" if thai else f"{credits} credits")
+    elif low is not None:
+        parts.append(f"อย่างน้อย {low:g} หน่วยกิต" if thai else f"at least {low:g} credits")
+    elif high is not None:
+        parts.append(f"ไม่เกิน {high:g} หน่วยกิต" if thai else f"at most {high:g} credits")
+    if state.faculty:
+        parts.append(f"คณะ {state.faculty}" if thai else f"faculty: {state.faculty}")
+    if state.curriculum:
+        parts.append(
+            f"หลักสูตร GE {state.curriculum}" if thai else f"GE curriculum {state.curriculum}"
+        )
+    if state.group:
+        parts.append(f"กลุ่มสาระ ‘{state.group}’" if thai else f"GE group ‘{state.group}’")
+    if state.competency:
+        parts.append(f"สมรรถนะที่ {state.competency}" if thai else f"competency {state.competency}")
+    if state.program:
+        program = {"regular": "ภาคปกติ", "special": "ภาคพิเศษ"}[state.program]
+        parts.append(program if thai else f"{state.program} program")
+    if state.verified_ge_only:
+        parts.append("เฉพาะวิชาที่ยืนยันว่าเป็น GE" if thai else "only verified GE courses")
+    if state.offered_only:
+        parts.append(
+            "เฉพาะวิชาที่มีหมู่เรียนใน snapshot" if thai else "only courses with sections in the snapshot"
+        )
+    details = " ".join(parts) if thai else ", ".join(parts)
+    if thai:
+        action = "สอบถามข้อมูลเกี่ยวกับ" if intent == "explain" else "ค้นหา"
+        return f"ผมเข้าใจว่าคุณต้องการ{action}{details} ใช่ไหมครับ? หากเข้าใจคลาดเคลื่อน พิมพ์แก้ได้เลยครับ"
+    action = "ask about" if intent == "explain" else "find"
+    return (
+        f"I understand you want to {action} {details}. Is that right? "
+        "If I misunderstood, please correct me."
+    )
 
 
 def respond(body, catalog, ge):
@@ -702,8 +779,7 @@ def respond(body, catalog, ge):
                 if body.language == "th"
                 else f" The current topic is ‘{state.interest}’. Say ‘reset’ to search without that topic."
             )
-        return payload
-    if engine in {"ollama", "llm-api"}:
+    elif engine in {"ollama", "llm-api"}:
         try:
             reply = answer(body, payload, saved)
             payload["message"] = reply.message
@@ -718,4 +794,8 @@ def respond(body, catalog, ge):
             payload["answer_sources"] = reply.course_codes
         except (OSError, ValueError, KeyError, TypeError, IndexError):
             payload["engine"] = "local-rules-fallback"
+    if plan.intent in {"search", "explain"}:
+        payload["message"] = (
+            restate_understanding(state, body.language, plan.intent) + "\n\n" + payload["message"]
+        )
     return payload
