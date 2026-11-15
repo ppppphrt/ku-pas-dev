@@ -120,6 +120,30 @@ def test_fast_no_matches_does_not_claim_llm_failed(chat_client, monkeypatch):
     assert data["total_results"] == 0 and "สเปน" in data["message"]
 
 
+def test_quick_search_returns_before_llm_then_generates_grounded_answer(chat_client, monkeypatch):
+    import chat
+
+    catalog = chat_client.app.state.catalog
+    catalog.by_code["005-61"].update(subject_name_th="ภาษาจีน", subject_name_en="Chinese")
+    monkeypatch.setenv("CHAT_OLLAMA_MODEL", "test")
+    calls = []
+
+    def reply(messages, schema):
+        calls.append(messages)
+        return {"message": "ดูรายละเอียดวิชา 005-61 ในการ์ดครับ", "course_codes": ["005-61"]}
+
+    monkeypatch.setattr(chat.chat_llm, "structured", reply)
+    body = {"message": "อยากเรียนภาษาจีน วันอังคาร ศุกร์", "dataset_version": "test-v1"}
+    quick = chat_client.post("/chat?quick=true", json=body).json()
+    assert quick["answer_pending"] and quick["total_results"] == 1
+    assert quick["feedback_receipt"] is None and quick["engine"] == "local-rules-fast"
+    assert quick["message"].startswith("ผมเข้าใจ") and not calls
+    final = chat_client.post("/chat", json=body).json()
+    assert final["engine"] == "ollama" and not final.get("answer_pending")
+    assert final["answer_sources"] == ["005-61"] and len(calls) == 1
+    assert final["state"] == quick["state"]
+
+
 def test_llm_patch_preserves_unchanged_filters_and_can_clear_them(monkeypatch):
     import chat
 

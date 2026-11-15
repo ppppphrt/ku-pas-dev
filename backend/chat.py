@@ -717,12 +717,12 @@ def restate_understanding(state, language, intent="search"):
     )
 
 
-def respond(body, catalog, ge):
+def respond(body, catalog, ge, *, quick=False):
     with chat_llm.turn_budget():
-        return respond_with_budget(body, catalog, ge)
+        return respond_with_budget(body, catalog, ge, quick=quick)
 
 
-def respond_with_budget(body, catalog, ge):
+def respond_with_budget(body, catalog, ge, *, quick=False):
     # Resolve saved refs against the authoritative catalog, never client-supplied slots.
     saved = catalog.timetable(body.items, 0, 10000)["items"]
     explicit = explicit_time_range(body.message)
@@ -923,6 +923,9 @@ def respond_with_budget(body, catalog, ge):
                 if body.language == "th"
                 else f" The current topic is ‘{state.interest}’. Say ‘reset’ to search without that topic."
             )
+    elif quick and fast_plan is not None:
+        payload["engine"] = "local-rules-fast"
+        payload["answer_pending"] = True
     elif engine in {"ollama", "llm-api"}:
         try:
             reply = answer(body, payload, saved)

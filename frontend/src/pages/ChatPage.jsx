@@ -117,6 +117,7 @@ export default function ChatPage() {
     setBusy(true);
     setError("");
     setNotice("");
+    setResponse(null);
     const lastTurn = messages.at(-1);
     const retry = lastTurn?.failed && lastTurn.text === displayText;
     const userTurn = {
@@ -130,48 +131,74 @@ export default function ChatPage() {
         : [...old.slice(-18), userTurn],
     );
     setMessage("");
+    let answerShown = false;
     try {
-      const { data } = await api.post(
-        "/chat",
-        {
-          message: text,
-          conversation_id: conversationId,
-          language,
-          history: messages
-            .filter((entry) => !entry.failed)
-            .slice(-12)
-            .map(({ role, text }) => ({
-              role,
-              content: text.slice(0, 5000),
-            })),
-          state,
-          dataset_version: timetable.metadata.dataset_version,
-          items: timetable.items.map(({ course, section }) => ({
-            subject_code: course.subject_code,
-            section_id: section.section_id,
+      const requestBody = {
+        message: text,
+        conversation_id: conversationId,
+        language,
+        history: messages
+          .filter((entry) => !entry.failed)
+          .slice(-12)
+          .map(({ role, text }) => ({
+            role,
+            content: text.slice(0, 5000),
           })),
-        },
+        state,
+        dataset_version: timetable.metadata.dataset_version,
+        items: timetable.items.map(({ course, section }) => ({
+          subject_code: course.subject_code,
+          section_id: section.section_id,
+        })),
+      };
+      const { data } = await api.post(
+        "/chat?quick=true",
+        requestBody,
         // LLM stages/retries share 48s; allow for retrieval, cold starts and network overhead.
         { timeout: 65000 },
       );
+      const assistantId = crypto.randomUUID();
       setMessages((old) => [
         ...old,
         {
           role: "assistant",
-          id: crypto.randomUUID(),
+          id: assistantId,
           text: data.message,
           feedbackReceipt: data.feedback_receipt,
         },
       ]);
       setResponse(data);
       setState(data.state);
+      answerShown = true;
+      if (data.answer_pending) {
+        const { data: finalAnswer } = await api.post("/chat", requestBody, {
+          timeout: 65000,
+        });
+        setMessages((old) =>
+          old.map((entry) =>
+            entry.id === assistantId
+              ? {
+                  ...entry,
+                  text: finalAnswer.message,
+                  feedbackReceipt: finalAnswer.feedback_receipt,
+                }
+              : entry,
+          ),
+        );
+        setResponse(finalAnswer);
+        setState(finalAnswer.state);
+      }
     } catch (e) {
-      setMessages((old) =>
-        old.map((entry) =>
-          entry.id === userTurn.id ? { ...entry, failed: true } : entry,
-        ),
-      );
-      setMessage(text);
+      if (answerShown) {
+        setResponse((old) => ({ ...old, answer_pending: false }));
+      } else {
+        setMessages((old) =>
+          old.map((entry) =>
+            entry.id === userTurn.id ? { ...entry, failed: true } : entry,
+          ),
+        );
+        setMessage(text);
+      }
       setError(errorMessage(e));
     } finally {
       pending.current = false;
@@ -449,7 +476,7 @@ export default function ChatPage() {
           {response && !response.needs_clarification && (
             <div className="chat-result-jump">
               <span role="status">
-                {busy ? (
+                {busy && !response.answer_pending ? (
                   t("กำลังค้นหา…")
                 ) : (
                   <>
@@ -458,7 +485,11 @@ export default function ChatPage() {
                   </>
                 )}
               </span>
-              <button type="button" onClick={showResults} disabled={busy}>
+              <button
+                type="button"
+                onClick={showResults}
+                disabled={busy && !response.answer_pending}
+              >
                 {t("View results")} <span aria-hidden="true">↓</span>
               </button>
             </div>
@@ -479,7 +510,9 @@ export default function ChatPage() {
             ))}
             {busy && (
               <p className="chat-bubble assistant" role="status">
-                {t("กำลังคิดคำตอบ…")}
+                {response?.answer_pending
+                  ? t("กำลังเพิ่มเติมคำอธิบายจาก AI…")
+                  : t("กำลังคิดคำตอบ…")}
               </p>
             )}
             <div ref={transcriptEnd} />
