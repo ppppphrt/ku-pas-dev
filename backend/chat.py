@@ -362,7 +362,7 @@ def explicit_time_range(message):
     return tuple(f"{int(t.split(':')[0]):02d}:{t.split(':')[1]}" for t in match.groups())
 
 
-def parse(message, previous, history=()):
+def parse(message, previous, history=(), diagnostics=None):
     if not chat_llm.provider():
         return ChatPlan(state=local_parse(message, previous)), "local-rules"
     system = (
@@ -401,7 +401,10 @@ def parse(message, previous, history=()):
         plan = ChatPlan.model_validate(plan)
         plan.state = resolve_state(message, previous, plan.state)
         return plan, chat_llm.provider()
-    except (OSError, ValueError, KeyError, TypeError, IndexError):
+    except (OSError, ValueError, KeyError, TypeError, IndexError) as error:
+        details = chat_llm.failure_details(error, "understanding")
+        if diagnostics is not None:
+            diagnostics.update(details)
         return ChatPlan(state=local_parse(message, previous)), "local-rules-fallback"
 
 
@@ -617,7 +620,8 @@ def respond(body, catalog, ge):
             "sources": {"catalog": catalog.metadata, "ge": ge.metadata},
             "answer_sources": [],
         }
-    plan, engine = parse(body.message, body.state, body.history)
+    diagnostics = {}
+    plan, engine = parse(body.message, body.state, body.history, diagnostics=diagnostics)
     state = plan.state
     occupied = [slot for item in saved for slot in item["section"]["time_slots"]]
     selected = {item["course"]["subject_code"] for item in saved}
@@ -741,6 +745,7 @@ def respond(body, catalog, ge):
         },
         "understanding_engine": engine,
         "engine": engine,
+        "llm_failure": diagnostics or None,
         "results": results[:8],
         "total_results": len(results),
         "dataset_version": catalog.metadata["dataset_version"],
@@ -792,7 +797,8 @@ def respond(body, catalog, ge):
                     "Current offerings, seats and registration eligibility are unconfirmed."
                 )
             payload["answer_sources"] = reply.course_codes
-        except (OSError, ValueError, KeyError, TypeError, IndexError):
+        except (OSError, ValueError, KeyError, TypeError, IndexError) as error:
+            payload["llm_failure"] = chat_llm.failure_details(error, "answer")
             payload["engine"] = "local-rules-fallback"
     if plan.intent in {"search", "explain"}:
         payload["message"] = (

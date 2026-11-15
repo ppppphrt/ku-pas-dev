@@ -1,13 +1,38 @@
 """Bounded LLM transport. Credentials and endpoint configuration stay server-side."""
 
 import json
+import logging
 import os
 import tomllib
 from pathlib import Path
+from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
 from urllib.request import Request, urlopen
 
 CONFIG_PATH = Path(__file__).with_name("chat.local.toml")
+log = logging.getLogger(__name__)
+
+
+def failure_details(error, stage):
+    """Return only bounded categories; never log provider bodies, prompts or credentials."""
+    details = {"stage": stage, "reason": "invalid_response"}
+    if isinstance(error, HTTPError):
+        details.update(reason="provider_http_error", http_status=error.code)
+    elif isinstance(error, TimeoutError) or (
+        isinstance(error, URLError) and isinstance(error.reason, TimeoutError)
+    ):
+        details["reason"] = "timeout"
+    elif isinstance(error, OSError):
+        details["reason"] = "connection_error"
+    elif isinstance(error, json.JSONDecodeError):
+        details["reason"] = "invalid_json"
+    log.warning(
+        "LLM fallback stage=%s reason=%s http_status=%s",
+        stage,
+        details["reason"],
+        details.get("http_status"),
+    )
+    return details
 
 
 def settings():
