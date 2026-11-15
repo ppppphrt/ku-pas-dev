@@ -153,7 +153,24 @@ def test_local_model_failure_falls_back(chat_client, monkeypatch):
         raise OSError("offline")
 
     monkeypatch.setattr(chat.chat_llm, "urlopen", offline)
-    assert ask(chat_client, "ค้นหา Programming").json()["engine"] == "local-rules-fallback"
+    data = ask(chat_client, "ค้นหา Programming").json()
+    assert data["engine"] == "local-rules-fallback"
+    assert data["llm_failure"] == {"stage": "understanding", "reason": "connection_error"}
+
+
+def test_understanding_timeout_is_identifiable_without_leaking_input(chat_client, monkeypatch):
+    import chat
+
+    monkeypatch.setenv("CHAT_OLLAMA_MODEL", "test")
+
+    def timeout(*args, **kwargs):
+        raise TimeoutError("private provider detail")
+
+    monkeypatch.setattr(chat.chat_llm, "structured", timeout)
+    data = ask(chat_client, "ค้นหา Programming").json()
+    assert data["llm_failure"] == {"stage": "understanding", "reason": "timeout"}
+    assert data["total_results"] == 2
+    assert "private provider detail" not in json.dumps(data)
 
 
 def test_local_model_validated(chat_client, monkeypatch):
@@ -247,6 +264,7 @@ def test_llm_uses_history_and_grounded_context(chat_client, monkeypatch):
     ]
     data = ask(chat_client, "จันทร์พอมีไหม", history=history).json()
     assert data["engine"] == "llm-api"
+    assert data["llm_failure"] is None
     recap, response = data["message"].split("\n\n", 1)
     assert "Programming" in recap and "จันทร์" in recap and "ใช่ไหมครับ" in recap
     assert "002-61" in response
@@ -279,6 +297,7 @@ def test_ungrounded_or_empty_llm_reply_falls_back(chat_client, monkeypatch, repl
     monkeypatch.setattr(chat.chat_llm, "structured", lambda *a: next(replies))
     data = ask(chat_client, "เขียนโค้ด").json()
     assert data["engine"] == "local-rules-fallback"
+    assert data["llm_failure"] == {"stage": "answer", "reason": "invalid_response"}
     assert data["message"].startswith("ผมเข้าใจว่าคุณต้องการค้นหา")
     assert data["total_results"] == 2
     assert "99999999" not in data["message"]
