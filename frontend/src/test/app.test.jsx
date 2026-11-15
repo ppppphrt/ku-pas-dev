@@ -316,15 +316,89 @@ it("chats with context, labels mocks and shares the existing timetable", async (
   await screen.findByText("1 วิชา");
 });
 
+it.each(["typed", "starter"])(
+  "shows the %s question before the response arrives",
+  async (mode) => {
+    localStorage.setItem("ku-language", "th");
+    let release;
+    const gate = new Promise((resolve) => {
+      release = resolve;
+    });
+    const requests = [];
+    server.use(
+      http.post(`${root}/chat`, async ({ request }) => {
+        const body = await request.json();
+        requests.push(body);
+        await gate;
+        return HttpResponse.json({
+          state: body.state,
+          engine: "llm-api",
+          total_results: 0,
+          message: "คำตอบทดสอบ",
+          notice: "",
+          results: [],
+          sources: { catalog: {}, ge: {} },
+        });
+      }),
+    );
+    window.history.replaceState({}, "", "/chat");
+    const user = userEvent.setup();
+    render(<App />);
+    const input = await screen.findByLabelText("ถามเรื่องรายวิชา GE");
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: "สนใจภาษา" })).toBeEnabled(),
+    );
+    const question =
+      mode === "starter"
+        ? "สนใจภาษา"
+        : "อยากเรียนภาษาจีน ว่างเฉพาะวันอังคาร ศุกร์";
+    if (mode === "starter")
+      await user.click(screen.getByRole("button", { name: question }));
+    else {
+      await user.type(input, question);
+      await user.click(screen.getByRole("button", { name: "ส่งข้อความ" }));
+    }
+    try {
+      await waitFor(() => expect(requests).toHaveLength(1));
+      expect(
+        within(screen.getByRole("log")).getByText(question),
+      ).toBeInTheDocument();
+      expect(input).toHaveValue("");
+      expect(screen.getByText("กำลังคิดคำตอบ…")).toBeInTheDocument();
+      expect(
+        screen.queryByText("เริ่มต้นจากคำถามเหล่านี้"),
+      ).not.toBeInTheDocument();
+      expect(requests[0].history).toEqual([]);
+    } finally {
+      release();
+    }
+    await screen.findByText("คำตอบทดสอบ");
+    expect(screen.getAllByText(question)).toHaveLength(1);
+  },
+);
+
 it("keeps the chat draft after an API error so the user can retry", async () => {
   localStorage.setItem("ku-language", "th");
+  const requests = [];
   server.use(
-    http.post(`${root}/chat`, () =>
-      HttpResponse.json(
-        { error: { message: "Chat unavailable" } },
-        { status: 503 },
-      ),
-    ),
+    http.post(`${root}/chat`, async ({ request }) => {
+      const body = await request.json();
+      requests.push(body);
+      return requests.length === 1
+        ? HttpResponse.json(
+            { error: { message: "Chat unavailable" } },
+            { status: 503 },
+          )
+        : HttpResponse.json({
+            state: body.state,
+            engine: "llm-api",
+            total_results: 0,
+            message: "ส่งอีกครั้งสำเร็จ",
+            notice: "",
+            results: [],
+            sources: { catalog: {}, ge: {} },
+          });
+    }),
   );
   window.history.replaceState({}, "", "/chat");
   const user = userEvent.setup();
@@ -337,6 +411,10 @@ it("keeps the chat draft after an API error so the user can retry", async () => 
   await screen.findByText(/Chat unavailable/);
   expect(input).toHaveValue("สนใจภาษา");
   expect(send).toBeEnabled();
+  await user.click(send);
+  await screen.findByText("ส่งอีกครั้งสำเร็จ");
+  expect(screen.getAllByText("สนใจภาษา")).toHaveLength(1);
+  expect(requests[1].history).toEqual([]);
 });
 
 it("switches the entire interface without losing the draft or canonical filters", async () => {

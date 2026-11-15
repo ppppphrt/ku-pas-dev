@@ -134,7 +134,7 @@ def complete(messages, schema=None):
         raise ValueError("No LLM configured")
     headers = {"Content-Type": "application/json"}
     planning = "state" in (schema or {}).get("properties", {})
-    max_tokens = 512 if planning else 1000
+    max_tokens = 512 if planning else 450
     # Leave at least 18 seconds for answering when understanding uses its full allowance.
     deadline = min(
         _turn_deadline.get() or monotonic() + TURN_BUDGET_SECONDS,

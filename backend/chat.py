@@ -35,11 +35,25 @@ TOPICS = {
     "ภาษา": ["ภาษา", "language", "english", "communication"],
     "อังกฤษ": ["อังกฤษ", "english"],
     "ญี่ปุ่น": ["ภาษาญี่ปุ่น", "japanese"],
+    "จีน": ["ภาษาจีน", "chinese", "mandarin"],
+    "สเปน": ["ภาษาสเปน", "spanish"],
+    "ฝรั่งเศส": ["ภาษาฝรั่งเศส", "french"],
+    "เกาหลี": ["ภาษาเกาหลี", "korean"],
+    "เยอรมัน": ["ภาษาเยอรมัน", "german"],
     "ธุรกิจ": ["ธุรกิจ", "ผู้ประกอบการ", "business", "entrepreneur"],
     "เทคโนโลยี": ["เทคโนโลยี", "คอมพิวเตอร์", "ดิจิทัล", "technology", "computer"],
     "สุขภาพ": ["สุขภาพ", "กีฬา", "health", "sport"],
     "ศิลปะ": ["ศิลป", "ดนตรี", "art", "music"],
     "สิ่งแวดล้อม": ["สิ่งแวดล้อม", "ธรรมชาติ", "environment", "nature"],
+}
+LANGUAGES = {
+    "อังกฤษ": ["english"],
+    "ญี่ปุ่น": ["japanese"],
+    "จีน": ["chinese", "mandarin"],
+    "สเปน": ["spanish"],
+    "ฝรั่งเศส": ["french"],
+    "เกาหลี": ["korean"],
+    "เยอรมัน": ["german"],
 }
 
 
@@ -224,11 +238,16 @@ def local_parse(message, previous):
     if credit:
         data["min_credits"] = data["max_credits"] = float(credit[1])
     code = re.search(r"\b\d{8}(?:-\d{2})?\b", text)
-    topic = next((t for t in ["ญี่ปุ่น", "อังกฤษ", *TOPICS] if t in text), None)
+    topic = next((t for t in [*LANGUAGES, *TOPICS] if t in text), None)
     english_topics = {
         "languages?": "ภาษา",
         "english": "อังกฤษ",
         "japanese": "ญี่ปุ่น",
+        "chinese|mandarin": "จีน",
+        "spanish": "สเปน",
+        "french": "ฝรั่งเศส",
+        "korean": "เกาหลี",
+        "german": "เยอรมัน",
         "business": "ธุรกิจ",
         "technology": "เทคโนโลยี",
         "health": "สุขภาพ",
@@ -236,7 +255,11 @@ def local_parse(message, previous):
         "environment": "สิ่งแวดล้อม",
     }
     topic = topic or next(
-        (value for pattern, value in english_topics.items() if re.search(rf"\b{pattern}\b", text)),
+        (
+            value
+            for pattern, value in english_topics.items()
+            if re.search(rf"\b(?:{pattern})\b", text)
+        ),
         None,
     )
     interest = re.search(
@@ -280,6 +303,92 @@ def local_parse(message, previous):
         ):
             data["interest"] = text[:200]
     return resolve_state(message, previous, ChatState.model_validate(data))
+
+
+def fast_search_plan(message, previous):
+    """Skip the planning LLM only when every word belongs to a supported search grammar."""
+    text = message.casefold().strip()
+    # Keep explanations, negations and ambiguous time expressions with the LLM.
+    if re.search(r"ไม่|ยกเว้น|ก่อน|หลัง|\b(?:not|no|except|before|after)\b", text):
+        return None
+    topics = [
+        name
+        for name, aliases in LANGUAGES.items()
+        if name in text or any(re.search(rf"\b{alias}\b", text) for alias in aliases)
+    ]
+    if len(topics) > 1:
+        return None
+    english_days = [
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday",
+    ]
+    has_day = any(day in text for day in DAYS) or any(
+        re.search(rf"\b{day}\b", text) for day in english_days
+    )
+    has_time = bool(re.search(r"\d{1,2}[:.]\d{2}", text))
+    if not (topics or has_day or has_time):
+        return None
+    remainder = re.sub(r"\d{1,2}[:.]\d{2}", " ", text)
+    english = [alias for aliases in LANGUAGES.values() for alias in aliases] + english_days
+    english += [
+        "want to learn",
+        "want to study",
+        "interested in",
+        "change to",
+        "instead",
+        "find",
+        "search",
+        "courses",
+        "course",
+        "only",
+        "available",
+        "on",
+        "and",
+        "please",
+    ]
+    for word in sorted(english, key=len, reverse=True):
+        remainder = re.sub(rf"\b{re.escape(word)}\b", " ", remainder)
+    thai = [
+        *LANGUAGES,
+        *DAYS,
+        "แล้วถ้าเป็น",
+        "เปลี่ยนเป็น",
+        "อยากเรียน",
+        "สนใจ",
+        "ค้นหา",
+        "เกี่ยวกับ",
+        "ช่วยแนะนำ",
+        "แนะนำ",
+        "ภาษา",
+        "เฉพาะ",
+        "ว่าง",
+        "ช่วง",
+        "เวลา",
+        "วัน",
+        "ถึง",
+        "แทน",
+        "ขอ",
+        "วิชา",
+        "มีมั้ย",
+        "มีไหม",
+        "ไหมครับ",
+        "ครับ",
+        "ค่ะ",
+        "ล่ะ",
+        "ละ",
+        "และ",
+        "กับ",
+    ]
+    for word in sorted(thai, key=len, reverse=True):
+        remainder = remainder.replace(word, " ")
+    if re.sub(r"[\s,?!\.\-–—]+", "", remainder):
+        return None
+    return ChatPlan(state=local_parse(message, previous))
 
 
 def interest_terms(interest):
@@ -440,7 +549,7 @@ def answer(body, payload, saved):
                 "code": row["course"]["subject_code"],
                 "name_th": row["course"]["subject_name_th"],
                 "name_en": row["course"]["subject_name_en"],
-                "description": (row["course"].get("subject_desc_" + body.language) or "")[:400],
+                "description": (row["course"].get("subject_desc_" + body.language) or "")[:160],
                 "credits": row["course"]["credits"],
                 "classification": row["classification"],
                 "sections": [
@@ -487,6 +596,9 @@ def answer(body, payload, saved):
         + ". "
         "Respond to what the person actually asked, acknowledge changes, explain relevant "
         "courses and ask at most one useful follow-up. Greetings/thanks need no course list. "
+        "Keep the answer to 2-3 short sentences. Course cards already show all results and "
+        "schedules: do not repeat the list or enumerate sections. Mention at most 2 relevant "
+        "course codes, and refer to cards for details. Answer explanations concisely. "
         "For search/explanation replies, the application already prefixes a summary of the "
         "resolved search filters and invites corrections. Do not repeat that summary or ask "
         "the user to confirm it; continue directly with the answer. "
@@ -640,7 +752,13 @@ def respond_with_budget(body, catalog, ge):
             "answer_sources": [],
         }
     diagnostics = {}
-    plan, engine = parse(body.message, body.state, body.history, diagnostics=diagnostics)
+    fast_plan = fast_search_plan(body.message, body.state) if chat_llm.provider() else None
+    if fast_plan is not None:
+        plan, engine = fast_plan, chat_llm.provider()
+        understanding_engine = "local-rules-fast"
+    else:
+        plan, engine = parse(body.message, body.state, body.history, diagnostics=diagnostics)
+        understanding_engine = engine
     state = plan.state
     occupied = [slot for item in saved for slot in item["section"]["time_slots"]]
     selected = {item["course"]["subject_code"] for item in saved}
@@ -762,7 +880,7 @@ def respond_with_budget(body, catalog, ge):
             "start_time": state.start_time,
             "end_time": state.end_time,
         },
-        "understanding_engine": engine,
+        "understanding_engine": understanding_engine,
         "engine": engine,
         "llm_failure": diagnostics or None,
         "results": results[:8],
@@ -797,6 +915,8 @@ def respond_with_budget(body, catalog, ge):
         )
     payload["answer_sources"] = []
     if not results and plan.intent in {"search", "explain"}:
+        if fast_plan is not None:
+            payload["engine"] = "local-rules-fast"
         if state.interest:
             payload["message"] += (
                 f" ขณะนี้ใช้คำค้น ‘{state.interest}’ หากต้องการค้นหาทุกความสนใจให้พิมพ์ ‘เริ่มใหม่’"
