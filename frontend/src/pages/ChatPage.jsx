@@ -135,7 +135,8 @@ export default function ChatPage() {
             section_id: section.section_id,
           })),
         },
-        { timeout: 45000 },
+        // LLM stages/retries share 48s; allow for retrieval, cold starts and network overhead.
+        { timeout: 65000 },
       );
       setMessages((old) => [
         ...old.slice(-18),

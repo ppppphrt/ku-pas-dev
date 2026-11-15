@@ -4,13 +4,81 @@ import json
 import logging
 import os
 import tomllib
+from contextlib import contextmanager
+from contextvars import ContextVar
 from pathlib import Path
+from time import monotonic, sleep
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
 from urllib.request import Request, urlopen
 
 CONFIG_PATH = Path(__file__).with_name("chat.local.toml")
 log = logging.getLogger(__name__)
+TURN_BUDGET_SECONDS = 48
+REQUEST_TIMEOUT_SECONDS = 30
+_turn_deadline = ContextVar("llm_turn_deadline", default=None)
+
+
+@contextmanager
+def turn_budget():
+    """Each request gets an isolated budget shared by both LLM stages and retries."""
+    token = _turn_deadline.set(monotonic() + TURN_BUDGET_SECONDS)
+    try:
+        yield
+    finally:
+        _turn_deadline.reset(token)
+
+
+def compact_schema(value):
+    if isinstance(value, dict):
+        return {
+            key: compact_schema(item)
+            for key, item in value.items()
+            if key not in {"title", "description", "default"}
+        }
+    if isinstance(value, list):
+        return [compact_schema(item) for item in value]
+    return value
+
+
+def transient(error):
+    if isinstance(error, HTTPError):
+        return error.code in {408, 429, 500, 502, 503, 504}
+    return isinstance(error, (TimeoutError, URLError, ConnectionError))
+
+
+def request_json(request, deadline):
+    """Retry once for transient failures, only within the original stage/turn budget."""
+    for attempt in range(2):
+        remaining = deadline - monotonic()
+        if remaining <= 0:
+            raise TimeoutError("LLM time budget exhausted")
+        try:
+            with urlopen(request, timeout=min(REQUEST_TIMEOUT_SECONDS, remaining)) as response:
+                raw = response.read(256_001)
+            if monotonic() >= deadline:
+                raise TimeoutError("LLM time budget exhausted")
+            return json.loads(raw)
+        except (OSError, ValueError) as error:
+            if attempt or not transient(error):
+                if isinstance(error, HTTPError):
+                    error.close()
+                raise
+            delay = 0.25
+            if isinstance(error, HTTPError):
+                try:
+                    delay = max(delay, float(error.headers.get("Retry-After", "0")))
+                except ValueError:
+                    # A date-form/unknown Retry-After must not cause an immediate retry.
+                    delay = 3
+                except (AttributeError, TypeError):
+                    pass
+                finally:
+                    error.close()
+            # Do not retry earlier than Retry-After, or spend the last seconds on a retry.
+            if delay > 2 or deadline - monotonic() < delay + 3:
+                raise
+            sleep(delay)
 
 
 def failure_details(error, stage):
@@ -65,13 +133,20 @@ def complete(messages, schema=None):
     if engine is None:
         raise ValueError("No LLM configured")
     headers = {"Content-Type": "application/json"}
+    planning = "state" in (schema or {}).get("properties", {})
+    max_tokens = 512 if planning else 1000
+    # Leave at least 18 seconds for answering when understanding uses its full allowance.
+    deadline = min(
+        _turn_deadline.get() or monotonic() + TURN_BUDGET_SECONDS,
+        monotonic() + REQUEST_TIMEOUT_SECONDS,
+    )
     if engine == "ollama":
         endpoint = "http://127.0.0.1:11434/api/chat"
         payload = {
             "model": os.environ["CHAT_OLLAMA_MODEL"],
             "messages": messages,
             "stream": False,
-            "options": {"temperature": 0.2, "num_predict": 1400},
+            "options": {"temperature": 0.2, "num_predict": max_tokens},
         }
         if schema:
             payload["format"] = schema
@@ -88,12 +163,10 @@ def complete(messages, schema=None):
             "messages": messages,
             "stream": False,
             "temperature": 0.2,
-            "max_tokens": 1400,
+            "max_tokens": max_tokens,
         }
     request = Request(endpoint, data=json.dumps(payload).encode(), headers=headers)
-    # Two calls per chat turn, bounded below the browser's 45-second timeout.
-    with urlopen(request, timeout=18) as response:
-        result = json.loads(response.read(256_001))
+    result = request_json(request, deadline)
     if engine == "ollama":
         content = result["message"]["content"]
     else:

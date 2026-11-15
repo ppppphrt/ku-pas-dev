@@ -57,6 +57,26 @@ def test_followup_and_reset():
     assert local_parse("เริ่มใหม่", state) == ChatState()
 
 
+def test_llm_patch_preserves_unchanged_filters_and_can_clear_them(monkeypatch):
+    import chat
+
+    monkeypatch.setenv("LLM_API_KEY", "test-key")
+    monkeypatch.setenv("LLM_MODEL", "test-model")
+    seen = []
+
+    def reply(messages, schema):
+        seen.append(json.loads(messages[-1]["content"])["previous_state"])
+        return {"state": {"interest": "อังกฤษ", "end_time": None}}
+
+    monkeypatch.setattr(chat.chat_llm, "structured", reply)
+    previous = ChatState(interest="ญี่ปุ่น", days=["Fri"], end_time="17:00")
+    plan, engine = chat.parse("เปลี่ยนเป็นอังกฤษ ไม่จำกัดเวลาสิ้นสุด", previous)
+    assert engine == "llm-api"
+    assert plan.state.interest == "อังกฤษ"
+    assert plan.state.days == ["Fri"] and plan.state.end_time is None
+    assert "faculty" not in seen[0]
+
+
 def test_curriculum_is_not_course_code_suffix():
     state = local_parse("กลุ่มสาระ 64 อยู่ดีมีสุข", ChatState())
     state = local_parse("สมรรถนะ 67 ด้าน 4", state)
