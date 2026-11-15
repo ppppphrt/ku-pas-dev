@@ -377,6 +377,85 @@ it.each(["typed", "starter"])(
   },
 );
 
+it.each(["success", "failure"])(
+  "shows results before AI finishes and handles AI %s",
+  async (outcome) => {
+    localStorage.setItem("ku-language", "th");
+    let release;
+    const gate = new Promise((resolve) => {
+      release = resolve;
+    });
+    server.use(
+      http.post(`${root}/chat`, async ({ request }) => {
+        const body = await request.json();
+        const common = {
+          state: body.state,
+          total_results: 1,
+          notice: "",
+          sources: { catalog: {}, ge: {} },
+          results: [
+            {
+              course: courses[0],
+              classification: {
+                status: "unknown",
+                groups: [],
+                competencies: [],
+              },
+              sections: [],
+            },
+          ],
+        };
+        if (new URL(request.url).searchParams.get("quick") === "true")
+          return HttpResponse.json({
+            ...common,
+            message: "ผลค้นหาพร้อมแล้ว",
+            engine: "local-rules-fast",
+            answer_pending: true,
+          });
+        await gate;
+        return outcome === "success"
+          ? HttpResponse.json({
+              ...common,
+              message: "คำอธิบายจาก AI",
+              engine: "llm-api",
+            })
+          : HttpResponse.json(
+              { error: { message: "AI explanation unavailable" } },
+              { status: 503 },
+            );
+      }),
+    );
+    window.history.replaceState({}, "", "/chat");
+    const user = userEvent.setup();
+    render(<App />);
+    const input = await screen.findByLabelText("ถามเรื่องรายวิชา GE");
+    await user.type(input, "อยากเรียนภาษาจีน");
+    const send = screen.getByRole("button", { name: "ส่งข้อความ" });
+    await waitFor(() => expect(send).toBeEnabled());
+    await user.click(send);
+    try {
+      await screen.findByText("ผลค้นหาพร้อมแล้ว");
+      expect(
+        screen.getByText("กำลังเพิ่มเติมคำอธิบายจาก AI…"),
+      ).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "ดูผลลัพธ์" })).toBeEnabled();
+      expect(input).toHaveValue("");
+    } finally {
+      release();
+    }
+    if (outcome === "success") {
+      await screen.findByText("คำอธิบายจาก AI");
+      expect(screen.queryByText("ผลค้นหาพร้อมแล้ว")).not.toBeInTheDocument();
+    } else {
+      await screen.findByText(/AI explanation unavailable/);
+      expect(screen.getByText("ผลค้นหาพร้อมแล้ว")).toBeInTheDocument();
+      expect(input).toHaveValue("");
+    }
+    expect(screen.getAllByText("อยากเรียนภาษาจีน")).toHaveLength(1);
+    expect(input).toBeEnabled();
+  },
+);
+
 it("keeps the chat draft after an API error so the user can retry", async () => {
   localStorage.setItem("ku-language", "th");
   const requests = [];

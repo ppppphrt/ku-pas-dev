@@ -502,6 +502,7 @@ export const messages = [
   ],
   ["Please enter a question.", "กรุณาพิมพ์คำถาม"],
   ["Searching the course catalog", "ค้นหาจากข้อมูลรายวิชา"],
+  ["Adding an AI explanation…", "กำลังเพิ่มเติมคำอธิบายจาก AI…"],
   [
     "Check the days, times, credits and timetable selections.",
     "ตรวจเงื่อนไขวัน เวลา หน่วยกิต และรายการในตารางอีกครั้ง",
