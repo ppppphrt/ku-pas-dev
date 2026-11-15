@@ -77,6 +77,45 @@ def test_llm_patch_preserves_unchanged_filters_and_can_clear_them(monkeypatch):
     assert "faculty" not in seen[0]
 
 
+@pytest.mark.parametrize("message", ["เปลี่ยนเป็นวันจันทร์แทน", "Monday instead"])
+def test_llm_day_followup_cannot_erase_previous_time_window(monkeypatch, message):
+    import chat
+
+    monkeypatch.setenv("LLM_API_KEY", "test-key")
+    monkeypatch.setenv("LLM_MODEL", "test-model")
+    monkeypatch.setattr(
+        chat.chat_llm,
+        "structured",
+        lambda *args: {
+            "state": {"days": ["Mon"], "start_time": None, "end_time": None},
+        },
+    )
+    previous = ChatState(interest="อังกฤษ", days=["Fri"], start_time="12:00", end_time="17:00")
+    plan, engine = chat.parse(message, previous)
+    assert engine == "llm-api"
+    assert plan.state.days == ["Mon"] and plan.state.interest == "อังกฤษ"
+    assert (plan.state.start_time, plan.state.end_time) == ("12:00", "17:00")
+
+
+@pytest.mark.parametrize("message", ["ทุกเวลา", "ไม่จำกัดเวลา", "any time"])
+def test_llm_can_still_explicitly_clear_time_window(monkeypatch, message):
+    import chat
+
+    monkeypatch.setenv("LLM_API_KEY", "test-key")
+    monkeypatch.setenv("LLM_MODEL", "test-model")
+    monkeypatch.setattr(
+        chat.chat_llm,
+        "structured",
+        lambda *args: {
+            "state": {"start_time": None, "end_time": None},
+        },
+    )
+    previous = ChatState(start_time="12:00", end_time="17:00")
+    plan, engine = chat.parse(message, previous)
+    assert engine == "llm-api"
+    assert plan.state.start_time is None and plan.state.end_time is None
+
+
 def test_curriculum_is_not_course_code_suffix():
     state = local_parse("กลุ่มสาระ 64 อยู่ดีมีสุข", ChatState())
     state = local_parse("สมรรถนะ 67 ด้าน 4", state)
