@@ -49,7 +49,7 @@ def test_hosted_transport_and_credentials_stay_server_side(monkeypatch):
 
     def transport(request, timeout):
         requests.append(request)
-        assert timeout == 18
+        assert 29 <= timeout <= 30
         return io.BytesIO(
             json.dumps({"choices": [{"message": {"content": '{"ok":true}'}}]}).encode()
         )
@@ -60,6 +60,94 @@ def test_hosted_transport_and_credentials_stay_server_side(monkeypatch):
     assert requests[0].get_header("Authorization") == "Bearer test-key"
     assert json.loads(requests[0].data)["model"] == "test-model"
     assert "test-key" not in requests[0].data.decode()
+
+
+def test_plan_has_smaller_output_and_turn_deadline_is_shared(monkeypatch):
+    monkeypatch.setenv("LLM_API_KEY", "test-key")
+    monkeypatch.setenv("LLM_MODEL", "test-model")
+    clock = [0]
+    calls = []
+    monkeypatch.setattr(chat_llm, "monotonic", lambda: clock[0])
+
+    def transport(request, timeout):
+        calls.append((json.loads(request.data), timeout))
+        clock[0] += 25 if len(calls) == 1 else 1
+        return io.BytesIO(b'{"choices":[{"message":{"content":"{}"}}]}')
+
+    monkeypatch.setattr(chat_llm, "urlopen", transport)
+    with chat_llm.turn_budget():
+        chat_llm.structured([], {"properties": {"state": {}}})
+        chat_llm.structured([], {"properties": {"message": {}}})
+    assert [call[0]["max_tokens"] for call in calls] == [512, 1000]
+    assert [call[1] for call in calls] == [30, 23]
+    assert chat_llm._turn_deadline.get() is None
+
+
+@pytest.mark.parametrize("status", [429, 500, 502, 503, 504])
+def test_transient_http_failure_retries_once(monkeypatch, status):
+    calls, delays = [], []
+    monkeypatch.setattr(chat_llm, "monotonic", lambda: 0)
+    monkeypatch.setattr(chat_llm, "sleep", delays.append)
+
+    def transport(request, timeout):
+        calls.append(timeout)
+        if len(calls) == 1:
+            raise HTTPError(
+                "https://example.com", status, "unavailable", {"Retry-After": "1"}, None
+            )
+        return io.BytesIO(b'{"ok":true}')
+
+    monkeypatch.setattr(chat_llm, "urlopen", transport)
+    assert chat_llm.request_json(None, 10) == {"ok": True}
+    assert len(calls) == 2 and delays == [1]
+
+
+@pytest.mark.parametrize("status,retry_after", [(401, "0"), (429, "60")])
+def test_permanent_error_or_long_retry_after_does_not_retry(monkeypatch, status, retry_after):
+    calls = []
+    monkeypatch.setattr(chat_llm, "monotonic", lambda: 0)
+
+    def transport(*args, **kwargs):
+        calls.append(1)
+        raise HTTPError("https://example.com", status, "error", {"Retry-After": retry_after}, None)
+
+    monkeypatch.setattr(chat_llm, "urlopen", transport)
+    with pytest.raises(HTTPError):
+        chat_llm.request_json(None, 10)
+    assert len(calls) == 1
+
+
+def test_repeated_network_failures_stop_after_two_attempts(monkeypatch):
+    calls = []
+    monkeypatch.setattr(chat_llm, "monotonic", lambda: 0)
+    monkeypatch.setattr(chat_llm, "sleep", lambda _: None)
+
+    def transport(*args, **kwargs):
+        calls.append(1)
+        raise URLError("offline")
+
+    monkeypatch.setattr(chat_llm, "urlopen", transport)
+    with pytest.raises(URLError):
+        chat_llm.request_json(None, 10)
+    assert len(calls) == 2
+
+
+def test_timeout_does_not_restart_exhausted_budget(monkeypatch):
+    clock, calls = [0], []
+    monkeypatch.setattr(chat_llm, "monotonic", lambda: clock[0])
+
+    def transport(*args, **kwargs):
+        calls.append(1)
+        clock[0] = 30
+        raise TimeoutError()
+
+    monkeypatch.setattr(chat_llm, "urlopen", transport)
+    with pytest.raises(TimeoutError):
+        chat_llm.request_json(None, 30)
+    assert len(calls) == 1
+    with pytest.raises(TimeoutError):
+        chat_llm.request_json(None, 30)
+    assert len(calls) == 1
 
 
 def test_cloud_key_is_not_sent_over_plain_http(monkeypatch):

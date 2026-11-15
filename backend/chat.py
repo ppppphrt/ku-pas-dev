@@ -369,8 +369,11 @@ def parse(message, previous, history=(), diagnostics=None):
         "You interpret course advising in Thai or English. Search the full Bangkhen catalog by "
         "default; verified_ge_only=true ONLY if the user explicitly requests verified GE. "
         "Do not treat a missing GE classification as a missing course. Return only JSON "
-        "matching this schema: " + json.dumps(ChatPlan.model_json_schema()) + ". "
-        "Return a COMPLETE state, preserving prior filters unless changed. Clear all filters on "
+        "matching this schema: "
+        + json.dumps(chat_llm.compact_schema(ChatPlan.model_json_schema()), separators=(",", ":"))
+        + ". "
+        "Return state as a PATCH: include ONLY changed filters; omit unchanged fields. "
+        "Use null or empty lists/strings to clear filters. Clear all filters on "
         "reset; clear obsolete interest on a topic switch. Understand negations and colloquial "
         "preferences (no early classes, Fridays only, etc). Use concise Thai/English search "
         "keywords for interest, not the entire question (e.g. ฝึกภาษาอังกฤษ -> อังกฤษ). "
@@ -389,7 +392,7 @@ def parse(message, previous, history=(), diagnostics=None):
                     "role": "user",
                     "content": json.dumps(
                         {
-                            "previous_state": previous.model_dump(),
+                            "previous_state": previous.model_dump(exclude_defaults=True),
                             "message": message,
                         },
                         ensure_ascii=False,
@@ -469,7 +472,7 @@ def answer(body, payload, saved):
         "for section detail. Do not combine different sections into one schedule. Reply in "
         + ("Thai" if body.language == "th" else "English")
         + ". Return only JSON matching "
-        + json.dumps(schema)
+        + json.dumps(chat_llm.compact_schema(schema), separators=(",", ":"))
         + ". "
         "Respond to what the person actually asked, acknowledge changes, explain relevant "
         "courses and ask at most one useful follow-up. Greetings/thanks need no course list. "
@@ -592,6 +595,11 @@ def restate_understanding(state, language, intent="search"):
 
 
 def respond(body, catalog, ge):
+    with chat_llm.turn_budget():
+        return respond_with_budget(body, catalog, ge)
+
+
+def respond_with_budget(body, catalog, ge):
     # Resolve saved refs against the authoritative catalog, never client-supplied slots.
     saved = catalog.timetable(body.items, 0, 10000)["items"]
     explicit = explicit_time_range(body.message)
