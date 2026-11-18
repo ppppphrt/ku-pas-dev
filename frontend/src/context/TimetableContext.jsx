@@ -117,6 +117,21 @@ export function TimetableProvider({ metadata, children }) {
         ])
       : [],
     add,
+    addPlan: (items) => {
+      if (!state.ready || !items.length) return false;
+      const codes = new Set(
+        state.items.map(({ course }) => course.subject_code),
+      );
+      if (items.some(({ course }) => codes.has(course.subject_code)))
+        return false;
+      const next = [...state.items, ...items];
+      if (
+        next.reduce((sum, { course }) => sum + course.credits, 0) >
+        metadata.max_credits
+      )
+        return false;
+      return commit(next);
+    },
     remove: (code) =>
       commit(state.items.filter((i) => i.course.subject_code !== code)),
     clear: () => commit([]),

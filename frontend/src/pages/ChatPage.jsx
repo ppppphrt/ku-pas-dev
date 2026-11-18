@@ -1,3 +1,4 @@
+import TimetableRecommendations from "../components/TimetableRecommendations";
 import Icon from "../components/Icon";
 import ChatFeedback from "../components/ChatFeedback";
 import { useLanguage } from "../hooks/useLanguage";
@@ -629,6 +630,18 @@ export default function ChatPage() {
                   ? `${response.sources.ge.semester}/${response.sources.ge.academic_year}`
                   : t("รอยืนยัน")}
               </p>
+              {response.results.length > 0 && (
+                <TimetableRecommendations
+                  key={response.results
+                    .map(({ course }) => course.subject_code)
+                    .join("|")}
+                  results={response.results}
+                  target={response.state?.competency}
+                  competencies={competencies}
+                  timetable={timetable}
+                  busy={busy && !response.answer_pending}
+                />
+              )}
               {response.results.map((result) => (
                 <ChatCourse
                   key={result.course.subject_code}
