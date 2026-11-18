@@ -35,7 +35,7 @@ function TimetableNotice() {
 }
 function Workspace() {
   const { t } = useLanguage();
-  const { ready, user, notice } = useAuth();
+  const { ready, user, notice, demoStudent } = useAuth();
   const [metadata, setMetadata] = useState(null);
   const [error, setError] = useState("");
   const [retry, setRetry] = useState(0);
@@ -81,9 +81,7 @@ function Workspace() {
         <>
           {DEMO_MODE && (
             <div className="notice" role="status">
-              {t(
-                "Demo timetables are saved in this browser. Accounts are unavailable.",
-              )}
+              {t("Demo timetables are saved in this browser.")}
             </div>
           )}
           <div className="notice dataset-notice">
@@ -92,7 +90,7 @@ function Workspace() {
             )}
           </div>
           <TimetableProvider
-            key={`${metadata.dataset_version}:${user?.id || "guest"}`}
+            key={`${metadata.dataset_version}:${user?.id || (demoStudent ? "demo-student" : "guest")}`}
             metadata={metadata}
           >
             <TimetableNotice />
