@@ -597,11 +597,11 @@ it("localizes chat controls while preserving the user's exact draft", async () =
   expect(screen.getByLabelText("Ask about GE courses")).toHaveValue("สนใจภาษา");
 });
 
-it("opens GE Chat on the homepage and keeps course discovery accessible", async () => {
+it("opens the registration choices on the homepage and keeps course discovery accessible", async () => {
   window.history.replaceState({}, "", "/");
   const user = userEvent.setup();
   render(<App />);
-  await screen.findByLabelText("Ask about GE courses");
+  await screen.findByRole("heading", { name: "How would you like to start?" });
   expect(screen.queryByRole("searchbox")).not.toBeInTheDocument();
   await user.click(
     within(screen.getByRole("navigation")).getByRole("link", {
@@ -663,7 +663,7 @@ it("shows catalog courses with unknown GE and asks about reversed times before s
       });
     }),
   );
-  window.history.replaceState({}, "", "/");
+  window.history.replaceState({}, "", "/chat");
   const user = userEvent.setup();
   render(<App />);
   const input = await screen.findByLabelText("ถามเรื่องรายวิชา GE");
@@ -751,3 +751,26 @@ it.each([
     ).toBeInTheDocument();
   },
 );
+
+it("offers both registration paths and lets visitors browse GE directly", async () => {
+  localStorage.setItem("ku-language", "en");
+  window.history.replaceState({}, "", "/");
+  const user = userEvent.setup();
+  render(<App />);
+  await user.click(
+    await screen.findByRole("button", { name: /Not registered yet/ }),
+  );
+  expect(
+    screen.getByRole("textbox", { name: /Enter course names or codes/ }),
+  ).toBeInTheDocument();
+  await user.click(screen.getByRole("button", { name: "Back to choices" }));
+  expect(
+    screen.getByRole("link", { name: /Already registered/ }),
+  ).toHaveAttribute("href", "/timetable?find-ge=1");
+  await user.click(
+    screen.getByRole("link", { name: "Browse GE courses first" }),
+  );
+  expect(
+    await screen.findByRole("button", { name: "Follow your interests" }),
+  ).toBeInTheDocument();
+});

@@ -589,4 +589,62 @@ export const messages = [
     "The explanation is still pending. You can review the results above.",
     "ยังรอคำอธิบายเพิ่มเติมอยู่ครับ คุณดูผลค้นหาที่แสดงแล้วได้เลย",
   ],
+  ["Back to choices", "กลับไปเลือกวิธีเริ่มต้น"],
+  ["Plan required courses", "จัดตารางวิชาจำเป็น"],
+  [
+    "Enter 1–8 courses, one per line.",
+    "กรอกชื่อหรือรหัส 1–8 วิชา แยกบรรทัดละวิชา",
+  ],
+  [
+    "Enter course names or codes, one per line.",
+    "กรอกชื่อหรือรหัสวิชา บรรทัดละหนึ่งวิชา",
+  ],
+  ["Find required courses", "ค้นหาวิชาจำเป็น"],
+  ["Select a matching course", "เลือกวิชาที่ตรงกัน"],
+  [
+    "No matching Bangkhen course with a complete schedule. Try the full code.",
+    "ไม่พบวิชาบางเขนที่ตรงคำค้นและมีตารางครบ ลองใช้รหัสเต็ม",
+  ],
+  ["Choose a section for me", "ให้ระบบเลือกหมู่"],
+  ["Arrange required courses", "จัดตารางวิชาจำเป็น"],
+  [
+    "Could not fit all required courses. Check duplicates, locked sections, or existing classes.",
+    "ยังจัดวิชาจำเป็นได้ไม่ครบ ลองตรวจวิชาซ้ำ หมู่ที่ล็อก หรือตารางเดิม",
+  ],
+  ["Review your base timetable", "ตรวจตารางตั้งต้น"],
+  ["Confirm timetable and find GE", "ยืนยันตารางแล้วหา GE"],
+  [
+    "Could not save this plan. Check conflicts and the credit limit.",
+    "บันทึกตารางไม่ได้ ลองตรวจเวลาชนและเพดานหน่วยกิต",
+  ],
+  ["Review your saved timetable", "ดูตารางที่บันทึกไว้"],
+  ["How would you like to start?", "ตอนนี้คุณมีตารางเรียนแล้วหรือยัง?"],
+  ["Not registered yet", "ยังไม่ได้ลงทะเบียน"],
+  ["Arrange required courses before adding GE.", "จัดตารางวิชาจำเป็นก่อนหา GE"],
+  ["Already registered", "ลงทะเบียนแล้ว"],
+  [
+    "Use your existing sections to find GE that fits.",
+    "ใช้หมู่เรียนที่ลงไว้หา GE ที่ไม่ชน",
+  ],
+  ["Browse GE courses first", "ขอดูวิชา GE ก่อน"],
+  ["Find GE around your timetable", "หา GE ที่ไม่ชนตาราง"],
+  [
+    "Add your existing sections before searching for GE that fits.",
+    "เพิ่มวิชาและหมู่ที่ลงไว้ก่อนค้นหา GE ที่ไม่ชนตาราง",
+  ],
+  [
+    "Free time in your saved timetable (08:00–20:00)",
+    "ช่วงว่างในตารางของฉัน (08:00–20:00)",
+  ],
+  ["No free time", "ไม่มีช่วงว่าง"],
+  [
+    "Tell the chat what interests you and any days or times to avoid.",
+    "บอกแชทได้เลยว่าสนใจเรื่องไหน และมีวันหรือเวลาที่อยากเว้นหรือไม่",
+  ],
+  ["Use this timetable to find GE", "ใช้ตารางนี้หา GE"],
+  [
+    "Add your registered courses and sections from Course Discovery, then return here to find GE.",
+    "เพิ่มวิชาและหมู่ที่ลงทะเบียนแล้วจากหน้าค้นหารายวิชา แล้วกลับมาหา GE จากตารางนี้",
+  ],
+  ["GE records in Bangkhen", "รายวิชาที่มีข้อมูล GE บางเขน"],
 ];

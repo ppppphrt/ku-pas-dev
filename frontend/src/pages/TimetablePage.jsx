@@ -1,11 +1,12 @@
 import { useLanguage } from "../hooks/useLanguage";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useTimetable } from "../hooks/useTimetable";
 import { useAuth } from "../hooks/useAuth";
 import { courseColor, creditState, DAYS, minutes } from "../utils/timetable";
 import Modal from "../components/Modal";
 export default function TimetablePage() {
+  const [params] = useSearchParams();
   const { t, courseText } = useLanguage();
   const {
     items,
@@ -93,6 +94,20 @@ export default function TimetablePage() {
           </button>
           {imported && <p role="status">{t("Sample timetable is ready.")}</p>}
         </section>
+      )}
+      {ready && items.length > 0 && (
+        <p>
+          <Link className="button primary" to="/chat?ge=fit">
+            {t("Use this timetable to find GE")}
+          </Link>
+        </p>
+      )}
+      {params.has("find-ge") && ready && !items.length && (
+        <p>
+          {t(
+            "Add your registered courses and sections from Course Discovery, then return here to find GE.",
+          )}
+        </p>
       )}
       {!ready && !error && <p role="status">{t("Restoring timetable…")}</p>}
       {error && (

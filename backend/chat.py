@@ -731,12 +731,12 @@ def restate_understanding(state, language, intent="search"):
     )
 
 
-def respond(body, catalog, ge, *, quick=False):
+def respond(body, catalog, ge, *, quick=False, ge_mode=None):
     with chat_llm.turn_budget():
-        return respond_with_budget(body, catalog, ge, quick=quick)
+        return respond_with_budget(body, catalog, ge, quick=quick, ge_mode=ge_mode)
 
 
-def respond_with_budget(body, catalog, ge, *, quick=False):
+def respond_with_budget(body, catalog, ge, *, quick=False, ge_mode=None):
     # Resolve saved refs against the authoritative catalog, never client-supplied slots.
     saved = catalog.timetable(body.items, 0, 10000)["items"]
     explicit = explicit_time_range(body.message)
@@ -829,6 +829,8 @@ def respond_with_budget(body, catalog, ge, *, quick=False):
         )
         exact_in_catalog |= exact and course["campus"] == "บางเขน"
         classification = classification_for(ge, code)
+        if ge_mode and classification["status"] not in {"verified", "mock"}:
+            continue
         if not in_scope(course, ge, state):
             continue
         searchable = " ".join(
@@ -896,6 +898,10 @@ def respond_with_budget(body, catalog, ge, *, quick=False):
                     ),
                 }
             )
+        if ge_mode == "fit":
+            sections = [section for section in sections if section["can_plan"]]
+            if not sections:
+                continue
         # Availability should apply to complete sections; no-schedule courses remain discoverable otherwise.
         if (state.days or state.start_time or state.end_time) and not sections:
             continue
