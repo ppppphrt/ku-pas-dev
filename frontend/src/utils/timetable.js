@@ -32,8 +32,8 @@ export function courseColor(code) {
   for (const char of code) hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
   return COLORS[hash % COLORS.length];
 }
-export function loadGuest(storage, version) {
-  const raw = storage.getItem("ku-timetable-v2");
+export function loadGuest(storage, version, key = "ku-timetable-v2") {
+  const raw = storage.getItem(key);
   if (!raw) return { items: [] };
   const saved = JSON.parse(raw);
   if (saved.dataset_version !== version)

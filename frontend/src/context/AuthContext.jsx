@@ -1,7 +1,20 @@
 import { useEffect, useState } from "react";
 import { api, errorMessage, DEMO_MODE } from "../services/courseApi";
+import { DEMO_SESSION_KEY } from "../utils/demoStudent";
 import { AuthContext } from "./auth";
 export function AuthProvider({ children }) {
+  const [demoStudent, setDemoStudent] = useState(
+    () => DEMO_MODE && sessionStorage.getItem(DEMO_SESSION_KEY) === "active",
+  );
+  function signInDemo() {
+    if (!DEMO_MODE) return;
+    sessionStorage.setItem(DEMO_SESSION_KEY, "active");
+    setDemoStudent(true);
+  }
+  function signOutDemo() {
+    sessionStorage.removeItem(DEMO_SESSION_KEY);
+    setDemoStudent(false);
+  }
   const [user, setUser] = useState(null);
   const [ready, setReady] = useState(
     DEMO_MODE || !sessionStorage.getItem("ku-token"),
@@ -63,6 +76,9 @@ export function AuthProvider({ children }) {
         ready,
         notice,
         authenticate,
+        demoStudent,
+        signInDemo,
+        signOutDemo,
         logout,
       }}
     >

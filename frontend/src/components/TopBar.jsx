@@ -5,7 +5,7 @@ import { NavLink, Link, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 export default function TopBar() {
   const { t, language, setLanguage } = useLanguage();
-  const { user, logout } = useAuth();
+  const { user, logout, demoStudent, signOutDemo } = useAuth();
   const location = useLocation();
   const discovery = `/courses${location.pathname === "/courses" ? location.search : sessionStorage.getItem("ku-discovery-query") || ""}`;
   return (
@@ -62,7 +62,14 @@ export default function TopBar() {
         </div>
         <span className="account">
           {DEMO_MODE ? (
-            <span className="badge">{t("Guest demo")}</span>
+            demoStudent ? (
+              <>
+                <span>{t("Demo student")}</span>
+                <button onClick={signOutDemo}>{t("Sign out")}</button>
+              </>
+            ) : (
+              <Link to="/login">{t("Try demo student")}</Link>
+            )
           ) : user ? (
             <>
               <span>{user.username}</span>

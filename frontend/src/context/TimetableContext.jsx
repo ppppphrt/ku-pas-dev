@@ -4,10 +4,12 @@ import { useAuth } from "../hooks/useAuth";
 import { TimetableContext } from "./timetable";
 import { api, errorMessage, validateTimetable } from "../services/courseApi";
 import { loadGuest, refs } from "../utils/timetable";
+import { DEMO_SECTIONS, DEMO_TIMETABLE_KEY } from "../utils/demoStudent";
 import Modal from "../components/Modal";
 export function TimetableProvider({ metadata, children }) {
   const { t } = useLanguage();
-  const { user } = useAuth();
+  const { user, demoStudent } = useAuth();
+  const storageKey = demoStudent ? DEMO_TIMETABLE_KEY : "ku-timetable-v2";
   const [state, setState] = useState({
     items: [],
     error: "",
@@ -23,7 +25,7 @@ export function TimetableProvider({ metadata, children }) {
       try {
         const saved = user
           ? (await api.get("/timetable")).data
-          : loadGuest(localStorage, version);
+          : loadGuest(localStorage, version, storageKey);
         const response = user
           ? saved
           : await validateTimetable({
@@ -53,7 +55,7 @@ export function TimetableProvider({ metadata, children }) {
     return () => {
       active = false;
     };
-  }, [user, version]);
+  }, [user, version, storageKey]);
   async function commit(next) {
     if (pending.current) return false;
     pending.current = true;
@@ -72,7 +74,7 @@ export function TimetableProvider({ metadata, children }) {
         return false;
       }
       if (user) await api.put("/timetable", body);
-      else localStorage.setItem("ku-timetable-v2", JSON.stringify(body));
+      else localStorage.setItem(storageKey, JSON.stringify(body));
       setState({
         items: result.items,
         error: "",
@@ -117,6 +119,23 @@ export function TimetableProvider({ metadata, children }) {
         ])
       : [],
     add,
+    importDemo: async () => {
+      if (!demoStudent || !state.ready) return false;
+      const existingCodes = new Set(
+        state.items.map((item) => item.course.subject_code),
+      );
+      const added = DEMO_SECTIONS.filter(
+        (ref) => !existingCodes.has(ref.subject_code),
+      );
+      if (!added.length) return true;
+      return commit([
+        ...state.items,
+        ...added.map((ref) => ({
+          course: { subject_code: ref.subject_code },
+          section: { section_id: ref.section_id },
+        })),
+      ]);
+    },
     remove: (code) =>
       commit(state.items.filter((i) => i.course.subject_code !== code)),
     clear: () => commit([]),

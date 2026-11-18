@@ -507,4 +507,22 @@ export const messages = [
     "Check the days, times, credits and timetable selections.",
     "ตรวจเงื่อนไขวัน เวลา หน่วยกิต และรายการในตารางอีกครั้ง",
   ],
+  ["Demo student", "นิสิตจำลอง"],
+  ["Try demo student", "ทดลองด้วยบัญชีนิสิตจำลอง"],
+  ["Sign in as demo student", "เข้าสู่ระบบด้วยบัญชีนิสิตจำลอง"],
+  [
+    "Use a fictional Bangkhen student to try importing a sample timetable.",
+    "ทดลองนำเข้าตารางเรียนด้วยบัญชีนิสิตบางเขนจำลอง",
+  ],
+  [
+    "Preview a fictional Bangkhen student’s schedule using catalog sections.",
+    "ทดลองจัดตารางของนิสิตจำลองโดยใช้หมู่เรียนจากแค็ตตาล็อกบางเขน",
+  ],
+  ["Sample timetable", "ตารางเรียนตัวอย่าง"],
+  ["Import sample timetable", "นำเข้าตารางเรียนตัวอย่าง"],
+  ["Sample timetable is ready.", "ตารางเรียนตัวอย่างพร้อมใช้งานแล้ว"],
+  [
+    "Demo timetables are saved in this browser.",
+    "ตารางเรียนทดลองบันทึกในเบราว์เซอร์นี้",
+  ],
 ];
