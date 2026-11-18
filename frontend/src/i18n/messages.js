@@ -602,8 +602,12 @@ export const messages = [
   ["Find required courses", "ค้นหาวิชาจำเป็น"],
   ["Select a matching course", "เลือกวิชาที่ตรงกัน"],
   [
-    "No matching Bangkhen course with a complete schedule. Try the full code.",
-    "ไม่พบวิชาบางเขนที่ตรงคำค้นและมีตารางครบ ลองใช้รหัสเต็ม",
+    "No matching course in the Bangkhen catalog. Check the full code.",
+    "ไม่พบรายวิชาในแค็ตตาล็อกบางเขน ลองตรวจสอบรหัสวิชาเต็มอีกครั้ง",
+  ],
+  [
+    "Course found. This snapshot has no section with enough information for timetable planning.",
+    "พบรายวิชาแล้ว แต่ชุดข้อมูลนี้ยังไม่มีข้อมูลหมู่เรียนเพียงพอสำหรับจัดตาราง",
   ],
   ["Choose a section for me", "ให้ระบบเลือกหมู่"],
   ["Arrange required courses", "จัดตารางวิชาจำเป็น"],

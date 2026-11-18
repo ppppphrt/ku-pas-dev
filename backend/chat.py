@@ -736,10 +736,60 @@ def respond(body, catalog, ge, *, quick=False, ge_mode=None):
         return respond_with_budget(body, catalog, ge, quick=quick, ge_mode=ge_mode)
 
 
+def requested_course_codes(message):
+    """Recognize a direct lookup without treating a longer question as a code list."""
+    query = re.sub(
+        r"^(?:ค้นหา(?:\s*รหัส)?(?:\s*วิชา)?|ขอดู(?:\s*รหัส)?\s*วิชา|search(?: for)?|find)(?=\s|[0-9])\s*",
+        "",
+        message.strip(),
+        flags=re.I,
+    )
+    code = r"[0-9]{8}\s*[-–—]\s*[0-9]{2}"
+    separator = r"(?:[\s,;/]+|\s*(?:และ|\band\b)\s*)"
+    if not re.fullmatch(rf"{code}(?:{separator}{code})*", query, flags=re.I):
+        return []
+    return list(dict.fromkeys(
+        re.sub(r"\s+", "", match).replace("–", "-").replace("—", "-")
+        for match in re.findall(code, query)
+    ))
+
+
+def code_lookup_message(codes, results, language):
+    found = {row["course"]["subject_code"] for row in results}
+    absent = [code for code in codes if code not in found]
+    unscheduled = [
+        row["course"]["subject_code"] for row in results
+        if not any(
+            s["section"]["schedule_complete"] and s["section"]["time_slots"]
+            for s in row["sections"]
+        )
+    ]
+    thai = language == "th"
+    summary = [
+        f"ผมเข้าใจว่าคุณต้องการค้นหาวิชาตามรหัสที่ส่งมา พบ {len(found)} จาก {len(codes)} รหัสในแค็ตตาล็อกบางเขนครับ"
+        if thai else
+        f"I looked up the course codes you sent and found {len(found)} of {len(codes)} in the Bangkhen catalog."
+    ]
+    if unscheduled:
+        joined = ", ".join(unscheduled)
+        summary.append(
+            f"พบรายวิชา แต่ชุดข้อมูลนี้ไม่มีหมู่เรียนพร้อมวันและเวลา: {joined}"
+            if thai else f"Found in the catalog, with no complete section schedule in this snapshot: {joined}"
+        )
+    if absent:
+        joined = ", ".join(absent)
+        summary.append(
+            f"ไม่พบรหัสนี้ในแค็ตตาล็อกบางเขน: {joined}"
+            if thai else f"Codes missing from the Bangkhen catalog: {joined}"
+        )
+    return "\n\n".join(summary)
+
+
 def respond_with_budget(body, catalog, ge, *, quick=False, ge_mode=None):
     # Resolve saved refs against the authoritative catalog, never client-supplied slots.
     saved = catalog.timetable(body.items, 0, 10000)["items"]
-    explicit = explicit_time_range(body.message)
+    codes = requested_course_codes(body.message)
+    explicit = explicit_time_range(body.message) if not codes else None
     if explicit and explicit[0] >= explicit[1]:
         start, end = explicit
         message = (
@@ -766,12 +816,12 @@ def respond_with_budget(body, catalog, ge, *, quick=False, ge_mode=None):
             "answer_sources": [],
         }
     diagnostics = {}
-    provider = chat_llm.provider()
+    provider = None if codes else chat_llm.provider()
     path = career_path(body.message)
     career = bool(CAREER.search(body.message)) or bool(
         path and re.search(r"อยากเป็น|จะเป็น|ควรเรียนวิชา", body.message)
     )
-    reference = course_reference(body.message, catalog, embedded=career)
+    reference = None if codes else course_reference(body.message, catalog, embedded=career)
     from_course = career and (bool(reference) or bool(re.search(
         r"เรียน.{0,40}มาแล้ว|เรียน(?:ตัว|วิชา)นี้|this course|studied|after taking", body.message, re.I
     )))
@@ -784,7 +834,13 @@ def respond_with_budget(body, catalog, ge, *, quick=False, ge_mode=None):
                     if reference:
                         break
     fast_plan = None
-    if reference or (path and not from_course and (career or path is GARDENING)):
+    if codes:
+        fast_plan = ChatPlan(state=ChatState(
+            interest=codes[0] if len(codes) == 1 else "",
+            program=body.state.program,
+        ))
+        ge_mode = None
+    elif reference or (path and not from_course and (career or path is GARDENING)):
         interest = reference.casefold() if reference else path[0][0]
         if from_course:
             fast_plan = ChatPlan(state=ChatState(interest=interest), intent="explain")
@@ -821,12 +877,16 @@ def respond_with_budget(body, catalog, ge, *, quick=False, ge_mode=None):
                 retrieval = "keyword-fallback"
     results = []
     exact_in_catalog = False
-    for course in catalog.courses:
+    candidates = (
+        (catalog.by_code[code] for code in codes if code in catalog.by_code)
+        if codes else catalog.courses
+    )
+    for course in candidates:
         code = course["subject_code"]
-        exact = bool(reference) and any(
+        exact = bool(codes) or (bool(reference) and any(
             normalized_title(value) == reference_key
             for value in (code, course["subject_name_th"], course["subject_name_en"])
-        )
+        ))
         exact_in_catalog |= exact and course["campus"] == "บางเขน"
         classification = classification_for(ge, code)
         if ge_mode and classification["status"] not in {"verified", "mock"}:
@@ -923,15 +983,16 @@ def respond_with_budget(body, catalog, ge, *, quick=False, ge_mode=None):
         title_matches = [item for item in results if item["retrieval_score"] >= 2]
         if title_matches:
             results = title_matches
-    results.sort(
-        key=lambda item: (
-            item["retrieval_score"] < 100,
-            -item["retrieval_score"] if career and not from_course else 0,
-            not any(s["can_plan"] for s in item["sections"]),
-            -item["retrieval_score"],
-            item["course"]["subject_code"],
+    if not codes:
+        results.sort(
+            key=lambda item: (
+                item["retrieval_score"] < 100,
+                -item["retrieval_score"] if career and not from_course else 0,
+                not any(s["can_plan"] for s in item["sections"]),
+                -item["retrieval_score"],
+                item["course"]["subject_code"],
+            )
         )
-    )
     if plan.intent in {"greeting", "clarify"}:
         results = []
     payload = {
@@ -939,8 +1000,8 @@ def respond_with_budget(body, catalog, ge, *, quick=False, ge_mode=None):
         "retrieval": retrieval,
         "search_context": {
             "campus": "บางเขน",
-            "scope": "verified-ge" if state.verified_ge_only else "catalog",
-            "interest": state.interest,
+            "scope": "verified-ge" if state.verified_ge_only else "ge" if ge_mode else "catalog",
+            "interest": ", ".join(codes[:8]) if codes else state.interest,
             "days": state.days,
             "start_time": state.start_time,
             "end_time": state.end_time,
@@ -957,6 +1018,14 @@ def respond_with_budget(body, catalog, ge, *, quick=False, ge_mode=None):
         else "ยังไม่พบรายวิชาใน snapshot บางเขนที่ตรงกับเงื่อนไขนี้ ไม่ได้หมายความว่าไม่มีวิชาหรือไม่เปิดสอนจริง ลองปรับเงื่อนไขหรือพิมพ์ ‘เริ่มใหม่’",
         "notice": "ข้อมูลกลุ่ม GE และการเปิดสอนที่ติดป้ายจำลองใช้เพื่อทดลองเท่านั้น ภาคเรียนของ KU Drive ยังไม่ยืนยัน จำนวนที่นั่งจาก snapshot ไม่ใช่ที่นั่งปัจจุบัน และยังยืนยันสิทธิ์เฉพาะบุคคลไม่ได้ การเพิ่มตารางเป็นการวางแผนเท่านั้น",
     }
+
+    if codes:
+        payload["message"] = code_lookup_message(codes, results, body.language)
+        payload["state"] = (
+            body.state.model_copy(update={"interest": codes[0]})
+            if len(codes) == 1 and results else body.state
+        )
+        return payload
 
     if body.language == "en":
         payload["message"] = (

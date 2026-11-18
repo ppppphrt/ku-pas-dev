@@ -46,3 +46,33 @@ def test_public_demo_api_and_spa(monkeypatch):
             page = client.get(path, headers={"Accept": "text/html"})
             assert page.status_code == 200
             assert '<div id="root">' in page.text
+
+
+def test_exact_course_codes_are_visible_even_without_ge_or_schedule(monkeypatch):
+    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[2]))
+    deployment = importlib.import_module("app")
+    codes = ["01219346-65", "01219325-65", "01219222-65", "01219497-65", "01219499-65"]
+    missing = "01219346-99"
+    with TestClient(deployment.app) as client:
+        metadata = client.get("/api/metadata").json()
+        response = client.post(
+            "/api/chat?quick=true&ge_mode=fit",
+            json={
+                "message": "ค้นหารหัสวิชา " + "\n".join([*codes, missing]),
+                "dataset_version": metadata["dataset_version"],
+                "state": {"verified_ge_only": True, "days": ["Sat"], "offered_only": True},
+            },
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["engine"] == "local-rules-fast"
+        assert not data.get("answer_pending")
+        assert data["search_context"]["scope"] == "catalog"
+        assert data["state"]["verified_ge_only"]
+        assert data["state"]["days"] == ["Sat"]
+        assert [row["course"]["subject_code"] for row in data["results"]] == codes
+        assert all(any(s["can_plan"] for s in row["sections"]) for row in data["results"][:2])
+        assert all(not row["sections"] for row in data["results"][2:])
+        assert "พบ 5 จาก 6 รหัส" in data["message"]
+        assert ", ".join(codes[2:]) in data["message"]
+        assert missing in data["message"]

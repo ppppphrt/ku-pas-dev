@@ -551,7 +551,7 @@ export default function ChatPage() {
                 {t(
                   response.search_context.scope === "verified-ge"
                     ? "เฉพาะวิชาที่รับรอง GE แล้ว"
-                    : geMode
+                    : response.search_context.scope === "ge"
                       ? "GE records in Bangkhen"
                       : "catalog บางเขน",
                 )}

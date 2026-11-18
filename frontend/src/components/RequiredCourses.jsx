@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useLanguage } from "../hooks/useLanguage";
 import { discover, errorMessage } from "../services/courseApi";
-import { arrangeRequired } from "../utils/arrangeRequired";
+import { arrangeRequired, requiredSections } from "../utils/arrangeRequired";
 
 export default function RequiredCourses({ timetable, onBack }) {
   const { t, courseText } = useLanguage();
@@ -40,15 +40,7 @@ export default function RequiredCourses({ timetable, onBack }) {
               filters: {},
             });
             const choices = results.filter(
-              (course) =>
-                course.campus === "บางเขน" &&
-                course.credits != null &&
-                course.sections.some(
-                  (section) =>
-                    section.campus === "บางเขน" &&
-                    section.schedule_complete &&
-                    section.time_slots.length,
-                ),
+              (course) => course.campus === "บางเขน",
             );
             const exact = choices.filter((course) =>
               [
@@ -111,52 +103,54 @@ export default function RequiredCourses({ timetable, onBack }) {
       </form>
       {working && <p role="status">{t("กำลังค้นหา…")}</p>}
       {error && <p role="alert">{error}</p>}
-      {rows.map(({ query, choices, course, locked }, i) => (
-        <div key={query} className="panel">
-          <label>
-            {query}
-            <select
-              value={course?.subject_code || ""}
-              onChange={(e) =>
-                update(i, {
-                  course: choices.find(
-                    (option) => option.subject_code === e.target.value,
-                  ),
-                  locked: "",
-                })
-              }
-            >
-              <option value="">{t("Select a matching course")}</option>
-              {choices.map((option) => (
-                <option key={option.subject_code} value={option.subject_code}>
-                  {option.subject_code} · {courseText(option, "name")}
-                </option>
-              ))}
-            </select>
-          </label>
-          {!choices.length && (
-            <p>
-              {t(
-                "No matching Bangkhen course with a complete schedule. Try the full code.",
-              )}
-            </p>
-          )}
-          {course && (
+      {rows.map(({ query, choices, course, locked }, i) => {
+        const sections = course ? requiredSections(course) : [];
+        return (
+          <div key={query} className="panel">
             <label>
-              {t("Section ")}
+              {query}
               <select
-                value={locked}
-                onChange={(e) => update(i, { locked: e.target.value })}
+                value={course?.subject_code || ""}
+                onChange={(e) =>
+                  update(i, {
+                    course: choices.find(
+                      (option) => option.subject_code === e.target.value,
+                    ),
+                    locked: "",
+                  })
+                }
               >
-                <option value="">{t("Choose a section for me")}</option>
-                {course.sections
-                  .filter(
-                    (section) =>
-                      section.campus === "บางเขน" &&
-                      section.schedule_complete &&
-                      section.time_slots.length,
-                  )
-                  .map((section) => (
+                <option value="">{t("Select a matching course")}</option>
+                {choices.map((option) => (
+                  <option key={option.subject_code} value={option.subject_code}>
+                    {option.subject_code} · {courseText(option, "name")}
+                  </option>
+                ))}
+              </select>
+            </label>
+            {!choices.length && (
+              <p>
+                {t(
+                  "No matching course in the Bangkhen catalog. Check the full code.",
+                )}
+              </p>
+            )}
+            {course && !sections.length && (
+              <p>
+                {t(
+                  "Course found. This snapshot has no section with enough information for timetable planning.",
+                )}
+              </p>
+            )}
+            {sections.length > 0 && (
+              <label>
+                {t("Section ")}
+                <select
+                  value={locked}
+                  onChange={(e) => update(i, { locked: e.target.value })}
+                >
+                  <option value="">{t("Choose a section for me")}</option>
+                  {sections.map((section) => (
                     <option key={section.section_id} value={section.section_id}>
                       {section.section_code} ·{" "}
                       {section.time_slots
@@ -166,15 +160,18 @@ export default function RequiredCourses({ timetable, onBack }) {
                         .join(", ")}
                     </option>
                   ))}
-              </select>
-            </label>
-          )}
-        </div>
-      ))}
+                </select>
+              </label>
+            )}
+          </div>
+        );
+      })}
       {rows.length > 0 && (
         <button
           disabled={
-            !rows.every((row) => row.course) ||
+            !rows.every(
+              ({ course }) => course && requiredSections(course).length,
+            ) ||
             !timetable.ready ||
             timetable.busy
           }

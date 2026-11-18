@@ -774,3 +774,35 @@ it("offers both registration paths and lets visitors browse GE directly", async 
     await screen.findByRole("button", { name: "Follow your interests" }),
   ).toBeInTheDocument();
 });
+
+it("shows a required course without a schedule and blocks automatic arrangement", async () => {
+  const code = "01219222-65";
+  const unscheduled = {
+    ...course(code, "Introduction to Computer Systems", "09:00"),
+    campus: "บางเขน",
+    sections: [],
+  };
+  server.use(
+    http.get(`${root}/keyword-search`, () =>
+      HttpResponse.json({ results: [unscheduled] }),
+    ),
+  );
+  window.history.replaceState({}, "", "/");
+  const user = userEvent.setup();
+  render(<App />);
+  await user.click(
+    await screen.findByRole("button", { name: /Not registered yet/ }),
+  );
+  await user.type(
+    screen.getByRole("textbox", { name: /Enter course names or codes/ }),
+    code,
+  );
+  await user.click(
+    screen.getByRole("button", { name: "Find required courses" }),
+  );
+  expect(await screen.findByRole("combobox", { name: code })).toHaveValue(code);
+  expect(screen.getByText(/Course found. This snapshot/)).toBeVisible();
+  expect(
+    screen.getByRole("button", { name: "Arrange required courses" }),
+  ).toBeDisabled();
+});
