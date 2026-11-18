@@ -9,6 +9,14 @@ from pydantic import Field, model_validator
 
 import chat_llm
 from catalog import overlap, section_matches
+from chat_guidance import (
+    CAREER,
+    GARDENING,
+    career_fallback,
+    career_path,
+    course_reference,
+    normalized_title,
+)
 from schemas import Filters, StrictModel, TimetableRef
 
 GROUPS = ["ภาษากับการสื่อสาร", "อยู่ดีมีสุข", "ศาสตร์แห่งผู้ประกอบการ", "พลเมืองไทยและพลเมืองโลก", "สุนทรียศาสตร์"]
@@ -398,7 +406,8 @@ def interest_terms(interest):
         return TOPICS["ญี่ปุ่น"]
     if "อังกฤษ" in text or re.search(r"\benglish\b", text):
         return [text, *TOPICS["อังกฤษ"]]
-    return TOPICS.get(text, [text])
+    path = career_path(text)
+    return [text, *path[1]] if path else TOPICS.get(text, [text])
 
 
 def resolve_state(message, previous, proposed):
@@ -497,6 +506,7 @@ def parse(message, previous, history=(), diagnostics=None):
         "reset; clear obsolete interest on a topic switch. Understand negations and colloquial "
         "preferences (no early classes, Fridays only, etc). Use concise Thai/English search "
         "keywords for interest, not the entire question (e.g. ฝึกภาษาอังกฤษ -> อังกฤษ). "
+        "For career goals use course-topic keywords (e.g. data analyst -> การวิเคราะห์ข้อมูล). "
         "Resolve follow-ups using conversation. Never repair or guess user-supplied times. "
         "intent=greeting for greetings/thanks, clarify if too vague to search, explain for "
         "questions comparing/explaining current courses, search for course requests. "
@@ -594,6 +604,10 @@ def answer(body, payload, saved):
         + ". Return only JSON matching "
         + json.dumps(chat_llm.compact_schema(schema), separators=(",", ":"))
         + ". "
+        "For career-to-course questions connect each recommended course to a relevant job skill. "
+        "For course-to-career questions name plausible roles and explain the link to the supplied "
+        "course content. Label these as suggestions, never promise hiring or qualifications. "
+        "If the course description lacks evidence, ask about skills or projects. "
         "Respond to what the person actually asked, acknowledge changes, explain relevant "
         "courses and ask at most one useful follow-up. Greetings/thanks need no course list. "
         "Keep the answer to 2-3 short sentences. Course cards already show all results and "
@@ -752,9 +766,37 @@ def respond_with_budget(body, catalog, ge, *, quick=False):
             "answer_sources": [],
         }
     diagnostics = {}
-    fast_plan = fast_search_plan(body.message, body.state) if chat_llm.provider() else None
+    provider = chat_llm.provider()
+    path = career_path(body.message)
+    career = bool(CAREER.search(body.message)) or bool(
+        path and re.search(r"อยากเป็น|จะเป็น|ควรเรียนวิชา", body.message)
+    )
+    reference = course_reference(body.message, catalog, embedded=career)
+    from_course = career and (bool(reference) or bool(re.search(
+        r"เรียน.{0,40}มาแล้ว|เรียน(?:ตัว|วิชา)นี้|this course|studied|after taking", body.message, re.I
+    )))
+    if from_course and not reference:
+        reference = course_reference(body.state.interest, catalog)
+        if not reference:
+            for turn in reversed(body.history):
+                if turn.role == "user":
+                    reference = course_reference(turn.content, catalog, embedded=True)
+                    if reference:
+                        break
+    fast_plan = None
+    if reference or (path and not from_course and (career or path is GARDENING)):
+        interest = reference.casefold() if reference else path[0][0]
+        if from_course:
+            fast_plan = ChatPlan(state=ChatState(interest=interest), intent="explain")
+        else:
+            state = body.state if reference else local_parse(body.message, body.state)
+            fast_plan = ChatPlan(state=state.model_copy(update={"interest": interest}))
+    elif from_course or (career and not body.history and re.search(r"งานนี้|อาชีพนี้|this job", body.message, re.I)):
+        fast_plan = ChatPlan(state=body.state, intent="clarify")
+    elif provider:
+        fast_plan = fast_search_plan(body.message, body.state)
     if fast_plan is not None:
-        plan, engine = fast_plan, chat_llm.provider()
+        plan, engine = fast_plan, provider or "local-rules-fast"
         understanding_engine = "local-rules-fast"
     else:
         plan, engine = parse(body.message, body.state, body.history, diagnostics=diagnostics)
@@ -762,10 +804,11 @@ def respond_with_budget(body, catalog, ge, *, quick=False):
     state = plan.state
     occupied = [slot for item in saved for slot in item["section"]["time_slots"]]
     selected = {item["course"]["subject_code"] for item in saved}
-    terms = interest_terms(state.interest)
+    terms = [state.interest] if reference else interest_terms(state.interest)
+    reference_key = normalized_title(reference) if reference else ""
     semantic_scores = {}
     retrieval = "keyword"
-    if state.interest and not re.fullmatch(r"\d{8}(?:-\d{2})?", state.interest):
+    if state.interest and not from_course and not re.fullmatch(r"\d{8}(?:-\d{2})?", state.interest):
         indices = [i for i, c in enumerate(catalog.courses) if in_scope(c, ge, state)]
         if indices and catalog.model is not None and catalog.embeddings is not None:
             try:
@@ -777,8 +820,14 @@ def respond_with_budget(body, catalog, ge, *, quick=False):
             except (RuntimeError, ValueError, OSError):
                 retrieval = "keyword-fallback"
     results = []
+    exact_in_catalog = False
     for course in catalog.courses:
         code = course["subject_code"]
+        exact = bool(reference) and any(
+            normalized_title(value) == reference_key
+            for value in (code, course["subject_name_th"], course["subject_name_en"])
+        )
+        exact_in_catalog |= exact and course["campus"] == "บางเขน"
         classification = classification_for(ge, code)
         if not in_scope(course, ge, state):
             continue
@@ -794,9 +843,12 @@ def respond_with_budget(body, catalog, ge, *, quick=False):
         ).casefold()
         if (
             state.interest
+            and not exact
             and not any(t in searchable for t in terms)
             and code not in semantic_scores
         ):
+            continue
+        if from_course and reference and not exact:
             continue
         if state.min_credits is not None and (
             course["credits"] is None or course["credits"] < state.min_credits
@@ -857,11 +909,18 @@ def respond_with_budget(body, catalog, ge, *, quick=False):
                 "course": course,
                 "classification": classification,
                 "sections": sections,
-                "retrieval_score": name_score + semantic_scores.get(code, 0),
+                "retrieval_score": 100 * exact + name_score + semantic_scores.get(code, 0),
             }
         )
+    if career and path and not from_course:
+        # Prefer catalog titles explicitly teaching the skills over incidental description matches.
+        title_matches = [item for item in results if item["retrieval_score"] >= 2]
+        if title_matches:
+            results = title_matches
     results.sort(
         key=lambda item: (
+            item["retrieval_score"] < 100,
+            -item["retrieval_score"] if career and not from_course else 0,
             not any(s["can_plan"] for s in item["sections"]),
             -item["retrieval_score"],
             item["course"]["subject_code"],
@@ -913,6 +972,18 @@ def respond_with_budget(body, catalog, ge, *, quick=False):
             if body.language == "th"
             else "What topic interests you, or which days work for you?"
         )
+    if career and (results or from_course):
+        payload["message"] = career_fallback(body.language, payload["results"], from_course, path)
+    elif career and plan.intent == "clarify":
+        payload["message"] = career_fallback(body.language, [], False)
+    if exact_in_catalog and not results:
+        payload["message"] = (
+            "พบวิชานี้ในแค็ตตาล็อกบางเขนครับ แต่ไม่ตรงกับตัวกรองที่ใช้อยู่ "
+            "ลองปรับเงื่อนไขวัน เวลา หมวดวิชา หรือจำนวนหน่วยกิตครับ"
+            if body.language == "th" else
+            "This course is in the Bangkhen catalog, but it does not match your active filters. "
+            "Try adjusting the schedule, category or credit filters."
+        )
     payload["answer_sources"] = []
     if not results and plan.intent in {"search", "explain"}:
         if fast_plan is not None:
@@ -923,10 +994,10 @@ def respond_with_budget(body, catalog, ge, *, quick=False):
                 if body.language == "th"
                 else f" The current topic is ‘{state.interest}’. Say ‘reset’ to search without that topic."
             )
-    elif quick and fast_plan is not None:
+    elif quick and fast_plan is not None and provider and results:
         payload["engine"] = "local-rules-fast"
         payload["answer_pending"] = True
-    elif engine in {"ollama", "llm-api"}:
+    elif engine in {"ollama", "llm-api"} and not (career and plan.intent == "clarify"):
         try:
             reply = answer(body, payload, saved)
             payload["message"] = reply.message
@@ -942,7 +1013,9 @@ def respond_with_budget(body, catalog, ge, *, quick=False):
         except (OSError, ValueError, KeyError, TypeError, IndexError) as error:
             payload["llm_failure"] = chat_llm.failure_details(error, "answer")
             payload["engine"] = "local-rules-fallback"
-    if plan.intent in {"search", "explain"}:
+    if from_course:
+        payload["state"] = body.state.model_copy(update={"interest": reference or body.state.interest})
+    if plan.intent in {"search", "explain"} and not from_course:
         payload["message"] = (
             restate_understanding(state, body.language, plan.intent) + "\n\n" + payload["message"]
         )
