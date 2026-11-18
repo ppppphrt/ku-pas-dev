@@ -801,3 +801,21 @@ def test_career_guidance_both_directions_without_model(chat_client):
     unknown = ask(chat_client, "เรียนตัวนี้มาแล้ว ไปทำงานสายไหนได้บ้าง").json()
     assert not unknown["results"]
     assert "ชื่อ/รหัสวิชา" in unknown["message"]
+
+
+def test_guided_ge_filters_unknown_and_overlapping_sections(chat_client):
+    app = chat_client.app
+    app.state.ge.courses.pop("003-61", None)
+    body = {
+        "message": "วันจันทร์",
+        "dataset_version": "test-v1",
+        "items": [{"subject_code": "001-61", "section_id": "s001-61"}],
+    }
+    response = chat_client.post("/chat?ge_mode=fit", json=body)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["total_results"] > 0
+    for row in data["results"]:
+        assert row["classification"]["status"] in {"verified", "mock"}
+        assert row["course"]["subject_code"] != "001-61"
+        assert row["sections"] and all(section["can_plan"] for section in row["sections"])

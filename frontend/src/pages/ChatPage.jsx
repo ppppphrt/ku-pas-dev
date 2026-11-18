@@ -4,7 +4,9 @@ import Icon from "../components/Icon";
 import ChatFeedback from "../components/ChatFeedback";
 import { useLanguage } from "../hooks/useLanguage";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import RequiredCourses from "../components/RequiredCourses";
+import { DAYS } from "../utils/timetable";
 import { api, errorMessage } from "../services/courseApi";
 import { useTimetable } from "../hooks/useTimetable";
 const groups = [
@@ -94,6 +96,11 @@ function SourceLink({ url, children }) {
 export default function ChatPage() {
   const { t, language } = useLanguage();
   const timetable = useTimetable();
+  const { pathname, search } = useLocation();
+  const mode = new URLSearchParams(search).get("ge");
+  const geMode = mode === "fit" || mode === "browse" ? mode : null;
+  const [planning, setPlanning] = useState(false);
+  const geQuery = geMode ? `&ge_mode=${geMode}` : "";
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [state, setState] = useState(initial);
@@ -135,7 +142,13 @@ export default function ChatPage() {
   }
 
   async function send(text = message, displayText = text) {
-    if (!text.trim() || pending.current || !timetable.ready) return;
+    if (
+      !text.trim() ||
+      pending.current ||
+      !timetable.ready ||
+      (geMode === "fit" && !timetable.items.length)
+    )
+      return;
     pending.current = true;
     setBusy(true);
     setError("");
@@ -198,7 +211,7 @@ export default function ChatPage() {
         })),
       };
       const { data } = await api.post(
-        "/chat?quick=true",
+        `/chat?quick=true${geQuery}`,
         requestBody,
         // LLM stages/retries share 48s; allow for retrieval, cold starts and network overhead.
         { timeout: 65000 },
@@ -218,9 +231,13 @@ export default function ChatPage() {
       answerShown = true;
       setStarter(null);
       if (data.answer_pending) {
-        const { data: finalAnswer } = await api.post("/chat", requestBody, {
-          timeout: 65000,
-        });
+        const { data: finalAnswer } = await api.post(
+          geMode ? `/chat?ge_mode=${geMode}` : "/chat",
+          requestBody,
+          {
+            timeout: 65000,
+          },
+        );
         setMessages((old) =>
           old.map((entry) =>
             entry.id === assistantId
@@ -258,6 +275,47 @@ export default function ChatPage() {
       [key]: value,
     }));
   }
+  if (planning && pathname === "/")
+    return (
+      <RequiredCourses
+        timetable={timetable}
+        onBack={() => setPlanning(false)}
+      />
+    );
+
+  if (pathname === "/")
+    return (
+      <main id="main" className="container chat-page chat-welcome">
+        <section className="chat-starters" aria-labelledby="entry-title">
+          <h1 id="entry-title">{t("How would you like to start?")}</h1>
+          <div className="chat-starter-grid chat-entry-grid">
+            <button type="button" onClick={() => setPlanning(true)}>
+              <strong>{t("Not registered yet")}</strong>
+              <span>{t("Arrange required courses before adding GE.")}</span>
+            </button>
+            <Link className="button" to="/timetable?find-ge=1">
+              <strong>{t("Already registered")}</strong>
+              <span>
+                {t("Use your existing sections to find GE that fits.")}
+              </span>
+            </Link>
+          </div>
+          <Link to="/chat?ge=browse">{t("Browse GE courses first")}</Link>
+        </section>
+      </main>
+    );
+
+  if (geMode === "fit" && timetable.ready && !timetable.items.length)
+    return (
+      <main id="main" className="container">
+        <h1>{t("Find GE around your timetable")}</h1>
+        <p>
+          {t("Add your existing sections before searching for GE that fits.")}
+        </p>
+        <Link to="/timetable?find-ge=1">{t("Timetable Planner")}</Link>
+      </main>
+    );
+
   return (
     <main
       id="main"
@@ -453,7 +511,7 @@ export default function ChatPage() {
                 <Icon name="book" />
                 <span aria-hidden="true">✦</span>
               </div>
-              <p className="eyebrow">YOUR COURSE COMPANION</p>
+              {geMode && <Link to="/">{t("Back to choices")}</Link>}
               <h1>{t("วันนี้อยากเรียนรู้อะไร?")}</h1>
               <p>
                 {t("หาวิชาที่ใช่ ในเวลาที่ชอบ")}
@@ -511,7 +569,9 @@ export default function ChatPage() {
                 {t(
                   response.search_context.scope === "verified-ge"
                     ? "เฉพาะวิชาที่รับรอง GE แล้ว"
-                    : "catalog บางเขน",
+                    : geMode
+                      ? "GE records in Bangkhen"
+                      : "catalog บางเขน",
                 )}
                 {" · "}
                 {response.search_context.days
@@ -565,6 +625,40 @@ export default function ChatPage() {
             )}
             <div ref={transcriptEnd} />
           </div>
+          {!messages.length && geMode === "fit" && (
+            <details className="chat-starters" open>
+              <summary>
+                {t("Free time in your saved timetable (08:00–20:00)")}
+              </summary>
+              <ul>
+                {DAYS.map((day) => {
+                  const slots = timetable.items
+                    .flatMap(({ section }) => section.time_slots)
+                    .filter((slot) => slot.day === day)
+                    .sort((a, b) => a.start.localeCompare(b.start));
+                  let cursor = "08:00";
+                  const gaps = [];
+                  for (const { start, end } of slots) {
+                    if (start >= "20:00") break;
+                    if (start > cursor) gaps.push(`${cursor}–${start}`);
+                    if (end > cursor) cursor = end;
+                  }
+                  if (cursor < "20:00") gaps.push(`${cursor}–20:00`);
+                  return (
+                    <li key={day}>
+                      {t(day)} ·{" "}
+                      {gaps.length ? gaps.join(", ") : t("No free time")}
+                    </li>
+                  );
+                })}
+              </ul>
+              <p>
+                {t(
+                  "Tell the chat what interests you and any days or times to avoid.",
+                )}
+              </p>
+            </details>
+          )}
           {!messages.length && (
             <div className="chat-starters">
               <p className="chat-starters-caption">

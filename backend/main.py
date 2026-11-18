@@ -5,6 +5,7 @@ import os
 from contextlib import asynccontextmanager
 from pathlib import Path
 from time import perf_counter
+from typing import Literal
 
 from fastapi import Depends, FastAPI, HTTPException, Query, Request
 from fastapi.exceptions import RequestValidationError
@@ -300,14 +301,14 @@ def create_app(catalog_path=None, database_path=None, semantic=None, demo=False)
         return found
 
     @app.post("/chat", tags=["Chat"])
-    def chat(body: ChatRequest, quick: bool = False):
+    def chat(body: ChatRequest, quick: bool = False, ge_mode: Literal["browse", "fit"] | None = None):
         c = catalog()
         if body.dataset_version != c.metadata["dataset_version"]:
             raise HTTPException(409, "ข้อมูลเปลี่ยนแล้ว กรุณาโหลดหน้าใหม่และตรวจตารางอีกครั้ง")
         if not body.message.strip():
             raise HTTPException(422, "กรุณาพิมพ์คำถาม")
         try:
-            result = respond(body, c, app.state.ge or GEData.unavailable(c), quick=quick)
+            result = respond(body, c, app.state.ge or GEData.unavailable(c), quick=quick, ge_mode=ge_mode)
             result["feedback_receipt"] = None
             if app.state.feedback is not None and not result.get("answer_pending"):
                 result["feedback_receipt"] = app.state.feedback.receipt(body, result)
