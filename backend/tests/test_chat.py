@@ -299,7 +299,7 @@ def test_local_model_failure_falls_back(chat_client, monkeypatch):
         raise OSError("offline")
 
     monkeypatch.setattr(chat.chat_llm, "urlopen", offline)
-    data = ask(chat_client, "ค้นหา Programming").json()
+    data = ask(chat_client, "ช่วยแนะนำวิชาเกี่ยวกับ Programming").json()
     assert data["engine"] == "local-rules-fallback"
     assert data["llm_failure"] == {"stage": "understanding", "reason": "connection_error"}
 
@@ -313,7 +313,7 @@ def test_understanding_timeout_is_identifiable_without_leaking_input(chat_client
         raise TimeoutError("private provider detail")
 
     monkeypatch.setattr(chat.chat_llm, "structured", timeout)
-    data = ask(chat_client, "ค้นหา Programming").json()
+    data = ask(chat_client, "ช่วยแนะนำวิชาเกี่ยวกับ Programming").json()
     assert data["llm_failure"] == {"stage": "understanding", "reason": "timeout"}
     assert data["total_results"] == 2
     assert "private provider detail" not in json.dumps(data)
@@ -762,3 +762,42 @@ def test_llm_cannot_silently_narrow_japanese_to_verified_ge(chat_client, monkeyp
     )
     plan, _ = chat.parse("อยากเรียนภาษาญี่ปุ่น", chat.ChatState())
     assert not plan.state.verified_ge_only
+
+
+def test_pasted_course_title_bypasses_interpretation_and_explains_filters(chat_client, monkeypatch):
+    import chat
+
+    course = chat_client.app.state.catalog.by_code["001-61"]
+    course["subject_name_th"] = "การเขียนโปรแกรมเบื้องต้น"
+    monkeypatch.setenv("CHAT_OLLAMA_MODEL", "test")
+
+    def unexpected(*args):
+        raise AssertionError("Exact catalog lookup must work before AI")
+
+    monkeypatch.setattr(chat.chat_llm, "structured", unexpected)
+    payload = {"message": "การเขียน\u200bโปรแกรมเบื้องต้น", "dataset_version": "test-v1"}
+    direct = chat_client.post("/chat?quick=true", json=payload).json()
+    assert direct["results"][0]["course"]["subject_code"] == "001-61"
+    assert direct["answer_pending"]
+    filtered = ask(chat_client, payload["message"], state={"days": ["Fri"]}).json()
+    assert not filtered["results"]
+    assert "พบวิชานี้ในแค็ตตาล็อกบางเขน" in filtered["message"]
+
+
+def test_career_guidance_both_directions_without_model(chat_client):
+    course = chat_client.app.state.catalog.by_code["001-61"]
+    course["subject_name_th"] = "การเขียนโปรแกรมเบื้องต้น"
+    goal = ask(chat_client, "เรียนแล้วจบไป อยากเป็นโปรแกรมเมอร์ ควรเรียนวิชาไหนดี").json()
+    assert goal["results"][0]["course"]["subject_code"] == "001-61"
+    assert "ทักษะ" in goal["message"]
+    reverse = ask(
+        chat_client,
+        "เรียนตัวนี้มาแล้ว ไปทำงานสายไหนได้บ้าง",
+        state={"interest": "การเขียนโปรแกรมเบื้องต้น", "days": ["Fri"]},
+    ).json()
+    assert [row["course"]["subject_code"] for row in reverse["results"]] == ["001-61"]
+    assert "นักพัฒนาซอฟต์แวร์" in reverse["message"]
+    assert reverse["state"]["days"] == ["Fri"]
+    unknown = ask(chat_client, "เรียนตัวนี้มาแล้ว ไปทำงานสายไหนได้บ้าง").json()
+    assert not unknown["results"]
+    assert "ชื่อ/รหัสวิชา" in unknown["message"]

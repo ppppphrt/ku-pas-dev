@@ -5,7 +5,7 @@ import { useAuth } from "../hooks/useAuth";
 import { errorMessage, DEMO_MODE } from "../services/courseApi";
 export default function AccountPage({ register = false }) {
   const { t } = useLanguage();
-  const { authenticate } = useAuth();
+  const { authenticate, signInDemo } = useAuth();
   const navigate = useNavigate();
   const [values, setValues] = useState({
     username: "",
@@ -83,13 +83,22 @@ export default function AccountPage({ register = false }) {
     return (
       <main id="main" className="account-page">
         <div className="account-card">
-          <h1>{t("Guest demo")}</h1>
+          <h1>{t("Demo student")}</h1>
           <p>
             {t(
-              "Demo timetables are saved in this browser. Accounts are unavailable.",
+              "Use a fictional Bangkhen student to try importing a sample timetable.",
             )}
           </p>
-          <Link className="button primary" to="/">
+          <button
+            className="primary"
+            onClick={() => {
+              signInDemo();
+              navigate("/timetable");
+            }}
+          >
+            {t("Sign in as demo student")}
+          </button>
+          <Link className="button" to="/">
             {t("Continue as guest")}
           </Link>
         </div>

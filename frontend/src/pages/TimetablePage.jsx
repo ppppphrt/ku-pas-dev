@@ -15,9 +15,11 @@ export default function TimetablePage() {
     error,
     remove,
     clear,
+    importDemo,
     conflictCodes = [],
   } = useTimetable();
-  const { user } = useAuth();
+  const { user, demoStudent } = useAuth();
+  const [imported, setImported] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const { credits, count, status } = creditState(
     items,
@@ -72,6 +74,26 @@ export default function TimetablePage() {
         {items.length ? t("Conflict-free timetable") : t("No courses selected")}{" "}
         · {user ? t("Saved to your account") : t("Saved in this browser")}
       </p>
+      {demoStudent && (
+        <section aria-label={t("Sample timetable")}>
+          <p>
+            {t(
+              "Preview a fictional Bangkhen student’s schedule using catalog sections.",
+            )}
+          </p>
+          <button
+            className="primary"
+            disabled={busy || !ready}
+            onClick={async () => {
+              setImported(false);
+              setImported(await importDemo());
+            }}
+          >
+            {t("Import sample timetable")}
+          </button>
+          {imported && <p role="status">{t("Sample timetable is ready.")}</p>}
+        </section>
+      )}
       {!ready && !error && <p role="status">{t("Restoring timetable…")}</p>}
       {error && (
         <p role="alert" className="error">
