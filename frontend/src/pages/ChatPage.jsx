@@ -5,6 +5,7 @@ import ChatFeedback from "../components/ChatFeedback";
 import { useLanguage } from "../hooks/useLanguage";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import PlanningHome from "../components/PlanningHome";
 import RequiredCourses from "../components/RequiredCourses";
 import { DAYS } from "../utils/timetable";
 import { api, errorMessage } from "../services/courseApi";
@@ -284,26 +285,7 @@ export default function ChatPage() {
     );
 
   if (pathname === "/")
-    return (
-      <main id="main" className="container chat-page chat-welcome">
-        <section className="chat-starters" aria-labelledby="entry-title">
-          <h1 id="entry-title">{t("How would you like to start?")}</h1>
-          <div className="chat-starter-grid chat-entry-grid">
-            <button type="button" onClick={() => setPlanning(true)}>
-              <strong>{t("Not registered yet")}</strong>
-              <span>{t("Arrange required courses before adding GE.")}</span>
-            </button>
-            <Link className="button" to="/timetable?find-ge=1">
-              <strong>{t("Already registered")}</strong>
-              <span>
-                {t("Use your existing sections to find GE that fits.")}
-              </span>
-            </Link>
-          </div>
-          <Link to="/chat?ge=browse">{t("Browse GE courses first")}</Link>
-        </section>
-      </main>
-    );
+    return <PlanningHome onPlan={() => setPlanning(true)} />;
 
   if (geMode === "fit" && timetable.ready && !timetable.items.length)
     return (
