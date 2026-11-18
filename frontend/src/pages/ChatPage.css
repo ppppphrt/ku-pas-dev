@@ -346,16 +346,3 @@
     flex-direction: column;
   }
 }
-
-.chat-starter-grid.chat-entry-grid {
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
-  margin-block: 1rem;
-}
-.chat-entry-grid > a {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 18px 15px 14px;
-  border-radius: 18px;
-  text-align: left;
-}

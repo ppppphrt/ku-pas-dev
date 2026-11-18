@@ -647,4 +647,19 @@ export const messages = [
     "เพิ่มวิชาและหมู่ที่ลงทะเบียนแล้วจากหน้าค้นหารายวิชา แล้วกลับมาหา GE จากตารางนี้",
   ],
   ["GE records in Bangkhen", "รายวิชาที่มีข้อมูล GE บางเขน"],
+  ["Bangkhen", "บางเขน"],
+  ["Find GE that fits your timetable", "หา GE ที่พอดีกับตารางเรียน"],
+  [
+    "Plan your required courses first, or use the timetable you already have to find GE courses that fit.",
+    "จัดวิชาที่ต้องลงให้ลงตัว หรือใช้ตารางที่มีอยู่เพื่อหา GE ที่ลงเพิ่มได้",
+  ],
+  [
+    "Enter your required courses and let KU-PAS arrange the sections.",
+    "บอกวิชาที่ต้องลง แล้วให้ KU-PAS ช่วยจัดหมู่เรียน",
+  ],
+  [
+    "Use the sections you already have to find GE without time conflicts.",
+    "ใช้หมู่เรียนที่ลงไว้ เพื่อหา GE ที่เวลาไม่ชน",
+  ],
+  ["Find GE to add", "หา GE ลงเพิ่ม"],
 ];
