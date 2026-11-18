@@ -565,4 +565,28 @@ export const messages = [
     "Enter the Thai or English course name, or its course code. You can also enter part of the name.",
     "ส่งชื่อวิชาภาษาไทย ภาษาอังกฤษ หรือรหัสวิชามาได้เลยครับ ถ้ารู้แค่บางส่วนของชื่อก็พิมพ์มาได้",
   ],
+  [
+    "Reading your question and looking for courses that match",
+    "กำลังอ่านคำถามและค้นหาวิชาที่ตรงกับเงื่อนไขของคุณ",
+  ],
+  [
+    "Waiting for search results. Some questions take a little longer.",
+    "กำลังรอผลค้นหาจากระบบ บางคำถามอาจใช้เวลานานกว่าปกติครับ",
+  ],
+  [
+    "Still waiting for the search. Results will appear here when ready.",
+    "ยังรอผลค้นหาอยู่ครับ ผลลัพธ์จะแสดงที่นี่เมื่อพร้อม",
+  ],
+  [
+    "Results are ready. Preparing an explanation.",
+    "ผลค้นหาพร้อมแล้ว กำลังเรียบเรียงคำอธิบายเพิ่มเติม",
+  ],
+  [
+    "Waiting for the explanation. You can browse the courses now.",
+    "กำลังรอคำอธิบายเพิ่มเติม ระหว่างนี้เปิดดูรายวิชาได้เลยครับ",
+  ],
+  [
+    "The explanation is still pending. You can review the results above.",
+    "ยังรอคำอธิบายเพิ่มเติมอยู่ครับ คุณดูผลค้นหาที่แสดงแล้วได้เลย",
+  ],
 ];
