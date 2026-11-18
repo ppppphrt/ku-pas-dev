@@ -1,5 +1,16 @@
 import { overlap } from "./timetable";
 
+export function requiredSections(course) {
+  return course.credits == null
+    ? []
+    : course.sections.filter(
+        (section) =>
+          section.campus === "บางเขน" &&
+          section.schedule_complete &&
+          section.time_slots.length,
+      );
+}
+
 export function arrangeRequired(rows, saved) {
   const occupied = saved.flatMap(({ section }) => section.time_slots);
   const savedCodes = new Set(saved.map(({ course }) => course.subject_code));
@@ -12,12 +23,8 @@ export function arrangeRequired(rows, saved) {
   const options = rows
     .map(({ course, locked }) => ({
       course,
-      sections: course.sections.filter(
-        (section) =>
-          section.campus === "บางเขน" &&
-          section.schedule_complete &&
-          section.time_slots.length &&
-          (!locked || section.section_id === locked),
+      sections: requiredSections(course).filter(
+        (section) => !locked || section.section_id === locked,
       ),
     }))
     .sort((a, b) => a.sections.length - b.sections.length);
