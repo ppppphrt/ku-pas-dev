@@ -507,4 +507,28 @@ export const messages = [
     "Check the days, times, credits and timetable selections.",
     "ตรวจเงื่อนไขวัน เวลา หน่วยกิต และรายการในตารางอีกครั้ง",
   ],
+  ["Suggested timetables", "ตารางเรียนแนะนำ"],
+  [
+    "Choose the courses you would like to include. Plans respect your existing timetable and the planning credit limit.",
+    "เลือกวิชาที่สนใจ ระบบจะจัดแผนให้ไม่ชนกับตารางเดิมและอยู่ในเพดานหน่วยกิต",
+  ],
+  ["Courses to consider", "วิชาที่ใช้จัดตาราง"],
+  ["Timetable by availability", "ตารางตามเวลา"],
+  ["Timetable by competency", "ตารางตามสมรรถนะ"],
+  [
+    "Fits the days and times in your search and favors fewer class days and gaps.",
+    "ยึดวันและเวลาที่ค้นหา โดยพยายามลดจำนวนวันเรียนและช่วงว่างระหว่างคาบ",
+  ],
+  [
+    "Prioritizes your selected competency, or broader competency coverage when none is selected.",
+    "เน้นสมรรถนะที่เลือก หากไม่ระบุจะจัดให้ครอบคลุมหลายสมรรถนะ",
+  ],
+  ["Sample competency data", "ข้อมูลสมรรถนะจำลอง"],
+  ["Add this plan to my timetable", "เพิ่มแผนนี้ลงตารางของฉัน"],
+  ["No sections fit this plan.", "ยังไม่พบหมู่เรียนที่จัดลงแผนนี้ได้"],
+  [
+    "No matching sections with competency data fit this plan.",
+    "ยังไม่พบหมู่เรียนที่มีข้อมูลสมรรถนะและจัดลงแผนนี้ได้",
+  ],
+  ["Plan added.", "เพิ่มแผนแล้ว"],
 ];
