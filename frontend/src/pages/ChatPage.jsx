@@ -1,3 +1,4 @@
+import ChatProgress from "../components/ChatProgress";
 import TimetableRecommendations from "../components/TimetableRecommendations";
 import Icon from "../components/Icon";
 import ChatFeedback from "../components/ChatFeedback";
@@ -557,11 +558,10 @@ export default function ChatPage() {
               </div>
             ))}
             {busy && (
-              <p className="chat-bubble assistant" role="status">
-                {response?.answer_pending
-                  ? t("กำลังเพิ่มเติมคำอธิบายจาก AI…")
-                  : t("กำลังคิดคำตอบ…")}
-              </p>
+              <ChatProgress
+                key={response?.answer_pending ? "explanation" : "search"}
+                phase={response?.answer_pending ? "explanation" : "search"}
+              />
             )}
             <div ref={transcriptEnd} />
           </div>

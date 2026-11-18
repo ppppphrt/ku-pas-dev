@@ -359,7 +359,9 @@ it("shows the typed question before the response arrives", async () => {
       within(screen.getByRole("log")).getByText(question),
     ).toBeInTheDocument();
     expect(input).toHaveValue("");
-    expect(screen.getByText("กำลังคิดคำตอบ…")).toBeInTheDocument();
+    expect(
+      screen.getByText("กำลังอ่านคำถามและค้นหาวิชาที่ตรงกับเงื่อนไขของคุณ"),
+    ).toBeInTheDocument();
     expect(
       screen.queryByText("เริ่มต้นจากคำถามเหล่านี้"),
     ).not.toBeInTheDocument();
@@ -430,7 +432,7 @@ it.each(["success", "failure"])(
     try {
       await screen.findByText("ผลค้นหาพร้อมแล้ว");
       expect(
-        screen.getByText("กำลังเพิ่มเติมคำอธิบายจาก AI…"),
+        screen.getByText("ผลค้นหาพร้อมแล้ว กำลังเรียบเรียงคำอธิบายเพิ่มเติม"),
       ).toBeInTheDocument();
       expect(screen.getByRole("button", { name: "ดูผลลัพธ์" })).toBeEnabled();
       expect(input).toHaveValue("");
