@@ -285,7 +285,9 @@ it("chats with context, labels mocks and shares the existing timetable", async (
   render(<App />);
   const input = await screen.findByLabelText("ถามเรื่องรายวิชา GE");
   await waitFor(() =>
-    expect(screen.getByRole("button", { name: "สนใจภาษา" })).toBeEnabled(),
+    expect(
+      screen.getByRole("button", { name: "หาวิชาที่ตรงใจ" }),
+    ).toBeEnabled(),
   );
   await user.type(input, "สนใจภาษา");
   await user.click(screen.getByRole("button", { name: "ส่งข้อความ" }));
@@ -316,66 +318,58 @@ it("chats with context, labels mocks and shares the existing timetable", async (
   await screen.findByText("1 วิชา");
 });
 
-it.each(["typed", "starter"])(
-  "shows the %s question before the response arrives",
-  async (mode) => {
-    localStorage.setItem("ku-language", "th");
-    let release;
-    const gate = new Promise((resolve) => {
-      release = resolve;
-    });
-    const requests = [];
-    server.use(
-      http.post(`${root}/chat`, async ({ request }) => {
-        const body = await request.json();
-        requests.push(body);
-        await gate;
-        return HttpResponse.json({
-          state: body.state,
-          engine: "llm-api",
-          total_results: 0,
-          message: "คำตอบทดสอบ",
-          notice: "",
-          results: [],
-          sources: { catalog: {}, ge: {} },
-        });
-      }),
-    );
-    window.history.replaceState({}, "", "/chat");
-    const user = userEvent.setup();
-    render(<App />);
-    const input = await screen.findByLabelText("ถามเรื่องรายวิชา GE");
-    await waitFor(() =>
-      expect(screen.getByRole("button", { name: "สนใจภาษา" })).toBeEnabled(),
-    );
-    const question =
-      mode === "starter"
-        ? "สนใจภาษา"
-        : "อยากเรียนภาษาจีน ว่างเฉพาะวันอังคาร ศุกร์";
-    if (mode === "starter")
-      await user.click(screen.getByRole("button", { name: question }));
-    else {
-      await user.type(input, question);
-      await user.click(screen.getByRole("button", { name: "ส่งข้อความ" }));
-    }
-    try {
-      await waitFor(() => expect(requests).toHaveLength(1));
-      expect(
-        within(screen.getByRole("log")).getByText(question),
-      ).toBeInTheDocument();
-      expect(input).toHaveValue("");
-      expect(screen.getByText("กำลังคิดคำตอบ…")).toBeInTheDocument();
-      expect(
-        screen.queryByText("เริ่มต้นจากคำถามเหล่านี้"),
-      ).not.toBeInTheDocument();
-      expect(requests[0].history).toEqual([]);
-    } finally {
-      release();
-    }
-    await screen.findByText("คำตอบทดสอบ");
-    expect(screen.getAllByText(question)).toHaveLength(1);
-  },
-);
+it("shows the typed question before the response arrives", async () => {
+  localStorage.setItem("ku-language", "th");
+  let release;
+  const gate = new Promise((resolve) => {
+    release = resolve;
+  });
+  const requests = [];
+  server.use(
+    http.post(`${root}/chat`, async ({ request }) => {
+      const body = await request.json();
+      requests.push(body);
+      await gate;
+      return HttpResponse.json({
+        state: body.state,
+        engine: "llm-api",
+        total_results: 0,
+        message: "คำตอบทดสอบ",
+        notice: "",
+        results: [],
+        sources: { catalog: {}, ge: {} },
+      });
+    }),
+  );
+  window.history.replaceState({}, "", "/chat");
+  const user = userEvent.setup();
+  render(<App />);
+  const input = await screen.findByLabelText("ถามเรื่องรายวิชา GE");
+  await waitFor(() =>
+    expect(
+      screen.getByRole("button", { name: "หาวิชาที่ตรงใจ" }),
+    ).toBeEnabled(),
+  );
+  const question = "อยากเรียนภาษาจีน ว่างเฉพาะวันอังคาร ศุกร์";
+  await user.type(input, question);
+  await user.click(screen.getByRole("button", { name: "ส่งข้อความ" }));
+  try {
+    await waitFor(() => expect(requests).toHaveLength(1));
+    expect(
+      within(screen.getByRole("log")).getByText(question),
+    ).toBeInTheDocument();
+    expect(input).toHaveValue("");
+    expect(screen.getByText("กำลังคิดคำตอบ…")).toBeInTheDocument();
+    expect(
+      screen.queryByText("เริ่มต้นจากคำถามเหล่านี้"),
+    ).not.toBeInTheDocument();
+    expect(requests[0].history).toEqual([]);
+  } finally {
+    release();
+  }
+  await screen.findByText("คำตอบทดสอบ");
+  expect(screen.getAllByText(question)).toHaveLength(1);
+});
 
 it.each(["success", "failure"])(
   "shows results before AI finishes and handles AI %s",
@@ -672,7 +666,9 @@ it("shows catalog courses with unknown GE and asks about reversed times before s
   render(<App />);
   const input = await screen.findByLabelText("ถามเรื่องรายวิชา GE");
   await waitFor(() =>
-    expect(screen.getByRole("button", { name: "สนใจภาษา" })).toBeEnabled(),
+    expect(
+      screen.getByRole("button", { name: "หาวิชาที่ตรงใจ" }),
+    ).toBeEnabled(),
   );
   await user.type(input, "อยากเรียนภาษาญี่ปุ่น มีเปิดวันไหนบ้าง");
   await user.click(screen.getByRole("button", { name: "ส่งข้อความ" }));
@@ -693,3 +689,63 @@ it("shows catalog courses with unknown GE and asks about reversed times before s
   ).not.toBeInTheDocument();
   expect(requests[1].state.interest).toBe("ญี่ปุ่น");
 });
+
+it.each([
+  ["หาวิชาที่ตรงใจ", /บอกความสนใจมาได้เลย/, "ถ่ายรูป", "สนใจ ถ่ายรูป"],
+  [
+    "เก็บวิชา GE ให้ครบ",
+    /กำลังเก็บ GE ตามหลักสูตรปีไหน/,
+    "4",
+    "สมรรถนะ 67 ด้าน 4",
+  ],
+  [
+    "หาวิชาในเวลาว่าง",
+    /สะดวกเรียนวันไหน/,
+    "ว่างวันพุธ 09:00-12:00",
+    "ว่างวันพุธ 09:00-12:00",
+  ],
+  ["มีวิชาในใจแล้ว", /ส่งชื่อวิชา/, "01001317", "ค้นหา 01001317"],
+])(
+  "guides the student through %s before searching",
+  async (choice, prompt, reply, query) => {
+    localStorage.setItem("ku-language", "th");
+    window.history.replaceState({}, "", "/chat");
+    const requests = [];
+    server.use(
+      http.post(`${root}/chat`, async ({ request }) => {
+        const body = await request.json();
+        requests.push(body);
+        return HttpResponse.json({
+          state: body.state,
+          total_results: 0,
+          results: [],
+          message: "คำตอบทดสอบ",
+          notice: "",
+          sources: { catalog: {}, ge: {} },
+        });
+      }),
+    );
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(await screen.findByRole("button", { name: choice }));
+    expect(
+      within(screen.getByRole("log")).getByText(prompt),
+    ).toBeInTheDocument();
+    expect(requests).toHaveLength(0);
+    const input = screen.getByLabelText("ถามเรื่องรายวิชา GE");
+    expect(input).toHaveFocus();
+    await user.type(input, reply);
+    const send = screen.getByRole("button", { name: "ส่งข้อความ" });
+    await waitFor(() => expect(send).toBeEnabled());
+    await user.click(send);
+    await screen.findByText("คำตอบทดสอบ");
+    expect(requests[0].message).toBe(query);
+    expect(requests[0].history.map(({ role }) => role)).toEqual([
+      "user",
+      "assistant",
+    ]);
+    expect(
+      within(screen.getByRole("log")).getByText(reply),
+    ).toBeInTheDocument();
+  },
+);

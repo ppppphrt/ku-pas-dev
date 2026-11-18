@@ -43,30 +43,42 @@ const initial = {
   start_time: null,
   end_time: null,
 };
-const examples = [
+const starters = [
   {
-    text: "สนใจภาษา",
+    id: "interest",
+    example: "สนใจภาษา",
     icon: "chat",
     title: "หาวิชาที่ตรงใจ",
     description: "เริ่มจากสิ่งที่คุณสนใจ",
+    prompt:
+      "บอกความสนใจมาได้เลยครับ ชอบเรียนเรื่องไหน หรือเวลาว่างชอบทำอะไร? เช่น ทำสวน ถ่ายรูป หรือฝึกภาษาจีน เดี๋ยวผมช่วยหาวิชาที่ตรงใจให้",
   },
   {
-    text: "สมรรถนะ 67 ด้าน 4",
+    id: "ge",
+    example: "สมรรถนะ 67 ด้าน 4",
     icon: "book",
     title: "เก็บวิชา GE ให้ครบ",
     description: "ค้นหาตามกลุ่มหรือสมรรถนะ",
+    prompt:
+      "กำลังเก็บ GE ตามหลักสูตรปีไหน และอยากเก็บกลุ่มสาระหรือสมรรถนะด้านไหนครับ? เช่น “หลักสูตร 67 สมรรถนะด้าน 4” หรือ “กลุ่มสาระ 64 อยู่ดีมีสุข” ถ้าไม่แน่ใจ บอกปีหลักสูตรก่อนได้ครับ",
   },
   {
-    text: "ว่างวันศุกร์ 09:00-16:00",
+    id: "time",
+    example: "ว่างวันศุกร์ 09:00-16:00",
     icon: "calendar",
     title: "หาวิชาในเวลาว่าง",
     description: "ให้เวลาเรียนเข้ากับชีวิตคุณ",
+    prompt:
+      "สะดวกเรียนวันไหนและช่วงกี่โมงครับ? เช่น “ว่างวันศุกร์ 09:00-16:00” ถ้ามีหัวข้อที่สนใจ บอกเพิ่มได้เลยครับ",
   },
   {
-    text: "ค้นหา 01001317",
+    id: "course",
+    example: "ค้นหา 01001317",
     icon: "search",
     title: "มีวิชาในใจแล้ว",
     description: "ค้นหาด้วยชื่อหรือรหัสวิชา",
+    prompt:
+      "ส่งชื่อวิชาภาษาไทย ภาษาอังกฤษ หรือรหัสวิชามาได้เลยครับ ถ้ารู้แค่บางส่วนของชื่อก็พิมพ์มาได้",
   },
 ];
 function SourceLink({ url, children }) {
@@ -84,6 +96,7 @@ export default function ChatPage() {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [state, setState] = useState(initial);
+  const [starter, setStarter] = useState(null);
   const [messages, setMessages] = useState([]);
   const [conversationId, setConversationId] = useState(() =>
     crypto.randomUUID(),
@@ -112,6 +125,14 @@ export default function ChatPage() {
     if (messages.length) messageInput.current?.focus();
   }, [messages]);
 
+  function begin(choice) {
+    setStarter(choice);
+    setMessages([
+      { role: "user", id: crypto.randomUUID(), text: t(choice.title) },
+      { role: "assistant", id: crypto.randomUUID(), text: t(choice.prompt) },
+    ]);
+  }
+
   async function send(text = message, displayText = text) {
     if (!text.trim() || pending.current || !timetable.ready) return;
     pending.current = true;
@@ -132,10 +153,33 @@ export default function ChatPage() {
         : [...old.slice(-18), userTurn],
     );
     setMessage("");
+    const reply = text.trim();
+    const geNumber = starter?.id === "ge" && /^[1-8]$/.test(reply);
+    const geName =
+      starter?.id === "ge" &&
+      [...groups, ...competencies].find((name) =>
+        [name, t(name)].some(
+          (label) => label.toLowerCase() === reply.toLowerCase(),
+        ),
+      );
+    let searchText = geNumber ? `สมรรถนะ 67 ด้าน ${reply}` : geName || text;
+    if (starter?.id === "ge" && /^(?:25)?(?:64|67)$/.test(reply))
+      searchText = `หลักสูตร ${reply}`;
+    if (
+      starter?.id === "interest" &&
+      !/สนใจ|อยาก|interested|\b(search|find|want)\b/i.test(text)
+    )
+      searchText = `สนใจ ${reply}`;
+    if (
+      starter?.id === "course" &&
+      !/^(ค้นหา|ขอดู|find\b|search\b)/i.test(reply)
+    )
+      searchText = `ค้นหา ${reply}`;
+
     let answerShown = false;
     try {
       const requestBody = {
-        message: text,
+        message: searchText.length <= 1000 ? searchText : text,
         conversation_id: conversationId,
         language,
         history: messages
@@ -171,6 +215,7 @@ export default function ChatPage() {
       setResponse(data);
       setState(data.state);
       answerShown = true;
+      setStarter(null);
       if (data.answer_pending) {
         const { data: finalAnswer } = await api.post("/chat", requestBody, {
           timeout: 65000,
@@ -383,6 +428,7 @@ export default function ChatPage() {
               setState(initial);
               setResponse(null);
               setMessages([]);
+              setStarter(null);
               setConversationId(crypto.randomUUID());
               setError("");
               setNotice("");
@@ -427,6 +473,7 @@ export default function ChatPage() {
                   setState(initial);
                   setResponse(null);
                   setMessages([]);
+                  setStarter(null);
                   setConversationId(crypto.randomUUID());
                   setMessage("");
                   setError("");
@@ -524,20 +571,20 @@ export default function ChatPage() {
                 {t("เริ่มต้นจากคำถามเหล่านี้")}
               </p>
               <div className="chat-starter-grid">
-                {examples.map(({ text, icon, title, description }) => (
+                {starters.map((choice) => (
                   <button
-                    key={text}
-                    aria-label={t(text)}
-                    disabled={busy || !timetable.ready}
-                    onClick={() => send(text, t(text))}
+                    key={choice.id}
+                    aria-label={t(choice.title)}
+                    disabled={busy}
+                    onClick={() => begin(choice)}
                   >
-                    <span className={`starter-icon starter-${icon}`}>
-                      <Icon name={icon} />
+                    <span className={`starter-icon starter-${choice.icon}`}>
+                      <Icon name={choice.icon} />
                     </span>
-                    <strong>{t(title)}</strong>
-                    <span>{t(description)}</span>
+                    <strong>{t(choice.title)}</strong>
+                    <span>{t(choice.description)}</span>
                     <span className="starter-prompt">
-                      {t(text)} <Icon name="arrow" />
+                      {t(choice.example)} <Icon name="arrow" />
                     </span>
                   </button>
                 ))}
@@ -561,7 +608,9 @@ export default function ChatPage() {
                 value={message}
                 maxLength={1000}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder={t("เช่น สนใจธุรกิจ ว่างวันพุธ 09:00-16:00")}
+                placeholder={t(
+                  starter?.example || "เช่น สนใจธุรกิจ ว่างวันพุธ 09:00-16:00",
+                )}
                 disabled={busy}
               />
               <button

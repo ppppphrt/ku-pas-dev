@@ -531,4 +531,20 @@ export const messages = [
     "ยังไม่พบหมู่เรียนที่มีข้อมูลสมรรถนะและจัดลงแผนนี้ได้",
   ],
   ["Plan added.", "เพิ่มแผนแล้ว"],
+  [
+    "Tell me what you enjoy learning or doing in your free time, such as gardening, photography, or practicing Chinese. I’ll help find courses that match.",
+    "บอกความสนใจมาได้เลยครับ ชอบเรียนเรื่องไหน หรือเวลาว่างชอบทำอะไร? เช่น ทำสวน ถ่ายรูป หรือฝึกภาษาจีน เดี๋ยวผมช่วยหาวิชาที่ตรงใจให้",
+  ],
+  [
+    "Which GE curriculum year are you following, and which category or competency do you need? For example, “curriculum 67, competency 4.” If you’re unsure, start with the curriculum year.",
+    "กำลังเก็บ GE ตามหลักสูตรปีไหน และอยากเก็บกลุ่มสาระหรือสมรรถนะด้านไหนครับ? เช่น “หลักสูตร 67 สมรรถนะด้าน 4” หรือ “กลุ่มสาระ 64 อยู่ดีมีสุข” ถ้าไม่แน่ใจ บอกปีหลักสูตรก่อนได้ครับ",
+  ],
+  [
+    "Which days and times are you free? For example, “Friday 09:00–16:00.” You can also tell me what you’d like to study.",
+    "สะดวกเรียนวันไหนและช่วงกี่โมงครับ? เช่น “ว่างวันศุกร์ 09:00-16:00” ถ้ามีหัวข้อที่สนใจ บอกเพิ่มได้เลยครับ",
+  ],
+  [
+    "Enter the Thai or English course name, or its course code. You can also enter part of the name.",
+    "ส่งชื่อวิชาภาษาไทย ภาษาอังกฤษ หรือรหัสวิชามาได้เลยครับ ถ้ารู้แค่บางส่วนของชื่อก็พิมพ์มาได้",
+  ],
 ];
