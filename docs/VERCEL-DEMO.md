@@ -45,3 +45,7 @@
 ทดสอบ backend ผ่าน 47 รายการ และ frontend ผ่าน 15 รายการ พร้อม lint และ build โหมด demo ผ่านแล้ว การทดสอบในเครื่องตรวจ deployment entrypoint, API ที่ `/api`, การค้นหา, การตรวจตาราง, GE Chat, ปิดบัญชี และ fallback ของหน้าย่อยได้ แต่ยังไม่แทนการทดสอบ deployment จริงบน Vercel ต้องผ่าน build และรายการด้านบนบน URL จริงก่อนประกาศพร้อมให้ใช้
 
 เอกสารอ้างอิง: [FastAPI บน Vercel](https://vercel.com/docs/frameworks/backend/fastapi), [Python runtime](https://vercel.com/docs/functions/runtimes/python)
+
+## ดึงรายวิชาจริงสำหรับกลุ่มทดลอง
+
+เพิ่มหน้า `/enrollments` สำหรับอ่านข้อมูลลงทะเบียนจาก KU-EDU ด้วยปี พ.ศ. ใช้รหัสเข้าถึงเฉพาะนิสิตที่มีวันหมดอายุ แยกจากบัญชี demo จำลอง ต้องตั้งค่า `KUEDU_USERNAME`, `KUEDU_PASSWORD`, `KUEDU_STUDENT_ACCESS` ฝั่ง server และ redeploy ก่อนใช้งาน ดูวิธีออกรหัสและตรวจหลัง deploy ใน [KUEDU-ENROLLMENTS.md](KUEDU-ENROLLMENTS.md)

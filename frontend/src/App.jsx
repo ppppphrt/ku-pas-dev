@@ -1,7 +1,13 @@
 import { LanguageProvider } from "./context/LanguageContext";
 import { useLanguage } from "./hooks/useLanguage";
 import { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link,
+  useLocation,
+} from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { TimetableProvider } from "./context/TimetableContext";
 import { useAuth } from "./hooks/useAuth";
@@ -16,6 +22,7 @@ import "./feedback.css";
 import ChatPage from "./pages/ChatPage";
 import CourseDetailPage from "./pages/CourseDetailPage";
 import TimetablePage from "./pages/TimetablePage";
+import EnrollmentPage from "./pages/EnrollmentPage";
 import AccountPage from "./pages/AccountPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import "./App.css";
@@ -34,6 +41,7 @@ function TimetableNotice() {
   );
 }
 function Workspace() {
+  const { pathname } = useLocation();
   const { t } = useLanguage();
   const { ready, user, notice, demoStudent } = useAuth();
   const [metadata, setMetadata] = useState(null);
@@ -84,11 +92,13 @@ function Workspace() {
               {t("Demo timetables are saved in this browser.")}
             </div>
           )}
-          <div className="notice dataset-notice">
-            {t(
-              "KU Drive course snapshot. Academic year and semester are unconfirmed. Sections with missing or invalid schedules cannot be added.",
-            )}
-          </div>
+          {pathname !== "/enrollments" && (
+            <div className="notice dataset-notice">
+              {t(
+                "KU Drive course snapshot. Academic year and semester are unconfirmed. Sections with missing or invalid schedules cannot be added.",
+              )}
+            </div>
+          )}
           <TimetableProvider
             key={`${metadata.dataset_version}:${user?.id || (demoStudent ? "demo-student" : "guest")}`}
             metadata={metadata}
@@ -107,6 +117,10 @@ function Workspace() {
                 element={<CourseDetailPage />}
               />
               <Route path="/timetable" element={<TimetablePage />} />
+              <Route
+                path="/enrollments"
+                element={<EnrollmentPage metadata={metadata} />}
+              />
               <Route path="/login" element={<AccountPage key="login" />} />
               <Route
                 path="/register"

@@ -667,4 +667,56 @@ export const messages = [
     "ใช้หมู่เรียนที่ลงไว้ เพื่อหา GE ที่เวลาไม่ชน",
   ],
   ["Find GE to add", "หา GE ลงเพิ่ม"],
+  ["My registered courses", "รายวิชาที่ลงทะเบียน"],
+  [
+    "Use the private access code issued to you for the pilot. Each code can retrieve only its assigned student's courses.",
+    "ใช้รหัสเข้าถึงส่วนตัวที่ได้รับสำหรับกลุ่มทดลอง แต่ละรหัสดึงได้เฉพาะรายวิชาของนิสิตที่ผูกไว้",
+  ],
+  [
+    "Enrollment lookup is not configured.",
+    "ยังไม่ได้ตั้งค่าการดึงข้อมูลลงทะเบียน",
+  ],
+  ["Student access code", "รหัสเข้าถึงของนิสิต"],
+  ["Academic year (B.E.)", "ปีการศึกษา (พ.ศ.)"],
+  ["Semester", "ภาคเรียน"],
+  ["Loading registered courses…", "กำลังดึงรายวิชาที่ลงทะเบียน…"],
+  ["Fetch registered courses", "ดึงรายวิชาที่ลงทะเบียน"],
+  [
+    "The access code and retrieved courses are kept only on this page. Clear them when finished, especially on a shared device.",
+    "รหัสเข้าถึงและรายวิชาที่ดึงมาจะอยู่เฉพาะหน้านี้ กรุณาล้างข้อมูลเมื่อใช้งานเสร็จ โดยเฉพาะเมื่อใช้เครื่องร่วมกับผู้อื่น",
+  ],
+  ["Clear private data", "ล้างข้อมูลส่วนตัว"],
+  ["Registered course results", "ผลรายวิชาที่ลงทะเบียน"],
+  [
+    "Source: KU-EDU registration API. Status codes are shown exactly as returned.",
+    "แหล่งข้อมูล: API การลงทะเบียน KU-EDU แสดงรหัสสถานะตามที่ API ส่งกลับ",
+  ],
+  [
+    "No enrollment records found for this academic year and semester. Check the B.E. year and semester.",
+    "ไม่พบข้อมูลลงทะเบียนสำหรับปีการศึกษาและภาคเรียนนี้ กรุณาตรวจสอบปี พ.ศ. และภาคเรียน",
+  ],
+  ["Enrollment status", "สถานะลงทะเบียน"],
+  ["Instructors", "ผู้สอน"],
+  ["Not provided", "ไม่ระบุ"],
+  ["Class schedules", "เวลาเรียน"],
+  [
+    "These are your registration records. To plan GE with the existing planner, select and verify the matching catalog sections and times first; this snapshot may differ from your actual semester.",
+    "ข้อมูลนี้เป็นรายการลงทะเบียนของคุณ หากต้องการวางแผน GE ในตารางเดิม ให้เลือกและตรวจสอบหมู่เรียนกับเวลาใน catalog ก่อน เนื่องจาก snapshot อาจต่างจากภาคเรียนจริง",
+  ],
+  [
+    "Fetch my registered courses from KU-EDU",
+    "ดึงรายวิชาที่ลงทะเบียนจาก KU-EDU",
+  ],
+  [
+    "Invalid or expired student access code.",
+    "รหัสเข้าถึงไม่ถูกต้องหรือหมดอายุ",
+  ],
+  [
+    "KU enrollment service is unavailable. Please try again.",
+    "บริการข้อมูลลงทะเบียน KU ไม่พร้อมใช้งาน กรุณาลองใหม่",
+  ],
+  [
+    "KU enrollment service returned an invalid response.",
+    "รูปแบบข้อมูลที่ได้รับจากบริการลงทะเบียน KU ไม่ถูกต้อง",
+  ],
 ];

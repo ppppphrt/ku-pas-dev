@@ -1,0 +1,40 @@
+.enrollment-page {
+  max-width: 1080px;
+}
+.enrollment-form {
+  display: grid;
+  grid-template-columns: minmax(200px, 2fr) 1fr 1fr;
+  gap: 1rem;
+  margin-block: 1.5rem;
+}
+.enrollment-form label {
+  display: grid;
+  gap: 0.5rem;
+}
+.enrollment-form input,
+.enrollment-form select {
+  width: 100%;
+  min-width: 0;
+}
+.enrollment-form button {
+  justify-self: start;
+  grid-column: 1 / -1;
+}
+.enrollment-courses {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-block: 1rem;
+}
+.enrollment-courses h3 {
+  margin-top: 0.5rem;
+}
+.enrollment-courses li {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 640px) {
+  .enrollment-form,
+  .enrollment-courses {
+    grid-template-columns: 1fr;
+  }
+}

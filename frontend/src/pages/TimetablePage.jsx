@@ -75,6 +75,11 @@ export default function TimetablePage() {
         {items.length ? t("Conflict-free timetable") : t("No courses selected")}{" "}
         · {user ? t("Saved to your account") : t("Saved in this browser")}
       </p>
+      <p>
+        <Link to="/enrollments">
+          {t("Fetch my registered courses from KU-EDU")}
+        </Link>
+      </p>
       {demoStudent && (
         <section aria-label={t("Sample timetable")}>
           <p>

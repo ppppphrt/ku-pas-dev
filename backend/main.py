@@ -17,6 +17,8 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from accounts import Accounts
 from catalog import Catalog
 from chat import ChatRequest, GEData, respond
+from enrollments import EnrollmentService
+from enrollments import install_routes as install_enrollment_routes
 from feedback import FeedbackService, install_routes
 from schemas import (
     Credentials,
@@ -49,6 +51,7 @@ def create_app(catalog_path=None, database_path=None, semantic=None, demo=False)
 
     @asynccontextmanager
     async def lifespan(app):
+        app.state.enrollments = EnrollmentService()
         app.state.catalog = None
         app.state.data_error = None
         app.state.accounts = None if demo else Accounts(database_path, os.getenv("JWT_SECRET"))
@@ -82,12 +85,15 @@ def create_app(catalog_path=None, database_path=None, semantic=None, demo=False)
 
     app = FastAPI(title="KU-PAS Course and Timetable API", version="2.0.0", lifespan=lifespan)
     install_routes(app)
+    install_enrollment_routes(app)
 
     @app.middleware("http")
     async def private_feedback_responses(request, call_next):
         response = await call_next(request)
-        if request.url.path.startswith("/feedback"):
+        route_path = request.url.path.removeprefix(request.scope.get("root_path", ""))
+        if route_path.startswith(("/feedback", "/enrollments")):
             response.headers["Cache-Control"] = "no-store"
+            response.headers["Pragma"] = "no-cache"
         return response
 
     origins = [
@@ -99,7 +105,7 @@ def create_app(catalog_path=None, database_path=None, semantic=None, demo=False)
         CORSMiddleware,
         allow_origins=origins,
         allow_methods=["GET", "POST", "PUT"],
-        allow_headers=["Authorization", "Content-Type", "X-Feedback-Review-Key"],
+        allow_headers=["Authorization", "Content-Type", "X-Feedback-Review-Key", "X-Enrollment-Key"],
     )
 
     @app.exception_handler(StarletteHTTPException)
@@ -185,6 +191,7 @@ def create_app(catalog_path=None, database_path=None, semantic=None, demo=False)
             ),
             "semantic_ready": c.embeddings is not None,
             "demo_mode": demo,
+            "enrollment_enabled": app.state.enrollments.enabled,
             "min_credits": minimum,
             "max_credits": maximum,
             "credit_rules_note": "Configurable planning thresholds; confirm your program rules.",

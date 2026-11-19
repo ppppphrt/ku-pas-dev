@@ -73,6 +73,9 @@ export default function PlanningHome({ onPlan }) {
         <Link className="planning-browse" to="/chat?ge=browse">
           {t("Browse GE courses first")} <Icon name="arrow" />
         </Link>
+        <Link className="planning-browse" to="/enrollments">
+          {t("My registered courses")} <Icon name="arrow" />
+        </Link>
       </section>
     </main>
   );
