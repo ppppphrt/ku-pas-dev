@@ -17,6 +17,8 @@ export default function TimetablePage() {
     remove,
     clear,
     importDemo,
+    registration,
+    registeredItems = [],
     conflictCodes = [],
   } = useTimetable();
   const { user, demoStudent } = useAuth();
@@ -49,8 +51,14 @@ export default function TimetablePage() {
           <p className="eyebrow">{t("Make room for what matters")}</p>
           <h1>{t("Timetable Planner")}</h1>
           <p>
-            {t(metadata.data_source)}
-            {t(" · Period unconfirmed")}
+            {registration ? (
+              `KU-EDU · ${registration.academic_year} / ${registration.semester}`
+            ) : (
+              <>
+                {t(metadata.data_source)}
+                {t(" · Period unconfirmed")}
+              </>
+            )}
           </p>
         </div>
         <div className="credit-widget">
@@ -59,8 +67,14 @@ export default function TimetablePage() {
             {t(" courses")}
           </strong>
           <strong>
-            {credits}
-            {t(" credits")}
+            {registeredItems.length ? (
+              t("Credits incomplete")
+            ) : (
+              <>
+                {credits}
+                {t(" credits")}
+              </>
+            )}
           </strong>
           <span>{t(status)}</span>
         </div>
@@ -72,14 +86,37 @@ export default function TimetablePage() {
         )}
       </p>
       <p>
-        {items.length ? t("Conflict-free timetable") : t("No courses selected")}{" "}
-        · {user ? t("Saved to your account") : t("Saved in this browser")}
+        {registeredItems.some((item) => !item.section.schedule_complete)
+          ? t("Schedule incomplete")
+          : items.length
+            ? t("Conflict-free timetable")
+            : t("No courses selected")}{" "}
+        ·{" "}
+        {registration
+          ? t("KU-EDU timetable saved for this browser session")
+          : user
+            ? t("Saved to your account")
+            : t("Saved in this browser")}
       </p>
       <p>
         <Link to="/enrollments">
           {t("Fetch my registered courses from KU-EDU")}
         </Link>
       </p>
+      {registeredItems.some((item) => !item.section.schedule_complete) && (
+        <p className="notice error" role="alert">
+          {t(
+            "Some registered schedules could not be read. Review the original times or remove these courses before finding GE.",
+          )}
+        </p>
+      )}
+      {registration && (
+        <p>
+          {t(
+            "KU-EDU does not provide credits or section numbers. Registered times are used directly; catalog planning data may be from a different semester.",
+          )}
+        </p>
+      )}
       {demoStudent && (
         <section aria-label={t("Sample timetable")}>
           <p>
@@ -129,7 +166,7 @@ export default function TimetablePage() {
               <Link to="/courses">{t("Course Discovery")}</Link>.
             </p>
           )}
-          {items.map(({ course, section }) => (
+          {items.map(({ course, section, source, raw_schedules }) => (
             <article
               key={course.subject_code}
               style={{
@@ -145,9 +182,15 @@ export default function TimetablePage() {
               </h3>
               <p>
                 {course.subject_code}
-                {t(" · Section ")}
-                {section.section_code} · {course.credits}
-                {t(" credits")}
+                {source === "KU-EDU" ? (
+                  " · KU-EDU"
+                ) : (
+                  <>
+                    {t(" · Section ")}
+                    {section.section_code} · {course.credits}
+                    {t(" credits")}
+                  </>
+                )}
               </p>
               <ul>
                 {section.time_slots.map((slot, i) => (
@@ -156,6 +199,9 @@ export default function TimetablePage() {
                   </li>
                 ))}
               </ul>
+              {source === "KU-EDU" && !section.schedule_complete && (
+                <p>{raw_schedules.join(", ") || t("Not provided")}</p>
+              )}
               <button
                 disabled={busy}
                 onClick={() => remove(course.subject_code)}
@@ -192,7 +238,7 @@ export default function TimetablePage() {
                     height: (endHour - startHour) * 48,
                   }}
                 >
-                  {items.flatMap(({ course, section }) =>
+                  {items.flatMap(({ course, section, source }) =>
                     section.time_slots
                       .filter((s) => s.day === day)
                       .map((slot, i) => (
@@ -213,8 +259,14 @@ export default function TimetablePage() {
                           </span>
                           <span>{courseText(course, "name")}</span>
                           <span>
-                            {t("Section ")}
-                            {section.section_code}
+                            {source === "KU-EDU" ? (
+                              "KU-EDU"
+                            ) : (
+                              <>
+                                {t("Section ")}
+                                {section.section_code}
+                              </>
+                            )}
                           </span>
                         </div>
                       )),

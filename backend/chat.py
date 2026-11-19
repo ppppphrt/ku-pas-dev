@@ -17,7 +17,7 @@ from chat_guidance import (
     course_reference,
     normalized_title,
 )
-from schemas import Filters, StrictModel, TimetableRef
+from schemas import Filters, StrictModel, TimeSlot, TimetableRef
 
 GROUPS = ["ภาษากับการสื่อสาร", "อยู่ดีมีสุข", "ศาสตร์แห่งผู้ประกอบการ", "พลเมืองไทยและพลเมืองโลก", "สุนทรียศาสตร์"]
 COMPETENCIES = [
@@ -98,6 +98,8 @@ class ChatRequest(StrictModel):
     message: str = Field(min_length=1, max_length=1000)
     state: ChatState = Field(default_factory=ChatState)
     items: list[TimetableRef] = Field(default_factory=list, max_length=100)
+    occupied_slots: list[TimeSlot] = Field(default_factory=list, max_length=1000)
+    registered_course_codes: list[str] = Field(default_factory=list, max_length=100)
     dataset_version: str
     history: list[ChatTurn] = Field(default_factory=list, max_length=12)
     language: Literal["th", "en"] = "th"
@@ -884,7 +886,9 @@ def respond_with_budget(body, catalog, ge, *, quick=False, ge_mode=None):
         understanding_engine = engine
     state = plan.state
     occupied = [slot for item in saved for slot in item["section"]["time_slots"]]
+    occupied.extend(slot.model_dump() for slot in body.occupied_slots)
     selected = {item["course"]["subject_code"] for item in saved}
+    selected.update(body.registered_course_codes)
     terms = [state.interest] if reference else interest_terms(state.interest)
     reference_key = normalized_title(reference) if reference else ""
     semantic_scores = {}

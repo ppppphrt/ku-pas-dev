@@ -147,6 +147,9 @@ export default function ChatPage() {
       !text.trim() ||
       pending.current ||
       !timetable.ready ||
+      timetable.registeredItems?.some(
+        (item) => !item.section.schedule_complete,
+      ) ||
       (geMode === "fit" && !timetable.items.length)
     )
       return;
@@ -206,10 +209,23 @@ export default function ChatPage() {
           })),
         state,
         dataset_version: timetable.metadata.dataset_version,
-        items: timetable.items.map(({ course, section }) => ({
-          subject_code: course.subject_code,
-          section_id: section.section_id,
-        })),
+        items: (timetable.catalogItems || timetable.items).map(
+          ({ course, section }) => ({
+            subject_code: course.subject_code,
+            section_id: section.section_id,
+          }),
+        ),
+        occupied_slots: (timetable.registeredItems || []).flatMap(
+          ({ section }) =>
+            section.time_slots.map(({ day, start, end }) => ({
+              day,
+              start,
+              end,
+            })),
+        ),
+        registered_course_codes: (timetable.registeredItems || []).map(
+          ({ course }) => course.subject_code,
+        ),
       };
       const { data } = await api.post(
         `/chat?quick=true${geQuery}`,
@@ -287,6 +303,20 @@ export default function ChatPage() {
   if (pathname === "/")
     return <PlanningHome onPlan={() => setPlanning(true)} />;
 
+  if (
+    geMode === "fit" &&
+    timetable.registeredItems?.some((item) => !item.section.schedule_complete)
+  )
+    return (
+      <main id="main" className="container">
+        <p role="alert">
+          {t(
+            "Some registered schedules could not be read. Review the original times or remove these courses before finding GE.",
+          )}
+        </p>
+        <Link to="/timetable">{t("Timetable Planner")}</Link>
+      </main>
+    );
   if (geMode === "fit" && timetable.ready && !timetable.items.length)
     return (
       <main id="main" className="container">

@@ -819,3 +819,25 @@ def test_guided_ge_filters_unknown_and_overlapping_sections(chat_client):
         assert row["classification"]["status"] in {"verified", "mock"}
         assert row["course"]["subject_code"] != "001-61"
         assert row["sections"] and all(section["can_plan"] for section in row["sections"])
+
+
+def test_registered_busy_slots_filter_ge_without_fake_catalog_refs(chat_client):
+    response = chat_client.post(
+        "/chat?quick=true&ge_mode=fit",
+        json={
+            "message": "Programming",
+            "dataset_version": "test-v1",
+            "items": [],
+            "occupied_slots": [{"day": "Mon", "start": "09:00", "end": "10:00"}],
+            "registered_course_codes": ["002-61"],
+        },
+    )
+    assert response.status_code == 200
+    assert response.json()["results"] == []  # 001 conflicts; 002 already registered.
+    invalid = chat_client.post(
+        "/chat", json={
+            "message": "Programming", "dataset_version": "test-v1",
+            "occupied_slots": [{"day": "Thu", "start": "19:00", "end": "09:00"}],
+        },
+    )
+    assert invalid.status_code == 422

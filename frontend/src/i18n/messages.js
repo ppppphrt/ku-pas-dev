@@ -719,4 +719,31 @@ export const messages = [
     "KU enrollment service returned an invalid response.",
     "รูปแบบข้อมูลที่ได้รับจากบริการลงทะเบียน KU ไม่ถูกต้อง",
   ],
+  ["Include in timetable", "นำเข้าตารางเรียน"],
+  ["Use selected courses in timetable", "นำวิชาที่เลือกไปจัดตาราง"],
+  [
+    "Could not import these courses. Check timetable conflicts or browser storage.",
+    "นำเข้ารายวิชาไม่ได้ กรุณาตรวจเวลาชนหรือพื้นที่จัดเก็บของเบราว์เซอร์",
+  ],
+  [
+    "Select the courses to use in your timetable. Status A is selected initially; review other statuses before including them. Only the timetable is saved for this browser session, without your access code or instructor details.",
+    "เลือกวิชาที่ต้องการใช้ในตาราง โดยเลือกสถานะ A ไว้เริ่มต้น กรุณาตรวจสอบสถานะอื่นก่อนเลือกเพิ่ม ระบบเก็บเฉพาะข้อมูลตารางในเซสชันเบราว์เซอร์นี้ ไม่เก็บรหัสเข้าถึงหรือข้อมูลผู้สอน",
+  ],
+  ["Credits incomplete", "ยังไม่ทราบหน่วยกิตรวม"],
+  [
+    "KU-EDU timetable saved for this browser session",
+    "ตาราง KU-EDU เก็บในเซสชันเบราว์เซอร์นี้",
+  ],
+  [
+    "Some registered schedules could not be read. Review the original times or remove these courses before finding GE.",
+    "บางวิชาแปลงเวลาเรียนไม่ได้ กรุณาตรวจเวลาเดิมหรือลบวิชาเหล่านี้ก่อนค้นหา GE",
+  ],
+  [
+    "KU-EDU does not provide credits or section numbers. Registered times are used directly; catalog planning data may be from a different semester.",
+    "KU-EDU ไม่ได้ส่งหน่วยกิตหรือเลขหมู่ ระบบใช้เวลาเรียนที่ดึงมาจริง ส่วนข้อมูลวิชาที่เลือกเพิ่มจาก catalog อาจเป็นคนละภาคเรียน",
+  ],
+  [
+    "The access code stays on this page. If you import courses, the timetable is saved for this browser session. Clear private data when finished, especially on a shared device.",
+    "รหัสเข้าถึงอยู่เฉพาะหน้านี้ หากนำเข้ารายวิชา ตารางจะถูกเก็บในเซสชันเบราว์เซอร์ กรุณาล้างข้อมูลส่วนตัวเมื่อใช้งานเสร็จ โดยเฉพาะเมื่อใช้เครื่องร่วมกับผู้อื่น",
+  ],
 ];

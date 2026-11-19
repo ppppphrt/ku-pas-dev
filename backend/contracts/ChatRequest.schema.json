@@ -189,6 +189,53 @@
       "title": "ChatTurn",
       "type": "object"
     },
+    "TimeSlot": {
+      "additionalProperties": false,
+      "properties": {
+        "day": {
+          "enum": [
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri",
+            "Sat",
+            "Sun"
+          ],
+          "title": "Day",
+          "type": "string"
+        },
+        "start": {
+          "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+          "title": "Start",
+          "type": "string"
+        },
+        "end": {
+          "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+          "title": "End",
+          "type": "string"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Location"
+        }
+      },
+      "required": [
+        "day",
+        "start",
+        "end"
+      ],
+      "title": "TimeSlot",
+      "type": "object"
+    },
     "TimetableRef": {
       "additionalProperties": false,
       "properties": {
@@ -239,6 +286,22 @@
       },
       "maxItems": 100,
       "title": "Items",
+      "type": "array"
+    },
+    "occupied_slots": {
+      "items": {
+        "$ref": "#/$defs/TimeSlot"
+      },
+      "maxItems": 1000,
+      "title": "Occupied Slots",
+      "type": "array"
+    },
+    "registered_course_codes": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 100,
+      "title": "Registered Course Codes",
       "type": "array"
     },
     "dataset_version": {

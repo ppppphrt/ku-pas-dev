@@ -12,11 +12,17 @@ export const refs = (items) =>
   }));
 export function creditState(items, minimum, maximum) {
   const credits = items.reduce((total, item) => total + item.course.credits, 0);
+  const unknown = items.some(({ course }) => course.credits == null);
   return {
     credits,
     count: items.length,
-    status:
-      credits > maximum ? "Exceeded" : credits < minimum ? "Warning" : "Normal",
+    status: unknown
+      ? "Credits incomplete"
+      : credits > maximum
+        ? "Exceeded"
+        : credits < minimum
+          ? "Warning"
+          : "Normal",
   };
 }
 const COLORS = [

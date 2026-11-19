@@ -3,19 +3,30 @@ import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { TimetableContext } from "./timetable";
 import { api, errorMessage, validateTimetable } from "../services/courseApi";
-import { loadGuest, refs } from "../utils/timetable";
+import { loadGuest, refs, overlap } from "../utils/timetable";
+import {
+  loadRegistration,
+  privateRegistration,
+  registrationItems,
+} from "../utils/registeredTimetable";
 import { DEMO_SECTIONS, DEMO_TIMETABLE_KEY } from "../utils/demoStudent";
 import Modal from "../components/Modal";
 export function TimetableProvider({ metadata, children }) {
   const { t } = useLanguage();
   const { user, demoStudent } = useAuth();
   const storageKey = demoStudent ? DEMO_TIMETABLE_KEY : "ku-timetable-v2";
+  const registrationKey = `ku-registered-v1:${user?.id || storageKey}`;
+  const [registration, setRegistration] = useState(() =>
+    loadRegistration(registrationKey),
+  );
+  const registeredItems = registrationItems(registration);
   const [state, setState] = useState({
     items: [],
     error: "",
     ready: false,
   });
   const [busy, setBusy] = useState(false);
+  const allItems = [...registeredItems, ...state.items];
   const [conflicts, setConflicts] = useState(null);
   const version = metadata.dataset_version;
   const pending = useRef(false);
@@ -56,7 +67,7 @@ export function TimetableProvider({ metadata, children }) {
       active = false;
     };
   }, [user, version, storageKey]);
-  async function commit(next) {
+  async function commit(next, imported = registeredItems) {
     if (pending.current) return false;
     pending.current = true;
     setBusy(true);
@@ -66,10 +77,28 @@ export function TimetableProvider({ metadata, children }) {
         items: refs(next),
       };
       const result = await validateTimetable(body);
-      if (result.conflicts.length) {
+      const pairs = [...result.conflicts];
+      const combined = [...imported, ...result.items];
+      for (let i = 0; i < imported.length; i++) {
+        for (let j = i + 1; j < combined.length; j++) {
+          for (const a of combined[i].section.time_slots) {
+            for (const b of combined[j].section.time_slots) {
+              if (overlap(a, b))
+                pairs.push({
+                  first: refs([combined[i]])[0],
+                  second: refs([combined[j]])[0],
+                  day: a.day,
+                  start: a.start > b.start ? a.start : b.start,
+                  end: a.end < b.end ? a.end : b.end,
+                });
+            }
+          }
+        }
+      }
+      if (pairs.length) {
         setConflicts({
-          pairs: result.conflicts,
-          items: result.items,
+          pairs,
+          items: combined,
         });
         return false;
       }
@@ -95,9 +124,8 @@ export function TimetableProvider({ metadata, children }) {
   async function add(course, section) {
     if (
       !state.ready ||
-      state.items.some(
-        (item) => item.course.subject_code === course.subject_code,
-      )
+      registeredItems.some((item) => !item.section.schedule_complete) ||
+      allItems.some((item) => item.course.subject_code === course.subject_code)
     )
       return false;
     return commit([
@@ -108,8 +136,41 @@ export function TimetableProvider({ metadata, children }) {
       },
     ]);
   }
+  async function importRegistration(record) {
+    try {
+      const minimal = privateRegistration(record);
+      const imported = registrationItems(minimal);
+      const codes = new Set(imported.map(({ course }) => course.subject_code));
+      const planned = state.items.filter(
+        ({ course }) => !codes.has(course.subject_code),
+      );
+      // Check storage before changing the existing planner; never persist the access key.
+      const previous = sessionStorage.getItem(registrationKey);
+      sessionStorage.setItem(registrationKey, JSON.stringify(minimal));
+      if (previous === null) sessionStorage.removeItem(registrationKey);
+      else sessionStorage.setItem(registrationKey, previous);
+      if (!(await commit(planned, imported))) return false;
+      if (minimal.courses.length)
+        sessionStorage.setItem(registrationKey, JSON.stringify(minimal));
+      else sessionStorage.removeItem(registrationKey);
+      setRegistration(minimal.courses.length ? minimal : null);
+      return true;
+    } catch (error) {
+      setState((old) => ({ ...old, error: errorMessage(error) }));
+      return false;
+    }
+  }
   const value = {
     ...state,
+    items: allItems,
+    catalogItems: state.items,
+    registeredItems,
+    registration,
+    importRegistration,
+    forgetRegistration: () => {
+      sessionStorage.removeItem(registrationKey);
+      setRegistration(null);
+    },
     busy,
     metadata,
     conflictCodes: conflicts
@@ -120,10 +181,13 @@ export function TimetableProvider({ metadata, children }) {
       : [],
     add,
     addPlan: (items) => {
-      if (!state.ready || !items.length) return false;
-      const codes = new Set(
-        state.items.map(({ course }) => course.subject_code),
-      );
+      if (
+        !state.ready ||
+        !items.length ||
+        registeredItems.some((item) => !item.section.schedule_complete)
+      )
+        return false;
+      const codes = new Set(allItems.map(({ course }) => course.subject_code));
       if (items.some(({ course }) => codes.has(course.subject_code)))
         return false;
       const next = [...state.items, ...items];
@@ -152,8 +216,20 @@ export function TimetableProvider({ metadata, children }) {
       ]);
     },
     remove: (code) =>
-      commit(state.items.filter((i) => i.course.subject_code !== code)),
-    clear: () => commit([]),
+      registeredItems.some(({ course }) => course.subject_code === code)
+        ? importRegistration({
+            ...registration,
+            courses: registration.courses.filter(
+              (course) => course.subject_code !== code,
+            ),
+          })
+        : commit(state.items.filter((i) => i.course.subject_code !== code)),
+    clear: async () => {
+      if (!(await commit([], []))) return false;
+      sessionStorage.removeItem(registrationKey);
+      setRegistration(null);
+      return true;
+    },
   };
   return (
     <TimetableContext.Provider value={value}>

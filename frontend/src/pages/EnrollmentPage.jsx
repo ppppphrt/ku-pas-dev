@@ -1,11 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useTimetable } from "../hooks/useTimetable";
 import { useLanguage } from "../hooks/useLanguage";
 import { api, errorMessage } from "../services/courseApi";
 import "./EnrollmentPage.css";
 
 export default function EnrollmentPage({ metadata }) {
   const { t } = useLanguage();
+  const timetable = useTimetable();
+  const navigate = useNavigate();
+  const [selected, setSelected] = useState([]);
   const [key, setKey] = useState("");
   const [year, setYear] = useState("");
   const [semester, setSemester] = useState("1");
@@ -19,6 +23,7 @@ export default function EnrollmentPage({ metadata }) {
     pending.current = null;
     setBusy(false);
     setResult(null);
+    setSelected([]);
     setError("");
   }
   async function lookup(event) {
@@ -38,7 +43,14 @@ export default function EnrollmentPage({ metadata }) {
           signal: controller.signal,
         },
       );
-      if (!controller.signal.aborted) setResult(data);
+      if (!controller.signal.aborted) {
+        setResult(data);
+        setSelected(
+          data.courses
+            .map((course, i) => (course.enroll_status === "A" ? i : -1))
+            .filter((i) => i >= 0),
+        );
+      }
     } catch (e) {
       if (!controller.signal.aborted) setError(t(errorMessage(e)));
     } finally {
@@ -47,6 +59,19 @@ export default function EnrollmentPage({ metadata }) {
         setBusy(false);
       }
     }
+  }
+  async function useRegistered() {
+    setError("");
+    const courses = result.courses.filter((_row, i) => selected.includes(i));
+    if (!courses.length) return;
+    if (await timetable.importRegistration({ ...result, courses }))
+      navigate("/timetable?find-ge=1");
+    else
+      setError(
+        t(
+          "Could not import these courses. Check timetable conflicts or browser storage.",
+        ),
+      );
   }
   return (
     <main id="main" className="container enrollment-page">
@@ -115,7 +140,7 @@ export default function EnrollmentPage({ metadata }) {
       )}
       <p>
         {t(
-          "The access code and retrieved courses are kept only on this page. Clear them when finished, especially on a shared device.",
+          "The access code stays on this page. If you import courses, the timetable is saved for this browser session. Clear private data when finished, especially on a shared device.",
         )}
       </p>
       {(key || result) && (
@@ -124,6 +149,7 @@ export default function EnrollmentPage({ metadata }) {
           onClick={() => {
             reset();
             setKey("");
+            timetable?.forgetRegistration?.();
           }}
         >
           {t("Clear private data")}
@@ -156,6 +182,20 @@ export default function EnrollmentPage({ metadata }) {
           <div className="enrollment-courses">
             {result.courses.map((course, i) => (
               <article className="panel" key={`${course.subject_code}-${i}`}>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={selected.includes(i)}
+                    onChange={(e) =>
+                      setSelected((old) =>
+                        e.target.checked
+                          ? [...old, i]
+                          : old.filter((index) => index !== i),
+                      )
+                    }
+                  />{" "}
+                  {t("Include in timetable")} · {course.subject_code}
+                </label>
                 <p className="eyebrow">{course.subject_code}</p>
                 <h3>{course.subject_name}</h3>
                 <p>
@@ -188,9 +228,20 @@ export default function EnrollmentPage({ metadata }) {
           {result.courses.length > 0 && (
             <p>
               {t(
-                "These are your registration records. To plan GE with the existing planner, select and verify the matching catalog sections and times first; this snapshot may differ from your actual semester.",
+                "Select the courses to use in your timetable. Status A is selected initially; review other statuses before including them. Only the timetable is saved for this browser session, without your access code or instructor details.",
               )}
             </p>
+          )}
+          {result.courses.length > 0 && (
+            <button
+              className="primary"
+              disabled={
+                !selected.length || !timetable?.ready || timetable?.busy
+              }
+              onClick={useRegistered}
+            >
+              {t("Use selected courses in timetable")}
+            </button>
           )}
         </section>
       )}
