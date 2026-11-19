@@ -346,3 +346,14 @@
     flex-direction: column;
   }
 }
+
+.chat-competency-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.chat-competency-choices button {
+  min-height: 44px;
+}

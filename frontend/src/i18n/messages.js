@@ -348,8 +348,8 @@ export const messages = [
   ["Search with these preferences", "ค้นหาตามเงื่อนไข"],
   ["Start a new conversation", "เริ่มบทสนทนาใหม่"],
   [
-    "The groups and competencies in this demo are sample data, not confirmation that they are interchangeable in your curriculum",
-    "กลุ่มสาระและสมรรถนะในชุดนี้เป็นข้อมูลจำลอง ไม่ใช่การรับรองว่าใช้แทนกันในหลักสูตรได้",
+    "GE 67 competencies are sourced from gened.xlsx. Data labeled as simulated is for testing.",
+    "สมรรถนะ GE 67 อ้างอิงจาก gened.xlsx และข้อมูลที่ติดป้ายจำลองใช้สำหรับทดลอง",
   ],
   ["GE search conversation", "บทสนทนาค้นหา GE"],
   ["Local AI · Ollama", "AI บนเครื่อง · Ollama"],
@@ -376,6 +376,7 @@ export const messages = [
   ["· Updated", "· อัปเดต"],
   ["· Semester:", "· ภาคเรียน:"],
   ["GE / course offerings:", "GE/การเปิดสอน:"],
+  ["GE data:", "ข้อมูล GE:"],
   ["Unconfirmed", "รอยืนยัน"],
   ["Latest results ·", "ผลล่าสุด ·"],
   ["sample", "จำลอง"],

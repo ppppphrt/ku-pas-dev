@@ -30,6 +30,10 @@ COMPETENCIES = [
     "การเรียนรู้ตลอดชีวิต",
     "ความเป็นพลเมือง",
 ]
+COMPETENCY_NUMBER = (
+    r"(?:สมรรถนะ|competenc(?:y|ies))(?:\s*(?:25)?67)?"
+    r"[,\s]*(?:ด้าน\s*ที่|ด้าน|ที่|area|number)?\s*([1-8])(?!\d)"
+)
 DAYS = {
     "จันทร์": "Mon",
     "อังคาร": "Tue",
@@ -103,6 +107,7 @@ class GECourse(StrictModel):
     subject_code: str
     groups: list[str] = Field(default_factory=list)
     competencies: list[int] = Field(default_factory=list)
+    competency_weights: dict[int, int] = Field(default_factory=dict)
     status: Literal["mock", "verified"] = "mock"
 
     @model_validator(mode="after")
@@ -111,6 +116,15 @@ class GECourse(StrictModel):
             raise ValueError("Unknown GE group")
         if any(c not in range(1, 9) for c in self.competencies):
             raise ValueError("Competencies must be 1–8")
+        if any(
+            not 1 <= key <= 9 or not 0 <= weight <= 100
+            for key, weight in self.competency_weights.items()
+        ):
+            raise ValueError("Invalid competency weights")
+        if self.competency_weights and set(self.competencies) != {
+            key for key, weight in self.competency_weights.items() if key <= 8 and weight > 0
+        }:
+            raise ValueError("Competencies must match positive weights")
         return self
 
 
@@ -127,6 +141,7 @@ class Offering(StrictModel):
 class GEExport(StrictModel):
     dataset_version: str
     source_url: str
+    source_name: str | None = None
     updated_at: str
     academic_year: int | None = None
     semester: str | None = None
@@ -230,14 +245,9 @@ def local_parse(message, previous):
         if name in text:
             data.update(competency=index, curriculum="67", group=None)
             category_named = True
-    match = re.search(r"สมรรถนะ(?:\s*67)?(?:\s*(?:ที่|ด้าน))?\s*([1-8])(?!\d)", text)
-    if match:
-        data.update(competency=int(match[1]), curriculum="67", group=None)
-    english_competency = re.search(
-        r"competenc(?:y|ies)(?:\s*67)?(?:[,\s]*(?:area|number))?\s*([1-8])(?!\d)", text
-    )
-    if english_competency:
-        data.update(competency=int(english_competency[1]), curriculum="67", group=None)
+    competency_number = re.search(COMPETENCY_NUMBER, text)
+    if competency_number:
+        data.update(competency=int(competency_number[1]), curriculum="67", group=None)
     if "ภาคปกติ" in text or "regular program" in text:
         data["program"] = "regular"
     if "ภาคพิเศษ" in text or "special program" in text:
@@ -302,7 +312,7 @@ def local_parse(message, previous):
             "program" in text,
             "any day" in text,
             "any time" in text,
-            bool(english_competency),
+            bool(competency_number),
             bool(re.search(r"เฉพาะ\s*(?:วิชา\s*)?ge|verified ge|ge only", text)),
         ]
     ):
@@ -736,6 +746,16 @@ def respond(body, catalog, ge, *, quick=False, ge_mode=None):
         return respond_with_budget(body, catalog, ge, quick=quick, ge_mode=ge_mode)
 
 
+def direct_competency_request(message):
+    names = "|".join(COMPETENCIES)
+    label = rf"(?:สมรรถนะ(?:\s*(?:25)?67)?\s*(?:ที่|ด้าน)?\s*)?(?:ด้าน\s*)?(?:{names})"
+    return re.fullmatch(
+        rf"(?:ช่วย)?(?:ขอ|หา|ค้นหา|แนะนำ|find|search for)?\s*(?:วิชา)?\s*(?:GE\s*)?(?:{label}|{COMPETENCY_NUMBER})[\s?!]*",
+        message.strip(),
+        flags=re.I,
+    )
+
+
 def requested_course_codes(message):
     """Recognize a direct lookup without treating a longer question as a code list."""
     query = re.sub(
@@ -847,6 +867,11 @@ def respond_with_budget(body, catalog, ge, *, quick=False, ge_mode=None):
         else:
             state = body.state if reference else local_parse(body.message, body.state)
             fast_plan = ChatPlan(state=state.model_copy(update={"interest": interest}))
+    elif body.message == "แนะนำวิชาตามเงื่อนไข":
+        fast_plan = ChatPlan(state=body.state)
+    elif direct_competency_request(body.message):
+        state = local_parse(body.message, body.state.model_copy(update={"interest": ""}))
+        fast_plan = ChatPlan(state=state.model_copy(update={"interest": ""}))
     elif from_course or (career and not body.history and re.search(r"งานนี้|อาชีพนี้|this job", body.message, re.I)):
         fast_plan = ChatPlan(state=body.state, intent="clarify")
     elif provider:
@@ -989,6 +1014,7 @@ def respond_with_budget(body, catalog, ge, *, quick=False, ge_mode=None):
                 item["retrieval_score"] < 100,
                 -item["retrieval_score"] if career and not from_course else 0,
                 not any(s["can_plan"] for s in item["sections"]),
+                -item["classification"].get("competency_weights", {}).get(state.competency, 0),
                 -item["retrieval_score"],
                 item["course"]["subject_code"],
             )

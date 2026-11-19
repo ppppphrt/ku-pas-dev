@@ -701,6 +701,12 @@ it.each([
     "สมรรถนะ 67 ด้าน 4",
   ],
   [
+    "เก็บวิชา GE ให้ครบ",
+    /กำลังเก็บ GE ตามหลักสูตรปีไหน/,
+    "ทักษะการคิด",
+    "ทักษะการคิด",
+  ],
+  [
     "หาวิชาในเวลาว่าง",
     /สะดวกเรียนวันไหน/,
     "ว่างวันพุธ 09:00-12:00",
@@ -734,6 +740,16 @@ it.each([
       within(screen.getByRole("log")).getByText(prompt),
     ).toBeInTheDocument();
     expect(requests).toHaveLength(0);
+    if (reply === "ทักษะการคิด") {
+      const picker = screen.getByRole("group", { name: "สมรรถนะ 67" });
+      expect(within(picker).getAllByRole("button")).toHaveLength(8);
+      await user.click(
+        within(picker).getByRole("button", { name: "ทักษะการคิด" }),
+      );
+      await screen.findByText("คำตอบทดสอบ");
+      expect(requests[0].message).toBe(query);
+      return;
+    }
     const input = screen.getByLabelText("ถามเรื่องรายวิชา GE");
     expect(input).toHaveFocus();
     await user.type(input, reply);

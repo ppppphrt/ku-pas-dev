@@ -91,7 +91,12 @@ export default function TimetableRecommendations({
                       <>
                         <br />
                         {classification.competencies
-                          .map((id) => t(competencies[id - 1]))
+                          .map((id) => {
+                            const label = t(competencies[id - 1]);
+                            const weight =
+                              classification.competency_weights?.[id];
+                            return weight ? `${label} (${weight}%)` : label;
+                          })
                           .join(", ")}
                         {classification.status === "mock" && (
                           <> · {t("Sample competency data")}</>

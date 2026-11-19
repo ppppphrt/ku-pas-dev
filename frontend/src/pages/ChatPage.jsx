@@ -479,7 +479,7 @@ export default function ChatPage() {
           </button>
           <p className="hint">
             {t(
-              "กลุ่มสาระและสมรรถนะในชุดนี้เป็นข้อมูลจำลอง ไม่ใช่การรับรองว่าใช้แทนกันในหลักสูตรได้",
+              "สมรรถนะ GE 67 อ้างอิงจาก gened.xlsx และข้อมูลที่ติดป้ายจำลองใช้สำหรับทดลอง",
             )}
           </p>
         </aside>
@@ -607,6 +607,23 @@ export default function ChatPage() {
             )}
             <div ref={transcriptEnd} />
           </div>
+          {starter?.id === "ge" && !busy && (
+            <div
+              className="chat-competency-choices"
+              role="group"
+              aria-label={t("สมรรถนะ 67")}
+            >
+              {competencies.map((name) => (
+                <button
+                  key={name}
+                  type="button"
+                  onClick={() => send(name, t(name))}
+                >
+                  {t(name)}
+                </button>
+              ))}
+            </div>
+          )}
           {!messages.length && geMode === "fit" && (
             <details className="chat-starters" open>
               <summary>
@@ -743,12 +760,14 @@ export default function ChatPage() {
                 {t("· อัปเดต ")}
                 {response.sources.catalog.updated_at || t("ไม่ทราบ")}
                 <br />
-                {t("GE/การเปิดสอน:")}{" "}
+                {t("GE data:")}{" "}
                 <SourceLink url={response.sources.ge.source_url}>
-                  {response.sources.ge.source_url}
+                  {response.sources.ge.source_name ||
+                    response.sources.ge.source_url ||
+                    t("ไม่ทราบ")}
                 </SourceLink>{" "}
-                {t("· อัปเดต ")}
-                {response.sources.ge.updated_at}
+                {response.sources.ge.updated_at &&
+                  `${t("· อัปเดต ")}${response.sources.ge.updated_at}`}
                 {t(" · ภาคเรียน:")}{" "}
                 {response.sources.ge.academic_year &&
                 response.sources.ge.semester
@@ -825,7 +844,13 @@ function ChatCourse({ result, timetable, busy, onAdded }) {
         {classification.groups.map((group) => t(group)).join(", ") ||
           t("ไม่ทราบ")}
         {t(" · สมรรถนะ 67: ")}
-        {classification.competencies.join(", ") || t("ไม่ทราบ")}
+        {classification.competencies
+          .map((id) => {
+            const label = t(competencies[id - 1]);
+            const weight = classification.competency_weights?.[id];
+            return weight ? `${label} (${weight}%)` : label;
+          })
+          .join(", ") || t("ไม่ทราบ")}
       </p>
       <p className="hint">
         {t(
