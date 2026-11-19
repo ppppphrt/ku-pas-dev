@@ -23,6 +23,7 @@ export function recommendTimetables(results, saved, limit, target) {
     credits: saved.reduce((sum, { course }) => sum + (course.credits ?? 0), 0),
     competencies: new Set(),
     verified: 0,
+    targetWeight: 0,
   };
   const candidates = results.filter(
     ({ course }) =>
@@ -76,6 +77,9 @@ export function recommendTimetables(results, saved, limit, target) {
             slots: [...plan.slots, ...section.time_slots],
             credits: plan.credits + course.credits,
             competencies: new Set([...plan.competencies, ...skills]),
+            targetWeight:
+              plan.targetWeight +
+              (classification.competency_weights?.[target] ?? 0),
             verified:
               plan.verified +
               Number(classification.status === "verified" && skills.length > 0),
@@ -89,7 +93,8 @@ export function recommendTimetables(results, saved, limit, target) {
       ranked.sort(
         (a, b) =>
           (forCompetency
-            ? b.plan.competencies.size - a.plan.competencies.size ||
+            ? b.plan.targetWeight - a.plan.targetWeight ||
+              b.plan.competencies.size - a.plan.competencies.size ||
               b.plan.verified - a.plan.verified
             : 0) ||
           b.plan.items.length - a.plan.items.length ||

@@ -66,3 +66,14 @@ it("tries an alternative section when the first section clashes with another sel
     ]);
   }
 });
+
+it("prefers a higher weight in the selected competency when sections conflict", () => {
+  const broad = candidate("broad", "Mon", "09:00", "10:00", [1, 2, 4]);
+  const focused = candidate("focused", "Mon", "09:00", "10:00", [4]);
+  broad.classification.competency_weights = { 4: 25 };
+  focused.classification.competency_weights = { 4: 60 };
+  const plans = recommendTimetables([broad, focused], [], 6, 4);
+  expect(plans.competency.map(({ course }) => course.subject_code)).toEqual([
+    "focused",
+  ]);
+});
