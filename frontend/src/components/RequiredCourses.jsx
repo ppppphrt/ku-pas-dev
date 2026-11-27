@@ -76,11 +76,11 @@ export default function RequiredCourses({ timetable, onBack }) {
     setRows(rows.map((row, i) => (i === index ? { ...row, ...patch } : row)));
   }
   return (
-    <main id="main" className="container">
+    <section className="panel" aria-labelledby="required-courses-title">
       <button type="button" onClick={onBack}>
         {t("Back to choices")}
       </button>
-      <h1>{t("Plan required courses")}</h1>
+      <h2 id="required-courses-title">{t("Plan required courses")}</h2>
       <form onSubmit={lookup}>
         <label>
           {t("Enter course names or codes, one per line.")}
@@ -192,7 +192,7 @@ export default function RequiredCourses({ timetable, onBack }) {
       )}
       {plan && (
         <section>
-          <h2>{t("Review your base timetable")}</h2>
+          <h3>{t("Review your base timetable")}</h3>
           <ul>
             {plan.map(({ course, section }) => (
               <li key={course.subject_code}>
@@ -226,6 +226,6 @@ export default function RequiredCourses({ timetable, onBack }) {
           <Link to="/timetable">{t("Review your saved timetable")}</Link>
         </p>
       )}
-    </main>
+    </section>
   );
 }

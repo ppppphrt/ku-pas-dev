@@ -105,12 +105,12 @@ function Workspace() {
           >
             <TimetableNotice />
             <Routes>
-              <Route path="/" element={<ChatPage />} />
+              <Route path="/" element={<ChatPage key="home-chat" />} />
               <Route
                 path="/courses"
                 element={<CoursePage metadata={metadata} />}
               />
-              <Route path="/chat" element={<ChatPage />} />
+              <Route path="/chat" element={<ChatPage key="course-chat" />} />
               <Route path="/feedback/review" element={<FeedbackReviewPage />} />
               <Route
                 path="/courses/:subjectCode"
