@@ -2,7 +2,6 @@
 export const messages = [
   ["Search preferences", "เงื่อนไขการค้นหา"],
   ["My timetable", "ตารางของฉัน"],
-  ["What would you like to learn?", "วันนี้อยากเรียนรู้อะไร?"],
   ["The right course. At the right time.", "หาวิชาที่ใช่ ในเวลาที่ชอบ"],
   [
     "Share your interests and let Chat GE help you discover courses and plan your timetable.",

@@ -539,10 +539,8 @@ export default function ChatPage() {
                 <span aria-hidden="true">✦</span>
               </div>
               {geMode && <Link to="/">{t("Back to choices")}</Link>}
-              <h1>{t("วันนี้อยากเรียนรู้อะไร?")}</h1>
+              <h1>{t("หาวิชาที่ใช่ ในเวลาที่ชอบ")}</h1>
               <p>
-                {t("หาวิชาที่ใช่ ในเวลาที่ชอบ")}
-                <br />
                 {t(
                   "เล่าความสนใจของคุณ แล้วให้ Chat GE ช่วยค้นหาและวางแผนตารางเรียน",
                 )}
