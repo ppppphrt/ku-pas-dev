@@ -267,6 +267,7 @@ export default function ChatPage() {
           id: assistantId,
           text: data.message,
           feedbackReceipt: data.feedback_receipt,
+          results: data.needs_clarification ? [] : data.results,
         },
       ]);
       setResponse(data);
@@ -288,6 +289,9 @@ export default function ChatPage() {
                   ...entry,
                   text: finalAnswer.message,
                   feedbackReceipt: finalAnswer.feedback_receipt,
+                  results: finalAnswer.needs_clarification
+                    ? []
+                    : finalAnswer.results,
                 }
               : entry,
           ),
@@ -643,7 +647,14 @@ export default function ChatPage() {
             )}
             {messages.map((entry, i) => (
               <div className={`chat-turn ${entry.role}`} key={entry.id || i}>
-                <p className={`chat-bubble ${entry.role}`}>{entry.text}</p>
+                {entry.results?.length ? (
+                  <div className="chat-bubble assistant chat-listed-answer">
+                    <p>{entry.text}</p>
+                    <ChatCourseList results={entry.results} />
+                  </div>
+                ) : (
+                  <p className={`chat-bubble ${entry.role}`}>{entry.text}</p>
+                )}
                 {entry.role === "assistant" && (
                   <ChatFeedback receipt={entry.feedbackReceipt} />
                 )}
@@ -944,6 +955,42 @@ export default function ChatPage() {
     </main>
   );
 }
+function ChatCourseList({ results }) {
+  const { t, courseText } = useLanguage();
+  return (
+    <ul className="chat-answer-courses" aria-label={t("Matching courses")}>
+      {results.map(({ course, sections }) => {
+        const options = new Set(
+          sections
+            .filter(
+              ({ section }) =>
+                section.schedule_complete && section.time_slots.length,
+            )
+            .map(({ section }) =>
+              section.time_slots
+                .map(({ day, start, end }) => `${t(days[day])} ${start}–${end}`)
+                .join(" · "),
+            ),
+        );
+        const firstTimes = options.values().next().value;
+        return (
+          <li key={course.subject_code}>
+            <Link to={`/courses/${encodeURIComponent(course.subject_code)}`}>
+              <strong>{courseText(course, "name")}</strong>{" "}
+              <span>({course.subject_code})</span>
+            </Link>
+            <span className="chat-answer-course-time">
+              {options.size > 1
+                ? t("Multiple schedules · see course details")
+                : firstTimes || t("No complete schedule in the snapshot")}
+            </span>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
 function ChatCourse({ result, timetable, busy, onAdded }) {
   const { t, courseText } = useLanguage();
   const { course, classification, sections } = result;

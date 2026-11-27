@@ -1,5 +1,14 @@
 // UI messages only. Course data and filter identifiers retain their source values.
 export const messages = [
+  ["Matching courses", "รายวิชาที่พบในคำตอบนี้"],
+  [
+    "Multiple schedules · see course details",
+    "มีหลายช่วงเวลา · ดูรายละเอียดรายวิชา",
+  ],
+  [
+    "No complete schedule in the snapshot",
+    "ข้อมูลวันเวลาเรียนยังไม่ครบในชุดข้อมูลนี้",
+  ],
   ["Search preferences", "เงื่อนไขการค้นหา"],
   ["My timetable", "ตารางของฉัน"],
   ["The right course. At the right time.", "หาวิชาที่ใช่ ในเวลาที่ชอบ"],

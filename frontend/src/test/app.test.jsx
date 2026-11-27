@@ -973,3 +973,54 @@ it("adds a box per course, focuses it, and searches the entries that remain", as
     expect(queries.sort()).toEqual(["01219325-65", "01219497-65"]),
   );
 });
+
+it("shows each matching course and its own schedule as a list in the reply", async () => {
+  const results = courses.map((entry, index) => ({
+    course: entry,
+    classification: { status: "verified", groups: [], competencies: [] },
+    sections: [
+      {
+        section: {
+          ...entry.sections[0],
+          time_slots: [
+            { day: index === 0 ? "Tue" : "Fri", start: "09:00", end: "12:00" },
+          ],
+        },
+      },
+    ],
+  }));
+  server.use(
+    http.post(`${root}/chat`, async ({ request }) => {
+      const body = await request.json();
+      return HttpResponse.json({
+        state: body.state,
+        message: "Found two matching courses.",
+        total_results: 2,
+        results,
+        sources: { catalog: {}, ge: {} },
+      });
+    }),
+  );
+  window.history.replaceState({}, "", "/");
+  const user = userEvent.setup();
+  render(<App />);
+  await user.type(
+    await screen.findByRole("textbox", { name: "Ask about GE courses" }),
+    "Find GE",
+  );
+  const send = screen.getByRole("button", { name: "Send message" });
+  await waitFor(() => expect(send).toBeEnabled());
+  await user.click(send);
+  const list = await within(screen.getByRole("log")).findByRole("list", {
+    name: "Matching courses",
+  });
+  const [programming, calculus] = within(list).getAllByRole("listitem");
+  expect(within(programming).getByRole("link")).toHaveTextContent(
+    "Programming (001)",
+  );
+  expect(within(programming).getByText("Tue 09:00–12:00")).toBeVisible();
+  expect(within(calculus).getByRole("link")).toHaveTextContent(
+    "Calculus (002)",
+  );
+  expect(within(calculus).getByText("Fri 09:00–12:00")).toBeVisible();
+});
