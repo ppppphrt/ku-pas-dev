@@ -623,15 +623,27 @@ export const messages = [
     "บันทึกตารางไม่ได้ ลองตรวจเวลาชนและเพดานหน่วยกิต",
   ],
   ["Review your saved timetable", "ดูตารางที่บันทึกไว้"],
-  ["How would you like to start?", "ตอนนี้คุณมีตารางเรียนแล้วหรือยัง?"],
-  ["Not registered yet", "ยังไม่ได้ลงทะเบียน"],
-  ["Arrange required courses before adding GE.", "จัดตารางวิชาจำเป็นก่อนหา GE"],
-  ["Already registered", "ลงทะเบียนแล้ว"],
+  ["What would you like help with today?", "ตอนนี้อยากให้ช่วยเรื่องไหนครับ?"],
+  ["Chat shortcuts", "ทางลัดในแชท"],
+  ["Plan before registration", "จัดตารางก่อนลงทะเบียน"],
+  ["Find GE using my timetable", "หา GE เพิ่มจากตารางที่มี"],
+  ["Browse GE by competency", "ดูวิชา GE ตามสมรรถนะ"],
   [
-    "Use your existing sections to find GE that fits.",
-    "ใช้หมู่เรียนที่ลงไว้หา GE ที่ไม่ชน",
+    "Which competency would you like to explore? Pick one below.",
+    "สนใจสมรรถนะด้านไหนครับ? เลือกด้านที่อยากดูได้เลย",
   ],
-  ["Browse GE courses first", "ขอดูวิชา GE ก่อน"],
+  [
+    "Which courses do you need to take? Enter their names or codes below and I’ll help arrange the sections.",
+    "ต้องลงวิชาอะไรบ้างครับ? กรอกชื่อหรือรหัสวิชาด้านล่าง แล้วผมจะช่วยจัดหมู่เรียนให้",
+  ],
+  [
+    "Your timetable is ready. Use it to find GE that fits.",
+    "มีตารางเรียนที่บันทึกไว้แล้วครับ ใช้ตารางนี้หา GE ที่เวลาไม่ชนได้เลย",
+  ],
+  [
+    "I don’t see a saved timetable yet. Import your registered courses or add your sections to get started.",
+    "ยังไม่มีตารางเรียนที่บันทึกไว้ครับ ลองดึงวิชาที่ลงทะเบียน หรือเพิ่มหมู่เรียนในตารางก่อน",
+  ],
   ["Find GE around your timetable", "หา GE ที่ไม่ชนตาราง"],
   [
     "Add your existing sections before searching for GE that fits.",
@@ -653,20 +665,6 @@ export const messages = [
   ],
   ["GE records in Bangkhen", "รายวิชาที่มีข้อมูล GE บางเขน"],
   ["Bangkhen", "บางเขน"],
-  ["Find GE that fits your timetable", "หา GE ที่พอดีกับตารางเรียน"],
-  [
-    "Plan your required courses first, or use the timetable you already have to find GE courses that fit.",
-    "จัดวิชาที่ต้องลงให้ลงตัว หรือใช้ตารางที่มีอยู่เพื่อหา GE ที่ลงเพิ่มได้",
-  ],
-  [
-    "Enter your required courses and let KU-PAS arrange the sections.",
-    "บอกวิชาที่ต้องลง แล้วให้ KU-PAS ช่วยจัดหมู่เรียน",
-  ],
-  [
-    "Use the sections you already have to find GE without time conflicts.",
-    "ใช้หมู่เรียนที่ลงไว้ เพื่อหา GE ที่เวลาไม่ชน",
-  ],
-  ["Find GE to add", "หา GE ลงเพิ่ม"],
   ["My registered courses", "รายวิชาที่ลงทะเบียน"],
   [
     "Use the private access code issued to you for the pilot. Each code can retrieve only its assigned student's courses.",

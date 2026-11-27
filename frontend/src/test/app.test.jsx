@@ -597,11 +597,11 @@ it("localizes chat controls while preserving the user's exact draft", async () =
   expect(screen.getByLabelText("Ask about GE courses")).toHaveValue("สนใจภาษา");
 });
 
-it("opens the registration choices on the homepage and keeps course discovery accessible", async () => {
+it("opens chat on the homepage and keeps course discovery accessible", async () => {
   window.history.replaceState({}, "", "/");
   const user = userEvent.setup();
   render(<App />);
-  await screen.findByRole("heading", { name: "How would you like to start?" });
+  await screen.findByRole("log");
   expect(screen.queryByRole("searchbox")).not.toBeInTheDocument();
   await user.click(
     within(screen.getByRole("navigation")).getByRole("link", {
@@ -768,27 +768,55 @@ it.each([
   },
 );
 
-it("offers both registration paths and lets visitors browse GE directly", async () => {
+it("opens chat directly and keeps timetable and competency actions available", async () => {
   localStorage.setItem("ku-language", "en");
   window.history.replaceState({}, "", "/");
   const user = userEvent.setup();
   render(<App />);
+  expect(await screen.findByLabelText("Ask about GE courses")).toBeEnabled();
+  expect(
+    within(screen.getByRole("log")).getByText(
+      "What would you like help with today?",
+    ),
+  ).toBeVisible();
   await user.click(
-    await screen.findByRole("button", { name: /Not registered yet/ }),
+    screen.getByRole("button", { name: "Plan before registration" }),
   );
+  expect(
+    within(screen.getByRole("log")).getByText(/Which courses do you need/),
+  ).toBeVisible();
   expect(
     screen.getByRole("textbox", { name: /Enter course names or codes/ }),
-  ).toBeInTheDocument();
+  ).toBeVisible();
   await user.click(screen.getByRole("button", { name: "Back to choices" }));
-  expect(
-    screen.getByRole("link", { name: /Already registered/ }),
-  ).toHaveAttribute("href", "/timetable?find-ge=1");
   await user.click(
-    screen.getByRole("link", { name: "Browse GE courses first" }),
+    screen.getByRole("button", { name: "Find GE using my timetable" }),
   );
   expect(
-    await screen.findByRole("button", { name: "Follow your interests" }),
-  ).toBeInTheDocument();
+    within(screen.getByRole("log")).getByText(/saved timetable yet/),
+  ).toBeVisible();
+  expect(
+    screen.getByRole("link", { name: "My registered courses" }),
+  ).toHaveAttribute("href", "/enrollments");
+  expect(
+    within(screen.getByRole("main")).getByRole("link", {
+      name: "Timetable Planner",
+      exact: true,
+    }),
+  ).toHaveAttribute("href", "/timetable?find-ge=1");
+  await user.click(
+    within(screen.getByRole("main")).getByRole("button", {
+      name: "Start a new conversation",
+    }),
+  );
+  await user.click(
+    screen.getByRole("button", { name: "Browse GE by competency" }),
+  );
+  expect(
+    within(screen.getByRole("group", { name: "Competencies 67" })).getAllByRole(
+      "button",
+    ),
+  ).toHaveLength(8);
 });
 
 it("shows a required course without a schedule and blocks automatic arrangement", async () => {
@@ -807,7 +835,7 @@ it("shows a required course without a schedule and blocks automatic arrangement"
   const user = userEvent.setup();
   render(<App />);
   await user.click(
-    await screen.findByRole("button", { name: /Not registered yet/ }),
+    await screen.findByRole("button", { name: "Plan before registration" }),
   );
   await user.type(
     screen.getByRole("textbox", { name: /Enter course names or codes/ }),

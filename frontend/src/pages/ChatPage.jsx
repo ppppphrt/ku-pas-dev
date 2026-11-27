@@ -5,7 +5,6 @@ import ChatFeedback from "../components/ChatFeedback";
 import { useLanguage } from "../hooks/useLanguage";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import PlanningHome from "../components/PlanningHome";
 import RequiredCourses from "../components/RequiredCourses";
 import { DAYS } from "../utils/timetable";
 import { api, errorMessage } from "../services/courseApi";
@@ -85,6 +84,17 @@ const starters = [
       "ส่งชื่อวิชาภาษาไทย ภาษาอังกฤษ หรือรหัสวิชามาได้เลยครับ ถ้ารู้แค่บางส่วนของชื่อก็พิมพ์มาได้",
   },
 ];
+const planningChoice = {
+  id: "plan",
+  title: "Plan before registration",
+  prompt:
+    "Which courses do you need to take? Enter their names or codes below and I’ll help arrange the sections.",
+};
+const registeredChoice = {
+  id: "registered",
+  title: "Find GE using my timetable",
+};
+
 function SourceLink({ url, children }) {
   return /^https?:\/\//.test(url || "") ? (
     <a href={url} target="_blank" rel="noreferrer">
@@ -100,12 +110,13 @@ export default function ChatPage() {
   const { pathname, search } = useLocation();
   const mode = new URLSearchParams(search).get("ge");
   const geMode = mode === "fit" || mode === "browse" ? mode : null;
-  const [planning, setPlanning] = useState(false);
+  const home = pathname === "/" && !geMode;
   const geQuery = geMode ? `&ge_mode=${geMode}` : "";
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [state, setState] = useState(initial);
   const [starter, setStarter] = useState(null);
+  const planning = home && starter?.id === "plan";
   const [messages, setMessages] = useState([]);
   const [conversationId, setConversationId] = useState(() =>
     crypto.randomUUID(),
@@ -292,17 +303,6 @@ export default function ChatPage() {
       [key]: value,
     }));
   }
-  if (planning && pathname === "/")
-    return (
-      <RequiredCourses
-        timetable={timetable}
-        onBack={() => setPlanning(false)}
-      />
-    );
-
-  if (pathname === "/")
-    return <PlanningHome onPlan={() => setPlanning(true)} />;
-
   if (
     geMode === "fit" &&
     timetable.registeredItems?.some((item) => !item.section.schedule_complete)
@@ -621,6 +621,13 @@ export default function ChatPage() {
             aria-label={t("ข้อความสนทนา")}
             aria-live="polite"
           >
+            {home && !messages.length && (
+              <div className="chat-turn assistant">
+                <p className="chat-bubble assistant">
+                  {t("What would you like help with today?")}
+                </p>
+              </div>
+            )}
             {messages.map((entry, i) => (
               <div className={`chat-turn ${entry.role}`} key={entry.id || i}>
                 <p className={`chat-bubble ${entry.role}`}>{entry.text}</p>
@@ -637,6 +644,68 @@ export default function ChatPage() {
             )}
             <div ref={transcriptEnd} />
           </div>
+          {home && !messages.length && (
+            <div
+              className="chat-competency-choices"
+              role="group"
+              aria-label={t("Chat shortcuts")}
+            >
+              <button type="button" onClick={() => begin(planningChoice)}>
+                {t(planningChoice.title)}
+              </button>
+              <button
+                type="button"
+                disabled={!timetable.ready}
+                onClick={() =>
+                  begin({
+                    ...registeredChoice,
+                    prompt: timetable.items.length
+                      ? "Your timetable is ready. Use it to find GE that fits."
+                      : "I don’t see a saved timetable yet. Import your registered courses or add your sections to get started.",
+                  })
+                }
+              >
+                {t(registeredChoice.title)}
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  begin({
+                    ...starters.find(({ id }) => id === "ge"),
+                    title: "Browse GE by competency",
+                    prompt:
+                      "Which competency would you like to explore? Pick one below.",
+                  })
+                }
+              >
+                {t("Browse GE by competency")}
+              </button>
+            </div>
+          )}
+          {home && starter?.id === "registered" && (
+            <div className="chat-competency-choices">
+              {timetable.items.length > 0 && (
+                <Link className="button primary" to="/chat?ge=fit">
+                  {t("Use this timetable to find GE")}
+                </Link>
+              )}
+              <Link className="button" to="/timetable?find-ge=1">
+                {t("Timetable Planner")}
+              </Link>
+              <Link className="button" to="/enrollments">
+                {t("My registered courses")}
+              </Link>
+            </div>
+          )}
+          {planning && (
+            <RequiredCourses
+              timetable={timetable}
+              onBack={() => {
+                setStarter(null);
+                setMessages([]);
+              }}
+            />
+          )}
           {starter?.id === "ge" && !busy && (
             <div
               className="chat-competency-choices"
@@ -688,7 +757,7 @@ export default function ChatPage() {
               </p>
             </details>
           )}
-          {!messages.length && (
+          {!home && !messages.length && (
             <div className="chat-starters">
               <p className="chat-starters-caption">
                 {t("เริ่มต้นจากคำถามเหล่านี้")}
@@ -714,37 +783,40 @@ export default function ChatPage() {
               </div>
             </div>
           )}
-          <form
-            className="chat-compose"
-            onSubmit={(e) => {
-              e.preventDefault();
-              send();
-            }}
-          >
-            <label className="sr-only" htmlFor="chat-message">
-              {t("ถามเรื่องรายวิชา GE")}
-            </label>
-            <div>
-              <input
-                id="chat-message"
-                ref={messageInput}
-                value={message}
-                maxLength={1000}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder={t(
-                  starter?.example || "เช่น สนใจธุรกิจ ว่างวันพุธ 09:00-16:00",
-                )}
-                disabled={busy}
-              />
-              <button
-                className="primary chat-send"
-                aria-label={busy ? t("กำลังค้นหา…") : t("ส่งข้อความ")}
-                disabled={busy || !message.trim() || !timetable.ready}
-              >
-                <Icon name="arrow" />
-              </button>
-            </div>
-          </form>
+          {!planning && (
+            <form
+              className="chat-compose"
+              onSubmit={(e) => {
+                e.preventDefault();
+                send();
+              }}
+            >
+              <label className="sr-only" htmlFor="chat-message">
+                {t("ถามเรื่องรายวิชา GE")}
+              </label>
+              <div>
+                <input
+                  id="chat-message"
+                  ref={messageInput}
+                  value={message}
+                  maxLength={1000}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder={t(
+                    starter?.example ||
+                      "เช่น สนใจธุรกิจ ว่างวันพุธ 09:00-16:00",
+                  )}
+                  disabled={busy}
+                />
+                <button
+                  className="primary chat-send"
+                  aria-label={busy ? t("กำลังค้นหา…") : t("ส่งข้อความ")}
+                  disabled={busy || !message.trim() || !timetable.ready}
+                >
+                  <Icon name="arrow" />
+                </button>
+              </div>
+            </form>
+          )}
           <p className="chat-footnote">
             {t("อ้างอิงข้อมูลรายวิชา · ยังไม่ยืนยันภาคเรียนปัจจุบัน")}
           </p>
