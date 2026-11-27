@@ -1,0 +1,40 @@
+.required-course-form .required-course-fields {
+  display: grid;
+  gap: 12px;
+}
+
+.required-course-field {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 8px;
+}
+
+.required-course-field label {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 6px;
+}
+
+.required-course-field button,
+.required-course-field input,
+.required-course-actions button {
+  min-height: 44px;
+}
+
+.required-course-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.required-course-actions .required-course-add:not(:disabled) {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.required-course-add span {
+  margin-inline-end: 4px;
+  font-size: 1.15em;
+  line-height: 1;
+}

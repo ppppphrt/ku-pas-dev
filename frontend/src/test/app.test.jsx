@@ -786,7 +786,7 @@ it("opens chat directly and keeps timetable and competency actions available", a
     within(screen.getByRole("log")).getByText(/Which courses do you need/),
   ).toBeVisible();
   expect(
-    screen.getByRole("textbox", { name: /Enter course names or codes/ }),
+    screen.getByRole("textbox", { name: "Course name or code 1" }),
   ).toBeVisible();
   await user.click(screen.getByRole("button", { name: "Back to choices" }));
   await user.click(
@@ -838,7 +838,7 @@ it("shows a required course without a schedule and blocks automatic arrangement"
     await screen.findByRole("button", { name: "Plan before registration" }),
   );
   await user.type(
-    screen.getByRole("textbox", { name: /Enter course names or codes/ }),
+    screen.getByRole("textbox", { name: "Course name or code 1" }),
     code,
   );
   await user.click(
@@ -902,7 +902,7 @@ it.each([
   await waitFor(() => expect(start).toBeEnabled());
   await user.click(start);
   await user.type(
-    screen.getByRole("textbox", { name: /Enter course names or codes/ }),
+    screen.getByRole("textbox", { name: "Course name or code 1" }),
     input,
   );
   await user.click(
@@ -933,4 +933,43 @@ it.each([
   expect(
     screen.getByRole("link", { name: "Use this timetable to find GE" }),
   ).toHaveAttribute("href", "/chat?ge=fit");
+});
+
+it("adds a box per course, focuses it, and searches the entries that remain", async () => {
+  const queries = [];
+  server.use(
+    http.get(`${root}/keyword-search`, ({ request }) => {
+      queries.push(new URL(request.url).searchParams.get("q"));
+      return HttpResponse.json({ results: [] });
+    }),
+  );
+  window.history.replaceState({}, "", "/");
+  const user = userEvent.setup();
+  render(<App />);
+  await user.click(
+    await screen.findByRole("button", { name: "Plan before registration" }),
+  );
+  const field = (number) =>
+    screen.getByRole("textbox", { name: `Course name or code ${number}` });
+  expect(field(1)).toHaveAttribute(
+    "placeholder",
+    expect.stringContaining("01219325-65"),
+  );
+  await user.type(field(1), "01219325-65{Enter}");
+  expect(field(2)).toHaveFocus();
+  expect(queries).toEqual([]);
+  await user.paste("01219222-65\n01219497-65");
+  expect(field(2)).toHaveValue("01219222-65");
+  expect(field(3)).toHaveValue("01219497-65");
+  await user.click(screen.getByRole("button", { name: "Remove course 2" }));
+  expect(field(2)).toHaveFocus();
+  expect(field(2)).toHaveValue("01219497-65");
+  await user.click(screen.getByRole("button", { name: "Add another course" }));
+  expect(field(3)).toHaveFocus();
+  await user.click(
+    screen.getByRole("button", { name: "Find required courses" }),
+  );
+  await waitFor(() =>
+    expect(queries.sort()).toEqual(["01219325-65", "01219497-65"]),
+  );
 });
