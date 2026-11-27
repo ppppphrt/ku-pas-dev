@@ -850,3 +850,87 @@ it("shows a required course without a schedule and blocks automatic arrangement"
     screen.getByRole("button", { name: "Arrange required courses" }),
   ).toBeDisabled();
 });
+
+it.each([
+  ["01219325-65 section 450", false],
+  ["Software Development Security", true],
+])("adds a registered course from chat: %s", async (input, chooseSection) => {
+  const code = "01219325-65";
+  const example = course(code, "Software Development Security", "09:00");
+  const selectedSection = {
+    ...example.sections[0],
+    campus: "บางเขน",
+    section_code: "450",
+  };
+  const registeredCourse = {
+    ...example,
+    campus: "บางเขน",
+    sections: [
+      selectedSection,
+      { ...selectedSection, section_id: "other", section_code: "451" },
+    ],
+  };
+  const queries = [];
+  const writes = [];
+  server.use(
+    http.get(`${root}/keyword-search`, ({ request }) => {
+      queries.push(new URL(request.url).searchParams.get("q"));
+      return HttpResponse.json({
+        results: [registeredCourse],
+        has_more: false,
+      });
+    }),
+    http.post(`${root}/timetable/validate`, async ({ request }) => {
+      const { items } = await request.json();
+      if (items.length) writes.push(items);
+      return HttpResponse.json({
+        items: items.map(() => ({
+          course: registeredCourse,
+          section: selectedSection,
+        })),
+        conflicts: [],
+        total_credits: items.length * 3,
+      });
+    }),
+  );
+  window.history.replaceState({}, "", "/");
+  const user = userEvent.setup();
+  render(<App />);
+  const start = await screen.findByRole("button", {
+    name: "Find GE using my timetable",
+  });
+  await waitFor(() => expect(start).toBeEnabled());
+  await user.click(start);
+  await user.type(
+    screen.getByRole("textbox", { name: /Enter course names or codes/ }),
+    input,
+  );
+  await user.click(
+    screen.getByRole("button", {
+      name: "Find registered courses in the catalog",
+    }),
+  );
+  if (chooseSection) {
+    await screen.findByText(/Which section did you register for/);
+    expect(writes).toHaveLength(0);
+    const add = screen.getByRole("button", {
+      name: "Add these courses to my timetable",
+    });
+    expect(add).toBeDisabled();
+    await user.selectOptions(
+      screen.getByRole("combobox", { name: /^Section$/ }),
+      selectedSection.section_id,
+    );
+    await user.click(add);
+  }
+  expect(
+    await within(screen.getByRole("log")).findByText(/Added to your timetable/),
+  ).toHaveTextContent(code);
+  expect(queries).toEqual([chooseSection ? input : code]);
+  expect(writes).toEqual([
+    [{ subject_code: code, section_id: selectedSection.section_id }],
+  ]);
+  expect(
+    screen.getByRole("link", { name: "Use this timetable to find GE" }),
+  ).toHaveAttribute("href", "/chat?ge=fit");
+});
