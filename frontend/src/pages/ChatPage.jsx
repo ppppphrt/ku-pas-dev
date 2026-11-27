@@ -99,7 +99,7 @@ const addRegisteredChoice = {
   ...registeredChoice,
   id: "add-registered",
   prompt:
-    "I don’t see a saved timetable yet. Type the courses you registered for, one per line. Include the section if you know it, for example 01219325-65 section 450.",
+    "I don’t see a saved timetable yet. Type the courses you registered for, one per box. Include the section if you know it, for example 01219325-65 section 450.",
 };
 
 function SourceLink({ url, children }) {

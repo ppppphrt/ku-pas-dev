@@ -3,6 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useLanguage } from "../hooks/useLanguage";
 import { discover, errorMessage } from "../services/courseApi";
 import { arrangeRequired, requiredSections } from "../utils/arrangeRequired";
+import "./RequiredCourses.css";
+
+const MAX_COURSES = 8;
+const MAX_COURSE_LENGTH = 1000;
 
 function registeredSection(course, sectionCode) {
   const matches = course.sections.filter(
@@ -25,13 +29,88 @@ export default function RequiredCourses({
   const registered = Boolean(onAdded);
   const { t, courseText } = useLanguage();
   const navigate = useNavigate();
-  const [draft, setDraft] = useState("");
+  const [fields, setFields] = useState([{ id: 0, value: "" }]);
+  const nextId = useRef(1);
+  const inputs = useRef(new Map());
+  const focusId = useRef(null);
   const [rows, setRows] = useState([]);
   const [plan, setPlan] = useState(null);
   const [working, setWorking] = useState(false);
   const [error, setError] = useState("");
   const request = useRef(null);
   useEffect(() => () => request.current?.abort(), []);
+  useEffect(() => {
+    if (focusId.current !== null) {
+      inputs.current.get(focusId.current)?.focus();
+      focusId.current = null;
+    }
+  }, [fields]);
+
+  const terms = [
+    ...new Set(fields.map(({ value }) => value.trim()).filter(Boolean)),
+  ];
+  const disabled = working || timetable.busy;
+  const atLimit = fields.length >= MAX_COURSES;
+
+  function changeFields(next, focus = null) {
+    focusId.current = focus;
+    setFields(next);
+    setRows([]);
+    setPlan(null);
+    setError("");
+  }
+
+  function addField() {
+    if (atLimit || disabled) return;
+    const id = nextId.current++;
+    // Adding a blank field leaves existing results valid until the user edits it.
+    focusId.current = id;
+    setFields([...fields, { id, value: "" }]);
+  }
+
+  function handleEnter(event, index) {
+    if (
+      event.key !== "Enter" ||
+      event.nativeEvent.isComposing ||
+      event.keyCode === 229
+    )
+      return;
+    event.preventDefault();
+    const next = fields[index + 1];
+    if (next) inputs.current.get(next.id)?.focus();
+    else if (fields[index].value.trim()) addField();
+  }
+
+  function pasteCourses(event, index) {
+    const pasted = event.clipboardData.getData("text");
+    if (!/[\r\n]/.test(pasted.trim())) return;
+    event.preventDefault();
+    const { value, selectionStart, selectionEnd } = event.currentTarget;
+    const combined =
+      value.slice(0, selectionStart) +
+      pasted.trim() +
+      value.slice(selectionEnd);
+    const values = combined
+      .split(/[\r\n]+/)
+      .map((line) => line.trim())
+      .filter(Boolean);
+    if (fields.length - 1 + values.length > MAX_COURSES) {
+      setError(t("You can enter up to 8 courses at a time."));
+      return;
+    }
+    if (values.some((line) => line.length > MAX_COURSE_LENGTH)) {
+      setError(t("One of the pasted course entries is too long."));
+      return;
+    }
+    const pastedFields = values.map((value, i) => ({
+      id: i === 0 ? fields[index].id : nextId.current++,
+      value,
+    }));
+    changeFields(
+      [...fields.slice(0, index), ...pastedFields, ...fields.slice(index + 1)],
+      pastedFields.at(-1).id,
+    );
+  }
 
   async function saveRegistered(selected, signal) {
     const items = selected.map(({ course, locked }) => ({
@@ -49,7 +128,7 @@ export default function RequiredCourses({
     if (signal?.aborted) return;
     if (saved) {
       setRows([]);
-      setDraft("");
+      setFields([{ id: nextId.current++, value: "" }]);
       onAdded(items);
     } else {
       setError(
@@ -61,23 +140,12 @@ export default function RequiredCourses({
   async function lookup(event) {
     event.preventDefault();
     if (request.current || working || timetable.busy) return;
-    const terms = [
-      ...new Set(
-        draft
-          .split(/[\n,;]+/)
-          .map((item) => item.trim())
-          .filter(Boolean),
-      ),
-    ];
-    if (!terms.length || terms.length > 8) {
-      setError(t("Enter 1–8 courses, one per line."));
-      return;
-    }
+    if (!terms.length) return;
     const controller = new AbortController();
     request.current = controller;
     setWorking(true);
     setError("");
-    onSubmitted?.(draft.trim());
+    onSubmitted?.(terms.join("\n"));
     setRows([]);
     setPlan(null);
     try {
@@ -162,32 +230,85 @@ export default function RequiredCourses({
       <h2 id="required-courses-title">
         {t(registered ? "Add registered courses" : "Plan required courses")}
       </h2>
-      <form onSubmit={lookup}>
-        <label>
-          {t("Enter course names or codes, one per line.")}
-          <textarea
-            rows={registered ? 3 : 5}
-            value={draft}
-            maxLength={1000}
-            disabled={working || timetable.busy}
-            onChange={(e) => {
-              setDraft(e.target.value);
-              setRows([]);
-              setPlan(null);
-              setError("");
-            }}
-          />
-        </label>
-        <button
-          className="primary"
-          disabled={working || timetable.busy || !draft.trim()}
-        >
+      <form className="required-course-form" onSubmit={lookup}>
+        <div className="required-course-fields">
+          {fields.map(({ id, value }, index) => (
+            <div className="required-course-field" key={id}>
+              <label>
+                {t("Course name or code")} {index + 1}
+                <input
+                  type="text"
+                  ref={(input) => {
+                    if (input) inputs.current.set(id, input);
+                    else inputs.current.delete(id);
+                  }}
+                  value={value}
+                  placeholder={t(
+                    registered
+                      ? "e.g. 01219325-65 section 450"
+                      : "e.g. 01219325-65 or Software Development Security",
+                  )}
+                  maxLength={MAX_COURSE_LENGTH}
+                  disabled={disabled}
+                  onChange={(event) =>
+                    changeFields(
+                      fields.map((field) =>
+                        field.id === id
+                          ? { ...field, value: event.target.value }
+                          : field,
+                      ),
+                    )
+                  }
+                  onKeyDown={(event) => handleEnter(event, index)}
+                  onPaste={(event) => pasteCourses(event, index)}
+                />
+              </label>
+              {fields.length > 1 && (
+                <button
+                  type="button"
+                  disabled={disabled}
+                  aria-label={`${t("Remove course")} ${index + 1}`}
+                  onClick={() =>
+                    changeFields(
+                      fields.filter((field) => field.id !== id),
+                      (fields[index + 1] || fields[index - 1]).id,
+                    )
+                  }
+                >
+                  {t("Remove")}
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+        <div className="required-course-actions">
+          <button
+            type="button"
+            className="required-course-add"
+            disabled={disabled || atLimit}
+            onClick={addField}
+          >
+            <span aria-hidden="true">+</span> {t("Add another course")}
+          </button>
+          <button
+            className="primary"
+            type="submit"
+            disabled={disabled || !terms.length}
+          >
+            {t(
+              registered
+                ? "Find registered courses in the catalog"
+                : "Find required courses",
+            )}
+          </button>
+        </div>
+        <p className="hint" role="status">
           {t(
-            registered
-              ? "Find registered courses in the catalog"
-              : "Find required courses",
+            atLimit
+              ? "You can enter up to 8 courses at a time."
+              : "Press Enter to move to the next course.",
           )}
-        </button>
+        </p>
       </form>
       {working && <p role="status">{t("กำลังค้นหา…")}</p>}
       {error && <p role="alert">{error}</p>}
