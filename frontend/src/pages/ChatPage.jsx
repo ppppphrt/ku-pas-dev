@@ -95,6 +95,13 @@ const registeredChoice = {
   title: "Find GE using my timetable",
 };
 
+const addRegisteredChoice = {
+  ...registeredChoice,
+  id: "add-registered",
+  prompt:
+    "I don’t see a saved timetable yet. Type the courses you registered for, one per line. Include the section if you know it, for example 01219325-65 section 450.",
+};
+
 function SourceLink({ url, children }) {
   return /^https?:\/\//.test(url || "") ? (
     <a href={url} target="_blank" rel="noreferrer">
@@ -117,6 +124,7 @@ export default function ChatPage() {
   const [state, setState] = useState(initial);
   const [starter, setStarter] = useState(null);
   const planning = home && starter?.id === "plan";
+  const addingRegistered = home && starter?.id === "add-registered";
   const [messages, setMessages] = useState([]);
   const [conversationId, setConversationId] = useState(() =>
     crypto.randomUUID(),
@@ -150,6 +158,13 @@ export default function ChatPage() {
     setMessages([
       { role: "user", id: crypto.randomUUID(), text: t(choice.title) },
       { role: "assistant", id: crypto.randomUUID(), text: t(choice.prompt) },
+    ]);
+  }
+
+  function appendTurn(role, text) {
+    setMessages((previous) => [
+      ...previous.slice(-18),
+      { role, id: crypto.randomUUID(), text },
     ]);
   }
 
@@ -488,7 +503,7 @@ export default function ChatPage() {
           </div>
           <button
             className="primary"
-            disabled={busy || !timetable.ready}
+            disabled={busy || !timetable.ready || planning || addingRegistered}
             onClick={() => send("แนะนำวิชาตามเงื่อนไข")}
           >
             {t("ค้นหาตามเงื่อนไข")}
@@ -657,12 +672,15 @@ export default function ChatPage() {
                 type="button"
                 disabled={!timetable.ready}
                 onClick={() =>
-                  begin({
-                    ...registeredChoice,
-                    prompt: timetable.items.length
-                      ? "Your timetable is ready. Use it to find GE that fits."
-                      : "I don’t see a saved timetable yet. Import your registered courses or add your sections to get started.",
-                  })
+                  begin(
+                    timetable.items.length
+                      ? {
+                          ...registeredChoice,
+                          prompt:
+                            "Your timetable is ready. Use it to find GE that fits.",
+                        }
+                      : addRegisteredChoice,
+                  )
                 }
               >
                 {t(registeredChoice.title)}
@@ -682,7 +700,7 @@ export default function ChatPage() {
               </button>
             </div>
           )}
-          {home && starter?.id === "registered" && (
+          {home && (starter?.id === "registered" || addingRegistered) && (
             <div className="chat-competency-choices">
               {timetable.items.length > 0 && (
                 <Link className="button primary" to="/chat?ge=fit">
@@ -697,9 +715,29 @@ export default function ChatPage() {
               </Link>
             </div>
           )}
-          {planning && (
+          {(planning || addingRegistered) && (
             <RequiredCourses
+              key={starter.id}
               timetable={timetable}
+              onSubmitted={
+                addingRegistered
+                  ? (text) => appendTurn("user", text)
+                  : undefined
+              }
+              onAdded={
+                addingRegistered
+                  ? (items) =>
+                      appendTurn(
+                        "assistant",
+                        `${t("Added to your timetable.")} ${items
+                          .map(
+                            ({ course, section }) =>
+                              `${course.subject_code} · ${t("Section ")}${section.section_code}`,
+                          )
+                          .join(", ")}`,
+                      )
+                  : undefined
+              }
               onBack={() => {
                 setStarter(null);
                 setMessages([]);
@@ -783,7 +821,7 @@ export default function ChatPage() {
               </div>
             </div>
           )}
-          {!planning && (
+          {!planning && !addingRegistered && (
             <form
               className="chat-compose"
               onSubmit={(e) => {

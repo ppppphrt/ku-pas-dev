@@ -641,9 +641,24 @@ export const messages = [
     "มีตารางเรียนที่บันทึกไว้แล้วครับ ใช้ตารางนี้หา GE ที่เวลาไม่ชนได้เลย",
   ],
   [
-    "I don’t see a saved timetable yet. Import your registered courses or add your sections to get started.",
-    "ยังไม่มีตารางเรียนที่บันทึกไว้ครับ ลองดึงวิชาที่ลงทะเบียน หรือเพิ่มหมู่เรียนในตารางก่อน",
+    "I don’t see a saved timetable yet. Type the courses you registered for, one per line. Include the section if you know it, for example 01219325-65 section 450.",
+    "ยังไม่มีตารางเรียนที่บันทึกไว้ครับ พิมพ์ชื่อหรือรหัสวิชาที่ลงทะเบียนมาได้เลย บรรทัดละหนึ่งวิชา ถ้ารู้หมู่เรียนให้พิมพ์ต่อท้าย เช่น 01219325-65 หมู่ 450",
   ],
+  ["Add registered courses", "เพิ่มวิชาที่ลงทะเบียนไว้"],
+  ["Find registered courses in the catalog", "ส่งรายวิชา"],
+  ["Select the section you registered for", "เลือกหมู่ที่ลงทะเบียน"],
+  [
+    "Which section did you register for? Choose it below.",
+    "ลงทะเบียนหมู่ไหนไว้ครับ? เลือกหมู่ด้านล่างได้เลย",
+  ],
+  [
+    "The section you entered could not be matched to one complete schedule. Review the options below.",
+    "ยังระบุเวลาเรียนของหมู่ที่กรอกไม่ได้ครับ ลองตรวจตัวเลือกด้านล่าง",
+  ],
+  ["Enter each course only once.", "กรอกแต่ละวิชาเพียงครั้งเดียวครับ"],
+  ["Add these courses to my timetable", "เพิ่มวิชาเหล่านี้ลงตาราง"],
+  ["Added to your timetable.", "เพิ่มลงตารางแล้วครับ"],
+
   ["Find GE around your timetable", "หา GE ที่ไม่ชนตาราง"],
   [
     "Add your existing sections before searching for GE that fits.",
