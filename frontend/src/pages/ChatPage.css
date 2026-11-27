@@ -357,3 +357,21 @@
 .chat-competency-choices button {
   min-height: 44px;
 }
+
+.chat-listed-answer p {
+  margin: 0;
+}
+
+.chat-answer-courses {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding-inline-start: 1.4rem;
+  white-space: normal;
+}
+
+.chat-answer-course-time {
+  display: block;
+  color: var(--muted);
+  font-size: 0.875em;
+}
